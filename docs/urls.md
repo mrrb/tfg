@@ -2,5 +2,4 @@
 
 ### Protocolo USB
 
-1. [USB made simple - MQP Electronics Ltd
-	] (http://www.usbmadesimple.co.uk/)
+1. [USB made simple - MQP Electronics Ltd](http://www.usbmadesimple.co.uk/)
