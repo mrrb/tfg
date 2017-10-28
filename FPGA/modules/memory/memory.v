@@ -2,40 +2,27 @@
 // Mario Rubio.
 
 // Little-endian [N:0] or Big-endian [0:N]??
+// Add address reg??
 // Change RAM to memory block w/ shifts and RAM utils
 //
 /*
-  Input:
-    - CS (Chip Select):    Enable access to memory module.
-    - WE (Write Enable):   Write DATA to the memory.
-    - SE (Shift Enable):   Enable shift data
-    - SC (Shift Control):  Control Shift direction Right or Left.
-    - SC (Signal Control): Control witch signal is use for perform task
-
-  Output:
-    - LS (Last Shifted value): Return the value of the last
-    -
-
-  Inout:
-    - Data: register of N bits to store transient data (Mem > Bus OR Bus > Mem).
-
-  parameters:
-    -
-    -
-
   Inputs:
-    - CS (Chip Select): Enable access to memory module.
-    - WE (Write Enable):
-    - RE (Read Enable):
-    - SE (Shift Enable):
-    - SD (Shift Direction):
-    - ADDR (Addr)
+    - CS   (Chip Select)[1]:         Enable access to memory module.
+    - WE   (Write Enable)[1]:        On Posedge, perform a memory write.
+    - RE   (Read Enable)[1]:         On Posedge, perform a memory read.
+    - SE   (Shift Enable)[1]:        On Posedge, perform a memory shift.
+    - SD   (Shift Direction)[1]:     Control the direction of the memory shift.
+    - ADDR (Address Bus)[Addr_size]: Contain the memory address.
 
   Outputs:
+    - ERR  (Error)[1]: Error detected.
 
   Inouts:
+    - DATA (Data Bus)[Mem_size]: IN/OUT of data.
 
   Parameters:
+    - Addr_size: Size of the address Bus.
+    - Mem_size:  Size of the memory.
 */
 
 module ram #(parameter addrs = 4,
