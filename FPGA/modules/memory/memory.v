@@ -46,7 +46,7 @@
     4. Pulse PS input to perform a Shift action, the deleted BIT will be outputted on the SVO pin.
 */
 
-// Not valid > E > NOT SUPPORTED IN YOSYS!
+// Not valid > NOT SUPPORTED IN YOSYS!
 // Only return 1 if the 2 first imputs are HIGH and the others LOW
 // primitive func_selector (output OUT, input I1, input I2, input I3, input I4);
 //   table
@@ -58,38 +58,45 @@
 
 module memory #(parameter Addr_width = 3,
                 parameter Data_width = 8)
-               (input wire CS,
-                input wire PW,
-                input wire PR,
-                input wire PS,
-                input wire SD,
-                input wire SV,
-                input wire [Addr_width-1:0]ADDR,
+               (input  wire CS,
+                input  wire PW,
+                input  wire PR,
+                input  wire PS,
+                input  wire SD,
+                input  wire SV,
+                input  wire [Addr_width-1:0]ADDR,
                 output wire ERR,
                 output wire DEBUG,
-                inout wire [Data_width-1:0]DATA);
+                inout  wire [Data_width-1:0]DATA);
 
 
   // Initial status
-  // ToDo
   reg [Data_width-1:0] memory [(2**Addr_width)-1:0]; // Memory block
-
-  initial begin
-    memory [1] = 8'b00001111;
-  end
 
   // Control logic
   wire S, R, W;
   assign S = (CS & ~PW) & (~PR & PS);
   assign R = (CS & ~PW) & (PR & ~PS);
-  assign W = (CS & PW) & (~PR & ~PS);
+  assign W = (CS & PW)  & (~PR & ~PS);
 
   assign DEBUG = R;
 
   // Memory Read
-  // Not Valid > W > Tri-states gates support limited with Yosys
+  // Not Valid > Tri-states gates support limited with Yosys
   // assign DATA = R?memory[ADDR]:8'bZZZZZZZZ;
-  // ToDo
+  reg [Data_width-1:0] ctrl_read = 8'bZZZZZZZZ;
+  assign DATA = R?memory[ADDR]:ctrl_read;
+
+  // reg [Data_width-1:0] ctrl_read;
+  // assign DATA = ctrl_read;
+  // always @(R) begin
+  //   if (R == 1'b1) begin
+  //     ctrl_read <= memory[ADDR];
+  //   end
+  //   else begin
+  //     ctrl_read <= ctrl_read2;
+  //   end
+  // end
 
   // Memory Write
   always @ ( posedge W ) begin

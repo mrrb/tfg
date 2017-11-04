@@ -1,7 +1,7 @@
 // Modulo de memoria. Test Bench.
 // Mario Rubio.
 
-// `include "memory.v"
+`include "memory.v"
 
 module memory_tb ();
 
@@ -48,10 +48,6 @@ module memory_tb ();
     $display("%d", {{ (3){1'bZ} }, 1'bZ } );
     CS = 0; PW = 0; PR = 0; PS = 0; SD = 0; SV = 0;
     $monitor("CS=%b, PR=%b, PW=%b, PS=%b, SD=%b, SV=%b, DATA=%b, ADDR=%b", CS, PR, PW, PS, SD, SV, DATA, ADDR);
-    $display("Memory Read!");
-    #1 CS = 1; ADDR = 3'b001;
-    #1 PR = 1;
-
     #1 CS = 0; PW = 0; PR = 0; PS = 0; SD = 0; SV = 0;
     $display("Memory Write!");
     #1 CS = 1; ADDR = 3'b001; ctrl = 8'b10100101;
@@ -59,6 +55,7 @@ module memory_tb ();
     #1 ctrl = 8'bzzzzzzzz;
     #1 PW = 0;
 
+    $display("Memory Read!");
     #1 PR = 1;
 
     #1 CS = 0; PW = 0; PR = 0; PS = 0; SD = 0; SV = 0;

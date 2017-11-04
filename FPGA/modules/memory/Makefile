@@ -8,7 +8,7 @@ sint: $(FNAME).bin
 
 $(FNAME)_tb.vcd: $(FNAME).v $(FNAME)_tb.v
 
-	iverilog $^ -o $(FNAME)_tb.out
+	iverilog $(FNAME)_tb.v -o $(FNAME)_tb.out
 
 	./$(FNAME)_tb.out
 
