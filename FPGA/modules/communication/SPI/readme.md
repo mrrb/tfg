@@ -2,11 +2,10 @@
 
 Implementación para FPGA dele estandar de comunicación SPI.
 
-  SPI
-  │
-  ├── bidirectional
-  ├── readme.md
-  ├── receive
-  │   └── master.v
-  ├── send
-  └── spy
+SPI
+ * [send](./../FPGA/modules/communication/SPI/send)
+ * [spy](./../FPGA/modules/communication/SPI/spy)
+ * [bidirectional](./../FPGA/modules/communication/SPI/bidirectional)
+ * [receive](./../FPGA/modules/communication/SPI/receive)
+   * [master.v](./../FPGA/modules/communication/SPI/receive/master.v)
+ * [readme.md](./../FPGA/modules/communication/SPI/readme.md)

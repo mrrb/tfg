@@ -8,6 +8,8 @@
 
 3. [Project IceStorm - Clifford Wolf & Mathias Lasser](http://www.clifford.at/icestorm/)
 
+4. [Verilog HDL Quick Reference Guide - Stuart Sutherland](http://sutherland-hdl.com/pdfs/verilog_2001_ref_guide.pdf)
+
 ### Protocolo USB
 
 1. [USB made simple - MQP Electronics Ltd](http://www.usbmadesimple.co.uk/)

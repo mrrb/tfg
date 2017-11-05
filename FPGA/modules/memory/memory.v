@@ -1,5 +1,5 @@
 // Modulo de memoria.
-// Mario Rubio.
+// Mario Rubio. 2017.
 
 // Little-endian [N:0] or Big-endian [0:N]??
 // Add address reg??
@@ -56,8 +56,8 @@
 //   endtable
 // endprimitive
 
-module memory #(parameter Addr_width = 2,
-                parameter Data_width = 8)
+module memory #(parameter Addr_width = 1,
+                parameter Data_width = 16)
                (input  wire CS,
                 input  wire PW,
                 input  wire PR,
@@ -95,10 +95,10 @@ module memory #(parameter Addr_width = 2,
   reg [Data_width-1:0] current_data = {Data_width{1'bz}};
   always @ ( posedge S ) begin
     if(SD == 1) begin
-      memory[ADDR] <= (memory[ADDR]>>1)+{SV, {(Data_width-1){1'b0}}};
+      // memory[ADDR] <= (memory[ADDR]>>1)+{SV, {(Data_width-1){1'b0}}};
     end
     else begin
-      memory[ADDR] <= (memory[ADDR]<<1)+SV;
+      // memory[ADDR] <= (memory[ADDR]<<1)+SV;
     end
   end
 
