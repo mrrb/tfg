@@ -56,7 +56,7 @@
 //   endtable
 // endprimitive
 
-module memory #(parameter Addr_width = 3,
+module memory #(parameter Addr_width = 2,
                 parameter Data_width = 8)
                (input  wire CS,
                 input  wire PW,
@@ -66,7 +66,6 @@ module memory #(parameter Addr_width = 3,
                 input  wire SV,
                 input  wire [Addr_width-1:0]ADDR,
                 output wire ERR,
-                output wire DEBUG,
                 inout  wire [Data_width-1:0]DATA);
 
 
@@ -79,31 +78,31 @@ module memory #(parameter Addr_width = 3,
   assign R = (CS & ~PW) & (PR & ~PS);
   assign W = (CS & PW)  & (~PR & ~PS);
 
-  assign DEBUG = R;
 
   // Memory Read
   // Not Valid > Tri-states gates support limited with Yosys
   // assign DATA = R?memory[ADDR]:8'bZZZZZZZZ;
-  reg [Data_width-1:0] ctrl_read = 8'bZZZZZZZZ;
+  reg [Data_width-1:0] ctrl_read = {Data_width{1'bz}};
   assign DATA = R?memory[ADDR]:ctrl_read;
-
-  // reg [Data_width-1:0] ctrl_read;
-  // assign DATA = ctrl_read;
-  // always @(R) begin
-  //   if (R == 1'b1) begin
-  //     ctrl_read <= memory[ADDR];
-  //   end
-  //   else begin
-  //     ctrl_read <= ctrl_read2;
-  //   end
-  // end
 
   // Memory Write
   always @ ( posedge W ) begin
-    memory[ADDR] = DATA;
+    memory[ADDR] <= DATA;
   end
 
   // Memory Shift
+  // ToDo
+  reg [Data_width-1:0] current_data = {Data_width{1'bz}};
+  always @ ( posedge S ) begin
+    if(SD == 1) begin
+      memory[ADDR] <= (memory[ADDR]>>1)+{SV, {(Data_width-1){1'b0}}};
+    end
+    else begin
+      memory[ADDR] <= (memory[ADDR]<<1)+SV;
+    end
+  end
+
+  // Error BIT
   // ToDo
 
 
