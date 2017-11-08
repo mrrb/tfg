@@ -3,37 +3,37 @@
 
 /*
   Inputs:
-    - clk
-    -
+    - clk_in [1>wire]
+    - MISO (Master Out Slave In)[1>wire]
+    - PC   (Perform Communication)[1>wire]: on posedge, the
+    - DATA_out [frame_length_MOSI>reg]
 
   Outputs:
+    - SCLK [1>wire]: clk signal for the communication
+    - MOSI (Master In Slave Out)[1>wire]
+    - DATA_in [frame_length_MISO>wire]
 
   Inouts:
-    -
 
   Parameters:
-    - frame_length
-    -
+    - frame_length_MOSI:  Bits to send in the MOSI output.
+    - frame_length_MISO:  Bits to receive in the MISO input.
+    - clk_prescaler
 */
 
 `include "../../../memory/memory.v"
 
-module master #(parameter frame_length  = 8,
-                parameter clk_prescaler = 4)
-               (input wire clk);
+module master #(parameter frame_length_MOSI = 4,
+                parameter frame_length_MISO = 4,
+                parameter clk_prescaler     = 4)
+               (input wire clk_in,
+                input wire MISO,
+                output wire SCLK,
+                output wire MOSI);
 
-  reg PW = 0;
-  wire [frame_length-1:0]DATA;
-  memory #(.Addr_width(1),
-           .Data_width(frame_length))
-          mem
-          (.CS(1'b1),
-           .PW(PW),
-           .PR(1'b0),
-           .PS(1'b0),
-           .SD(1'b0),
-           .SV(1'b0),
-           .ADDR(1'b1),
-           .DATA(DATA));
+  // Clock init
+  // ToDo
+
+  //
 // genvar
 endmodule
