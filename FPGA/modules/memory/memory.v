@@ -66,7 +66,8 @@ module memory #(parameter Addr_width = 1,
                 input  wire SV,
                 input  wire [Addr_width-1:0]ADDR,
                 output wire ERR,
-                inout  wire [Data_width-1:0]DATA);
+                inout  wire [Data_width-1:0]DATA,
+                input  wire clk);
 
 
   // Initial status
@@ -74,7 +75,7 @@ module memory #(parameter Addr_width = 1,
 
   // Control logic
   wire S, R, W;
-  assign S = (CS & ~PW) & (~PR & PS);
+  assign S = (CS & ~PW) & (PS & ~PR);
   assign R = (CS & ~PW) & (PR & ~PS);
   assign W = (CS & PW)  & (~PR & ~PS);
 
@@ -86,19 +87,22 @@ module memory #(parameter Addr_width = 1,
   assign DATA = R?memory[ADDR]:ctrl_read;
 
   // Memory Write
-  always @ ( posedge W ) begin
-    memory[ADDR] <= DATA;
+  always @ ( posedge clk ) begin
+    if(W == 1) begin
+      memory[ADDR] <= DATA;
+    end
   end
 
   // Memory Shift
-  // ToDo
-  reg [Data_width-1:0] current_data = {Data_width{1'bz}};
-  always @ ( posedge S ) begin
-    if(SD == 1) begin
-      // memory[ADDR] <= (memory[ADDR]>>1)+{SV, {(Data_width-1){1'b0}}};
-    end
-    else begin
-      // memory[ADDR] <= (memory[ADDR]<<1)+SV;
+  // reg [Data_width-1:0] current_data = {Data_width{1'bz}};
+  always @ ( posedge clk ) begin
+    if(S == 1) begin
+      if(SD == 1) begin
+        memory[ADDR] <= (memory[ADDR]>>1)+SV<<(Data_width-2);
+      end
+      else begin
+        memory[ADDR] <= (memory[ADDR]<<1)+SV;
+      end
     end
   end
 
