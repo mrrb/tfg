@@ -10,4 +10,4 @@ Pinout del ICEstick - BQ
 
 ### SBTICETechnologyLibrary201504.pdf
 
-Documento con
+Documento con primitivas para la FPGA

@@ -1,0 +1,19 @@
+# Fdb version 3
+["pdflatex"] 1510161381 "anteproyecto.tex" "anteproyecto.pdf" "anteproyecto" 1510161382
+  "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1501615455 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
+  "/usr/share/texmf-dist/fonts/tfm/public/cm/cmr12.tfm" 1501615461 1288 655e228510b4c2a1abe905c368440826 ""
+  "/usr/share/texmf-dist/tex/latex/base/article.cls" 1501615465 19821 310da678527a7dfe2a02c88af38079b7 ""
+  "/usr/share/texmf-dist/tex/latex/base/inputenc.sty" 1501615465 4732 d63eda807ac82cca2ca8488efd31a966 ""
+  "/usr/share/texmf-dist/tex/latex/base/omsenc.dfu" 1501615465 2004 ac51aeac484f08c01026120d62677eca ""
+  "/usr/share/texmf-dist/tex/latex/base/ot1enc.dfu" 1501615465 3181 1cb3e9ad01f4a01127b2ffd821bfeec7 ""
+  "/usr/share/texmf-dist/tex/latex/base/size12.clo" 1501615465 8303 1d67e16498f00f63da792fab169302fc ""
+  "/usr/share/texmf-dist/tex/latex/base/t1enc.dfu" 1501615465 11255 9d97362866549d3d3c994b5f28d1b9b5 ""
+  "/usr/share/texmf-dist/tex/latex/base/utf8.def" 1501615465 7784 325a2a09984cb5c4ff230f9867145ad3 ""
+  "/usr/share/texmf-dist/web2c/texmf.cnf" 1501615481 32585 d82bbcf7626b7842c87671687479e852 ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1506346300 7735972 f5d3cecec88885eab68c57bc72582ba4 ""
+  "anteproyecto.aux" 1510161299 8 a94a2480d3289e625eea47cd1b285758 ""
+  "anteproyecto.tex" 1510161379 167 e1c4032cc59d5faa3b9b0d59624dcd00 ""
+  (generated)
+  "anteproyecto.aux"
+  "anteproyecto.log"
+  "anteproyecto.pdf"
