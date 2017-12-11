@@ -1,4 +1,0 @@
-set_io clk      21
-set_io clk_12   81
-set_io clk_out  80
-set_io clk_out2 79
