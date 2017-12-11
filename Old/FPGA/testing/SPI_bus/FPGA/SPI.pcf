@@ -1,0 +1,5 @@
+set_io clk_12 21
+set_io MISO   78
+set_io MOSI   79
+set_io SS     80
+set_io sclk   81
