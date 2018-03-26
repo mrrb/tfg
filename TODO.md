@@ -11,12 +11,16 @@
   * Hacer página web simple.
 * Almacenamiento.
   * Hacer librería de gestión de almacenamiento.
-  
+  * Formatear la memoria segun los datos necesarios para almacenar.
 * Extras
   * Pequeño anlizador de pulsaciones de teclado en el propio microcontrolador.
 
 ___
 ## PC (Equipo de analisis)
+___
+## Memoria
+* Decidir si utilizar LaTeX o Libreoffice.
+* Creación de las partes de la memoria.
 ___
 ## KiCAD
 * Mirar como hacer la placa.
