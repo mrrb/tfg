@@ -91,6 +91,17 @@
 // ============================
 
 /*
+ * DEBUG mode 
+ */
+enum debug_e
+{
+    DEBUG_DISABLE,
+    DEBUG_ENABLE
+} debug_status;
+
+debug_status = DEBUG_ENABLE;
+
+/*
  * USB3300 Pins
  */
 #define GPIO_USB3300_INPUT_MASK  (1ULL<<GPIO_USB3300_NXT)| \

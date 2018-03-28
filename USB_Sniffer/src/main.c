@@ -42,9 +42,7 @@ void app_main(void)
     /*
      * Configuration > config.h
      */
-    printf("\nUART init...\n");
     main_uart_init();
-    printf("UART init done!\n");
 
     printf("GPIO init...\n");
     main_gpio_init();

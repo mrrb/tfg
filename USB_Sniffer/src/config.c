@@ -77,10 +77,11 @@ esp_err_t main_gpio_init()
 }
 
 /*
- * 
+ * ESP32 UART init
  */
 esp_err_t main_uart_init()
 {
+    if(debug_status == 1) printf("UART init...\n");
     uart_config_t uart_config;
     uart_config.baud_rate = UART0_INIT_BAUDRATE;      /* UART baud rate */
     uart_config.parity    = UART0_INIT_PARITY;        /* UART parity bits */
@@ -91,6 +92,7 @@ esp_err_t main_uart_init()
     uart_param_config(UART_NUM_0, &uart_config);
     uart_driver_install(UART_NUM_0, UART0_BUFFER_SIZE*2, 0, 0, NULL, 0);
 
+    if(debug_status == 1) printf("UART init done! Status: %d\n", ESP_OK);
     return ESP_OK;
 }
 

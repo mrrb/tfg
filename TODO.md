@@ -1,5 +1,5 @@
 ## Código ESP32
-* Terminar configuración del ESP32
+* Terminar configuración del ESP32.
 * Controlador USB3300
   * Adjudicar todo el procesamiento del USB3300 a un único nucleo.
   * Sincronizar reloj utilizando interrupts.
@@ -27,5 +27,5 @@ ___
 * Mirar que componentes poner.
 ___
 ## Otras cosas
-* Redactar una mejor descripción del del TFG en el arhcivo README princiapl.
+* Redactar una mejor descripción del del TFG en el archivo README principal.
 * ~~test~~ _[27/03/2018]_
