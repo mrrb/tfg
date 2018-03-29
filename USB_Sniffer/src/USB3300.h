@@ -33,6 +33,7 @@
 
 #include "esp_err.h"
 #include "user_config.h"
+#include "config.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -59,16 +60,6 @@ typedef struct
 /*
  * 
  */
-esp_err_t USB3300_task_init();
-
-/*
- * 
- */
-esp_err_t USB3300_task();
-
-/*
- * 
- */
-esp_err_t USB3300_isr_handler();
+esp_err_t USB3300_controller_init(TaskHandle_t *USB3300_handle);
 
 #endif /* USB3300_CONTROLLER_H */

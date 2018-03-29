@@ -56,7 +56,7 @@ esp_err_t main_pin_configure(uint8_t schema, uint64_t pin_bit_mask)
  */
 esp_err_t main_gpio_init()
 {
-    MSG("GPIO init... ");
+    MSG("GPIO init...\n");
     /* Inputs */
     main_pin_configure(C_GPIO_INPUT, GPIO_USB3300_INPUT_MASK);
     main_pin_configure(C_GPIO_INPUT, GPIO_SD_INPUT_MASK);
@@ -82,7 +82,7 @@ esp_err_t main_gpio_init()
         adc1_config_channel_atten(GPIO_ADC_Vin_CHANNEL, ADC_ATTEN_0db);
     #endif
 
-    MSG("Done! Status: %d\n", ESP_OK);
+    MSG("GPIO init done! Status: %d\n", ESP_OK);
     return ESP_OK;
 }
 
@@ -91,7 +91,7 @@ esp_err_t main_gpio_init()
  */
 esp_err_t main_uart_init(void)
 {
-    MSG("UART init... ");
+    MSG("UART init...\n");
     uart_config_t uart_config;
     uart_config.baud_rate = UART0_INIT_BAUDRATE;      /* UART baud rate */
     uart_config.parity    = UART0_INIT_PARITY;        /* UART parity bits */
@@ -102,7 +102,7 @@ esp_err_t main_uart_init(void)
     uart_param_config(UART_NUM_0, &uart_config);
     uart_driver_install(UART_NUM_0, UART0_BUFFER_SIZE*2, 0, 0, NULL, 0);
 
-    MSG("Done! Status: %d\n", ESP_OK);
+    MSG("UART init done! Status: %d\n", ESP_OK);
     return ESP_OK;
 }
 
@@ -120,7 +120,7 @@ static bool chk_stored_wifi_config(uint8_t mode)
  */
 esp_err_t main_wifi_init(uint8_t mode)
 {
-    MSG("WiFi init... ");
+    MSG("WiFi init...\n");
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT(); /* Load default WiFi Config */
     esp_wifi_init(&cfg);
 
@@ -158,6 +158,6 @@ esp_err_t main_wifi_init(uint8_t mode)
 
     esp_wifi_start();
 
-    MSG("Done! Status: %d\n", ESP_OK);
+    MSG("WiFi init done! Status: %d\n", ESP_OK);
     return ESP_OK;
 }

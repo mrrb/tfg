@@ -33,6 +33,7 @@
 #include "web_server.h"
 
 #include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 void app_main(void)
 {
@@ -53,14 +54,15 @@ void app_main(void)
     /*
      * USB3300 related stuff > USB3300.h
      */
-    USB3300_task_init();
+    TaskHandle_t USB3300_task_handle;
+    USB3300_controller_init(&USB3300_task_handle);
 
     /*
      * App MAIN loop
      */
     for(;;)
     {
-
+        vTaskDelay(1000 / portTICK_RATE_MS);
     }
 
     fflush(stdout);

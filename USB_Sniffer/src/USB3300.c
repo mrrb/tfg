@@ -34,6 +34,8 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
+static xQueueHandle clk_evt_queue = NULL;
+
 esp_err_t USB3300_main()
 {
     // uint64_t ctrl = 0;
@@ -74,12 +76,53 @@ esp_err_t USB3300_main()
     return ESP_OK;
 }
 
-esp_err_t USB3300_task_init(void)
+static void IRAM_ATTR USB3300_isr_handler(void* arg)
+{
+    USB3300_msg_t new_msg;
+
+    new_msg.DATA = gpio_get_level(GPIO_USB3300_DATA0)|
+                   gpio_get_level(GPIO_USB3300_DATA1)<<1|
+                   gpio_get_level(GPIO_USB3300_DATA2)<<2|
+                   gpio_get_level(GPIO_USB3300_DATA3)<<3|
+                   gpio_get_level(GPIO_USB3300_DATA4)<<4|
+                   gpio_get_level(GPIO_USB3300_DATA5)<<5|
+                   gpio_get_level(GPIO_USB3300_DATA6)<<6|
+                   gpio_get_level(GPIO_USB3300_DATA7)<<7;
+    new_msg.msg_type = MSG_TYPE_test;
+    new_msg.IO_CTRL  = gpio_get_level(GPIO_USB3300_DIR)>>1|
+                       gpio_get_level(GPIO_USB3300_NXT);
+    xQueueSendFromISR(clk_evt_queue, &new_msg, NULL);
+}
+
+static void USB3300_task(void* arg)
+{
+    #ifdef USB3300_TASK_DISABLE
+        vTaskSuspend(*(TaskHandle_t *)arg);
+    #endif
+    uint32_t cnt = 0;
+    USB3300_msg_t msg;
+    for(;;)
+    {
+        if(xQueueReceive(clk_evt_queue, &msg, portMAX_DELAY))
+        {
+            if(cnt++%10000 == 0)
+            {
+                MSG("Data: %#x. IO_ctrl: %#x", msg.DATA, msg.IO_CTRL);
+            }
+        }
+    }
+}
+
+esp_err_t USB3300_controller_init(TaskHandle_t *USB3300_handle)
 {
     MSG("USB3300 module controller init! ");
 
-    gpio_evt_queue = xQueueCreate(15, sizeof(USB3300_msg_t));
+    clk_evt_queue = xQueueCreate(15, sizeof(USB3300_msg_t));
+    xTaskCreate(USB3300_task, "USB3300_task", USB3300_TASK_STACK_DEPTH, USB3300_handle, USB3300_TASK_PRIORITY, USB3300_handle);
 
-    MSG("Done! Status: %d\n", ESP_OK);
+    gpio_install_isr_service(ESP_INTR_DEFAULT_FLAG);
+    gpio_isr_handler_add(GPIO_USB3300_CLK, USB3300_isr_handler, MSG_TYPE_test);
+
+    MSG("USB3300 init done! Status: %d\n", ESP_OK);
     return ESP_OK;
 }

@@ -118,6 +118,11 @@
 #define P_DAY     29
 
 /*
+ * 
+ */
+#define ESP_INTR_DEFAULT_FLAG 0
+
+/*
  * DEBUG mode 
  */
 typedef enum
@@ -128,8 +133,11 @@ typedef enum
 extern uint8_t debug_status;
 
 /*
- * USB3300 Pins
+ * USB3300
  */
+#define USB3300_TASK_DISABLE     /* Disable at startup any operations on the USB3300 task  */
+#define USB3300_TASK_PRIORITY    10
+#define USB3300_TASK_STACK_DEPTH 1024
 #define GPIO_USB3300_INPUT_MASK  (1ULL<<GPIO_USB3300_NXT)| \
                                  (1ULL<<GPIO_USB3300_DIR)| \
                                  (1ULL<<GPIO_USB3300_CLK)
@@ -144,7 +152,7 @@ extern uint8_t debug_status;
                                  (1ULL<<GPIO_USB3300_DATA7)
 
 /*
- * SDcard Pins
+ * SDcard
  */
 #define GPIO_SD_INPUT_MASK  0
 #define GPIO_SD_OUTPUT_MASK (1ULL<<GPIO_SD_CLK)
@@ -155,7 +163,7 @@ extern uint8_t debug_status;
                             (1ULL<<GPIO_SD_DATA3)
 
 /*
- * ADC1 Pins
+ * ADC1
  */
 
 /*

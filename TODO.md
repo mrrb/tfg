@@ -17,6 +17,7 @@
   * Pequeño anlizador de pulsaciones de teclado en el propio microcontrolador.
   * Añadir RTC inicialización (cargar hora por WiFi?) y uso.
   * Añadir Timer en los mensajes de depuración.
+  * Añadir control de errores en funciones
 
 ___
 ## PC (Equipo de analisis)
