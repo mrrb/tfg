@@ -34,35 +34,52 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-USB3300_main()
+esp_err_t USB3300_main()
 {
-    uint64_t ctrl = 0;
-    uint8_t  last = 0;
-    uint8_t  new  = 0;
-    uint8_t  data = 0x00;
+    // uint64_t ctrl = 0;
+    // uint8_t  last = 0;
+    // uint8_t  new  = 0;
+    // uint8_t  data = 0x00;
+    // for(;;)
+    // {
+    //     new = gpio_get_level(GPIO_USB3300_CLK);
+    //     if( new == 1 && last == 0)
+    //     {
+    //         if(ctrl++%10000 == 0)
+    //         {
+    //             printf("Iteration: %" PRId64 " ", ctrl-1);
+    //             data = 0x0;
+    //             data = gpio_get_level(GPIO_USB3300_DATA0)|
+    //                    gpio_get_level(GPIO_USB3300_DATA1)<<1|
+    //                    gpio_get_level(GPIO_USB3300_DATA2)<<2|
+    //                    gpio_get_level(GPIO_USB3300_DATA3)<<3|
+    //                    gpio_get_level(GPIO_USB3300_DATA4)<<4|
+    //                    gpio_get_level(GPIO_USB3300_DATA5)<<5|
+    //                    gpio_get_level(GPIO_USB3300_DATA6)<<6|
+    //                    gpio_get_level(GPIO_USB3300_DATA7)<<7;
+    //             printf("Data: %#x ", data);
+
+    //             printf("DIR: %s NXT: %s\n", gpio_get_level(GPIO_USB3300_DIR)==1 ? "On" : "Off",
+    //                                            gpio_get_level(GPIO_USB3300_NXT)==1 ? "On" : "Off");
+    //         }
+    //     }
+    //     last = new;
+    // }
+
     for(;;)
     {
-        new = gpio_get_level(GPIO_USB3300_CLK);
-        if( new == 1 && last == 0)
-        {
-            if(ctrl++%10000 == 0)
-            {
-                printf("Iteration: %" PRId64 " ", ctrl-1);
-                data = 0x0;
-                data = gpio_get_level(GPIO_USB3300_DATA0)|
-                       gpio_get_level(GPIO_USB3300_DATA1)<<1|
-                       gpio_get_level(GPIO_USB3300_DATA2)<<2|
-                       gpio_get_level(GPIO_USB3300_DATA3)<<3|
-                       gpio_get_level(GPIO_USB3300_DATA4)<<4|
-                       gpio_get_level(GPIO_USB3300_DATA5)<<5|
-                       gpio_get_level(GPIO_USB3300_DATA6)<<6|
-                       gpio_get_level(GPIO_USB3300_DATA7)<<7;
-                printf("Data: %#x ", data);
 
-                printf("DIR: %s NXT: %s\n", gpio_get_level(GPIO_USB3300_DIR)==1 ? "On" : "Off",
-                                               gpio_get_level(GPIO_USB3300_NXT)==1 ? "On" : "Off");
-            }
-        }
-        last = new;
     }
+    
+    return ESP_OK;
+}
+
+esp_err_t USB3300_task_init(void)
+{
+    MSG("USB3300 module controller init! ");
+
+    gpio_evt_queue = xQueueCreate(15, sizeof(USB3300_msg_t));
+
+    MSG("Done! Status: %d\n", ESP_OK);
+    return ESP_OK;
 }

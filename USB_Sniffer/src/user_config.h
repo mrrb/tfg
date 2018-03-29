@@ -3,24 +3,42 @@
 
 #include "driver/uart.h"
 #include "driver/adc.h"
+#include "driver/gpio.h"
 #include "esp_wifi.h"
+
+#include <stdint.h>
+
+#define DEBUG /* Debug mode enable */
+
+/*
+ * Components
+ */
+#define WIFI_C              /* Include WiFi support  */
+#define BLUETOOTH_C         /* Include Bluetooth support  */
+#define SD_CARD_C           /* Include SD card support  */
+#define UART_C              /* Include UART support  */
+#define WEB_SERVER_C        /* Include a built-in WEB server */
+#define DEFAULT_WEB_PAGE_C  /* Include a default web page */
+#define VOLTAGE_VBUS_CTRL_C /* Include support for USB bus voltage control */
+#define VOLTAGE_VIN_CTRL_C  /* Include support for input voltage control */
+#define CJSON_SUPPORT       /* Include support for the cJSON lib */
 
 /*
  * USB3300 Pins
  */
-#define GPIO_USB3300_DATA0 23   /* USB3300 Parallel Data 0 [INOUT] */
-#define GPIO_USB3300_DATA1 22   /* USB3300 Parallel Data 1 [INOUT] */
-#define GPIO_USB3300_DATA2 21   /* USB3300 Parallel Data 2 [INOUT] */
-#define GPIO_USB3300_DATA3 19   /* USB3300 Parallel Data 3 [INOUT] */
-#define GPIO_USB3300_DATA4 18   /* USB3300 Parallel Data 4 [INOUT] */
-#define GPIO_USB3300_DATA5 5    /* USB3300 Parallel Data 5 [INOUT] */
-#define GPIO_USB3300_DATA6 17   /* USB3300 Parallel Data 6 [INOUT] */
-#define GPIO_USB3300_DATA7 16   /* USB3300 Parallel Data 7 [INOUT] */
-#define GPIO_USB3300_STP   25   /* USB3300 stop signal [OUTPUT] */
-#define GPIO_USB3300_NXT   35   /* USB3300 data flow control when LINK->PHY [INPUT] */
-#define GPIO_USB3300_DIR   34   /* USB3300 direction signal [INPUT] */
-#define GPIO_USB3300_CLK   27   /* USB3300 clock signal [INPUT] */
-#define GPIO_USB3300_RST   NULL /* USB3300 reset pin [OUTPUT or NC] */
+#define GPIO_USB3300_DATA0 GPIO_NUM_23   /* USB3300 Parallel Data 0 [INOUT] */
+#define GPIO_USB3300_DATA1 GPIO_NUM_22   /* USB3300 Parallel Data 1 [INOUT] */
+#define GPIO_USB3300_DATA2 GPIO_NUM_21   /* USB3300 Parallel Data 2 [INOUT] */
+#define GPIO_USB3300_DATA3 GPIO_NUM_19   /* USB3300 Parallel Data 3 [INOUT] */
+#define GPIO_USB3300_DATA4 GPIO_NUM_18   /* USB3300 Parallel Data 4 [INOUT] */
+#define GPIO_USB3300_DATA5 GPIO_NUM_5    /* USB3300 Parallel Data 5 [INOUT] */
+#define GPIO_USB3300_DATA6 GPIO_NUM_17   /* USB3300 Parallel Data 6 [INOUT] */
+#define GPIO_USB3300_DATA7 GPIO_NUM_16   /* USB3300 Parallel Data 7 [INOUT] */
+#define GPIO_USB3300_STP   GPIO_NUM_25   /* USB3300 stop signal [OUTPUT] */
+#define GPIO_USB3300_NXT   GPIO_NUM_35   /* USB3300 data flow control when LINK->PHY [INPUT] */
+#define GPIO_USB3300_DIR   GPIO_NUM_34   /* USB3300 direction signal [INPUT] */
+#define GPIO_USB3300_CLK   GPIO_NUM_27   /* USB3300 clock signal [INPUT] */
+#define GPIO_USB3300_RST   NULL          /* USB3300 reset pin [OUTPUT or NC] */
 
 #define GPIO_USB3300_INPUT_MASK  (1ULL<<GPIO_USB3300_NXT)| \
                                  (1ULL<<GPIO_USB3300_DIR)| \
@@ -38,12 +56,12 @@
 /*
  * SDcard Pins
  */
-#define GPIO_SD_CMD   15 /* SD command [INOUT] */
-#define GPIO_SD_CLK   14 /* SD clock [OUTPUT] */
-#define GPIO_SD_DATA0 2  /* SD Serial Data 0 [INOUT] */
-#define GPIO_SD_DATA1 4  /* SD Serial Data 1 [INOUT] */
-#define GPIO_SD_DATA2 12 /* SD Serial Data 2 [INOUT] */
-#define GPIO_SD_DATA3 13 /* SD Serial Data 3 [INOUT] */
+#define GPIO_SD_CMD   GPIO_NUM_15 /* SD command [INOUT] */
+#define GPIO_SD_CLK   GPIO_NUM_14 /* SD clock [OUTPUT] */
+#define GPIO_SD_DATA0 GPIO_NUM_2  /* SD Serial Data 0 [INOUT] */
+#define GPIO_SD_DATA1 GPIO_NUM_4  /* SD Serial Data 1 [INOUT] */
+#define GPIO_SD_DATA2 GPIO_NUM_12 /* SD Serial Data 2 [INOUT] */
+#define GPIO_SD_DATA3 GPIO_NUM_13 /* SD Serial Data 3 [INOUT] */
 
 #define GPIO_SD_INPUT_MASK  0
 #define GPIO_SD_OUTPUT_MASK (1ULL<<GPIO_SD_CLK)
@@ -91,15 +109,23 @@
 // ============================
 
 /*
+ *
+ */
+#define P_AUTHOR  "Mario Rubio"
+#define P_VERSION "V0.0.1"
+#define P_YEAR    2018
+#define P_MONTH   03
+#define P_DAY     29
+
+/*
  * DEBUG mode 
  */
-enum debug_e
+typedef enum
 {
-    DEBUG_DISABLE,
+    DEBUG_DISABLE = 0,
     DEBUG_ENABLE
-} debug_status;
-
-debug_status = DEBUG_ENABLE;
+} debug_t;
+extern uint8_t debug_status;
 
 /*
  * USB3300 Pins

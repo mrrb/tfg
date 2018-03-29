@@ -24,8 +24,8 @@
 
 /*
  * Revision History:
- *     Initial: 2018/03/08      Mario Rubio
- *     Added new 
+ *     Initial: 2018/03/08           Mario Rubio
+ *     Restructured: 2018/03/28      Mario Rubio
  */
 
 #include "config.h"
@@ -34,25 +34,14 @@
 
 #include "freertos/FreeRTOS.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
 void app_main(void)
 {
     /*
      * Configuration > config.h
      */
     main_uart_init();
-
-    printf("GPIO init...\n");
     main_gpio_init();
-    printf("GPIO init done!\n");
-
-    printf("WiFi init...\n");
-    // Move prints inside intialization funcitons with control to print it or not!!
     main_wifi_init(C_WIFI_AP);
-    printf("Created WiFi AP wi\n");
-    printf("WiFi init done!\n");
 
     /*
      * Web server initialization > web_server.h
@@ -60,7 +49,19 @@ void app_main(void)
     // main_web_server_init();
     // main_web_communication_init();
 
-    USB3300_main();
+
+    /*
+     * USB3300 related stuff > USB3300.h
+     */
+    USB3300_task_init();
+
+    /*
+     * App MAIN loop
+     */
+    for(;;)
+    {
+
+    }
 
     fflush(stdout);
 }

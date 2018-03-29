@@ -30,7 +30,7 @@
 #include "config.h"
 
 /*
- *
+ * Function that configure IO pins according to a schema given
  */
 esp_err_t main_pin_configure(uint8_t schema, uint64_t pin_bit_mask)
 {
@@ -52,10 +52,11 @@ esp_err_t main_pin_configure(uint8_t schema, uint64_t pin_bit_mask)
 }
 
 /*
- * 
+ * GPIO initialization function
  */
 esp_err_t main_gpio_init()
 {
+    MSG("GPIO init... ");
     /* Inputs */
     main_pin_configure(C_GPIO_INPUT, GPIO_USB3300_INPUT_MASK);
     main_pin_configure(C_GPIO_INPUT, GPIO_SD_INPUT_MASK);
@@ -68,20 +69,29 @@ esp_err_t main_gpio_init()
     main_pin_configure(C_GPIO_INOUT, GPIO_USB3300_INOUT_MASK);
     main_pin_configure(C_GPIO_INOUT, GPIO_SD_INOUT_MASK);
 
+    /* Interrupts */
+    gpio_set_intr_type(GPIO_USB3300_CLK, GPIO_INTR_POSEDGE);
+
     /* ADC */
     adc1_config_width(GPIO_ADC_WIDTH);
-    adc1_config_channel_atten(GPIO_ADC_Vbus_CHANNEL, ADC_ATTEN_0db);
-    adc1_config_channel_atten(GPIO_ADC_Vin_CHANNEL, ADC_ATTEN_0db);
+    #ifdef VOLTAGE_VBUS_CTRL_C
+        adc1_config_channel_atten(GPIO_ADC_Vbus_CHANNEL, ADC_ATTEN_0db);
+    #endif
 
+    #ifdef VOLTAGE_VIN_CTRL_C
+        adc1_config_channel_atten(GPIO_ADC_Vin_CHANNEL, ADC_ATTEN_0db);
+    #endif
+
+    MSG("Done! Status: %d\n", ESP_OK);
     return ESP_OK;
 }
 
 /*
- * ESP32 UART init
+ * ESP32 UART initialization function
  */
-esp_err_t main_uart_init()
+esp_err_t main_uart_init(void)
 {
-    if(debug_status == 1) printf("UART init...\n");
+    MSG("UART init... ");
     uart_config_t uart_config;
     uart_config.baud_rate = UART0_INIT_BAUDRATE;      /* UART baud rate */
     uart_config.parity    = UART0_INIT_PARITY;        /* UART parity bits */
@@ -92,7 +102,7 @@ esp_err_t main_uart_init()
     uart_param_config(UART_NUM_0, &uart_config);
     uart_driver_install(UART_NUM_0, UART0_BUFFER_SIZE*2, 0, 0, NULL, 0);
 
-    if(debug_status == 1) printf("UART init done! Status: %d\n", ESP_OK);
+    MSG("Done! Status: %d\n", ESP_OK);
     return ESP_OK;
 }
 
@@ -106,10 +116,11 @@ static bool chk_stored_wifi_config(uint8_t mode)
 }
 
 /*
- * 
+ * WiFi initialization function
  */
 esp_err_t main_wifi_init(uint8_t mode)
 {
+    MSG("WiFi init... ");
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT(); /* Load default WiFi Config */
     esp_wifi_init(&cfg);
 
@@ -129,18 +140,24 @@ esp_err_t main_wifi_init(uint8_t mode)
     if(mode == C_WIFI_AP)
     {
         esp_wifi_set_config(WIFI_IF_AP, &wifi_config);
+        MSG("Created WiFi AP with ");
     }
     else if(mode == C_WIFI_STA)
     {
-        
+        MSG("Configured station with ");
     }
     else if(mode == C_WIFI_APSTA)
     {
-
+        MSG("Configured ");
     }
-    else return ESP_ERR_INVALID_ARG;
+    else
+    {
+        MSG("Error! Status: %d\n", ESP_ERR_INVALID_ARG);
+        return ESP_ERR_INVALID_ARG;
+    }
 
     esp_wifi_start();
 
+    MSG("Done! Status: %d\n", ESP_OK);
     return ESP_OK;
 }

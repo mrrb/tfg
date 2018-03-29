@@ -10,10 +10,13 @@
   * Hacer servidor web.
   * Hacer página web simple.
 * Almacenamiento.
+  * STACK para almacenar los datos entrantes salientes.
   * Hacer librería de gestión de almacenamiento.
   * Formatear la memoria segun los datos necesarios para almacenar.
 * Extras
   * Pequeño anlizador de pulsaciones de teclado en el propio microcontrolador.
+  * Añadir RTC inicialización (cargar hora por WiFi?) y uso.
+  * Añadir Timer en los mensajes de depuración.
 
 ___
 ## PC (Equipo de analisis)

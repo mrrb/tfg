@@ -24,51 +24,13 @@
 
 /*
  * Revision History:
- *     Initial: 2018/03/26      Mario Rubio
+ *     Initial: 2018/03/28      Mario Rubio
  */
 
-
-#ifndef USB3300_CONTROLLER_H
-#define USB3300_CONTROLLER_H
-
-#include "esp_err.h"
 #include "user_config.h"
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
-
-#include <stdint.h>
-
-/*
- * 
- */
-typedef enum
-{
-    MSG_TYPE_test = 0
-} msg_type_t;
-
-typedef struct
-{
-    double  time;           /*  */
-    msg_type_t msg_type;    /*  */
-    uint8_t IO_CTRL;        /* 76543210 -> (0) NXT, (1) DIR, (2) STP  */
-    uint8_t DATA;           /* 76543210 -> (0) DATA0, ..., (7) DATA7 */
-} USB3300_msg_t;
-
-/*
- * 
- */
-esp_err_t USB3300_task_init();
-
-/*
- * 
- */
-esp_err_t USB3300_task();
-
-/*
- * 
- */
-esp_err_t USB3300_isr_handler();
-
-#endif /* USB3300_CONTROLLER_H */
+#ifdef DEBUG
+    uint8_t debug_status = DEBUG_ENABLE;
+#else
+    uint8_t debug_status = DEBUG_DISABLE;
+#endif

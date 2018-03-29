@@ -73,16 +73,24 @@
  * WiFi related stuff
  */
 #define C_MAX_SSID_LEN 32 /* SSID max. length */
-enum C_WIFI_MODES_E
+enum C_WIFI_MODE_E
 {
     C_WIFI_AP = 0,
     C_WIFI_STA,
     C_WIFI_APSTA
-} C_WIFI_MODES;
+} C_WIFI_MODE;
 
+/*
+ * MSG macro
+ */
+#ifdef _FSTDIO
+    #define MSG(...) do { if(debug_status == DEBUG_ENABLE) printf(__VA_ARGS__); } while(0);
+#else
+    #define MSG(...) do {  } while(0);
+#endif
 
 /* 
- * 
+ * esp er
  */
 
 /*
