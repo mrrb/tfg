@@ -27,26 +27,4 @@
  *     Initial: 2018/03/31      Mario Rubio
  */
 
-#ifndef MAIN_COMMON_H
-#define MAIN_COMMON_H
-
-#include "driver/gpio.h"
-#include "esp_log.h"
-#include "esp_err.h"
-
-#include <stdint.h>
-
-/*
- * Typedefs
- */
-
-/*
- * Macros
- */
-
-/*
- * Functions
- */
-
-
-#endif /* MAIN_COMMON_H */
+#include "USB3300.h"

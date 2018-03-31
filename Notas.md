@@ -6,3 +6,4 @@
 
 *[31/03/2018]*
   * Borrón y cuenta nueva ;( *[17:35]*
+  * Primero voy a hacer los exencial -> MainApp+USB3300+UART *[17:40]*
