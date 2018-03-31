@@ -47,6 +47,6 @@
 /*
  * Functions
  */
-
+esp_err_t common_config_gpio();
 
 #endif /* MAIN_COMMON_H */
