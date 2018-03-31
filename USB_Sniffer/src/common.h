@@ -27,12 +27,3 @@
  *     Initial: 2018/03/31      Mario Rubio
  */
 
-#include "common.h"
-
-void app_main()
-{
-    for(;;)
-    {
-
-    }
-}
