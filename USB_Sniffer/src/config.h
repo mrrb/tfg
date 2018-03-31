@@ -33,6 +33,7 @@
 #include "driver/gpio.h"
 #include "driver/adc.h"
 #include "driver/uart.h"
+#include "esp_event_loop.h"
 #include "esp_wifi.h"
 #include "esp_wifi_types.h"
 #include <stdint.h>
@@ -81,17 +82,26 @@ enum C_WIFI_MODE_E
 } C_WIFI_MODE;
 
 /*
- * MSG macro
+ * Macros
  */
 #ifdef _FSTDIO
-    #define MSG(...) do { if(debug_status == DEBUG_ENABLE) printf(__VA_ARGS__); } while(0);
+    #define ERROR(...)   do { ESP_LOGE(TAG, __VA_ARGS__); } while(0);
+    #define WARNING(...) do { ESP_LOGW(TAG, __VA_ARGS__); } while(0);
+    #define INFO(...)    do { ESP_LOGI(TAG, __VA_ARGS__); } while(0);
+    #define DEBUG(...)   do { if(debug_status == DEBUG_ENABLE) ESP_LOGD(TAG, __VA_ARGS__); } while(0);
+    #define VERBOSE(...) do { ESP_LOGV(TAG, __VA_ARGS__); } while(0);
 #else
-    #define MSG(...) do {  } while(0);
+    #define ERROR(...)   do {  } while(0);
+    #define WARNING(...) do {  } while(0);
+    #define INFO(...)    do {  } while(0);
+    #define DEBUG(...)   do {  } while(0);
+    #define VERBOSE(...) do {  } while(0);
 #endif
 
 /* 
- * esp er
+ * Main App config
  */
+esp_err_t main_app_config(void);
 
 /*
  * GPIO PINs configuration

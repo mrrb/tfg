@@ -29,8 +29,10 @@
 
 #include "user_config.h"
 
-#ifdef DEBUG
+#ifdef DEBUG_ACTIVE
     uint8_t debug_status = DEBUG_ENABLE;
 #else
     uint8_t debug_status = DEBUG_DISABLE;
 #endif
+
+static const char* TAG = "user_config";

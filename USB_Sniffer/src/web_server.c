@@ -28,3 +28,5 @@
  */
 
 #include "web_server.h"
+
+static const char* TAG = "web_server";

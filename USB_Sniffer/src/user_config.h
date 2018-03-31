@@ -5,10 +5,11 @@
 #include "driver/adc.h"
 #include "driver/gpio.h"
 #include "esp_wifi.h"
+#include "esp_log.h"
 
 #include <stdint.h>
 
-#define DEBUG /* Debug mode enable */
+#define DEBUG_ACTIVE /* Debug mode enable -> Display  */
 
 /*
  * Components
@@ -135,9 +136,9 @@ extern uint8_t debug_status;
 /*
  * USB3300
  */
-#define USB3300_TASK_DISABLE     /* Disable at startup any operations on the USB3300 task  */
+// #define USB3300_TASK_DISABLE     /* Disable at startup any operations on the USB3300 task  */
 #define USB3300_TASK_PRIORITY    10
-#define USB3300_TASK_STACK_DEPTH 1024
+#define USB3300_TASK_STACK_DEPTH 2048
 #define GPIO_USB3300_INPUT_MASK  (1ULL<<GPIO_USB3300_NXT)| \
                                  (1ULL<<GPIO_USB3300_DIR)| \
                                  (1ULL<<GPIO_USB3300_CLK)

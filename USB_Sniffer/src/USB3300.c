@@ -34,6 +34,8 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
+
+static const char* TAG = "USB3300";
 static xQueueHandle clk_evt_queue = NULL;
 
 esp_err_t USB3300_main()
@@ -91,13 +93,13 @@ static void IRAM_ATTR USB3300_isr_handler(void* arg)
     new_msg.msg_type = MSG_TYPE_test;
     new_msg.IO_CTRL  = gpio_get_level(GPIO_USB3300_DIR)>>1|
                        gpio_get_level(GPIO_USB3300_NXT);
-    xQueueSendFromISR(clk_evt_queue, &new_msg, NULL);
+    xQueueSendFromISR(clk_evt_queue, &new_msg, (void*) NULL);
 }
 
 static void USB3300_task(void* arg)
 {
     #ifdef USB3300_TASK_DISABLE
-        vTaskSuspend(*(TaskHandle_t *)arg);
+        vTaskSuspend(xTaskGetCurrentTaskHandle());
     #endif
     uint32_t cnt = 0;
     USB3300_msg_t msg;
@@ -107,7 +109,8 @@ static void USB3300_task(void* arg)
         {
             if(cnt++%10000 == 0)
             {
-                MSG("Data: %#x. IO_ctrl: %#x", msg.DATA, msg.IO_CTRL);
+                INFO("Debug_test: %d\n", msg);
+                // INFO("Data: %#x. IO_ctrl: %#x", msg.DATA, msg.IO_CTRL);
             }
         }
     }
@@ -115,14 +118,14 @@ static void USB3300_task(void* arg)
 
 esp_err_t USB3300_controller_init(TaskHandle_t *USB3300_handle)
 {
-    MSG("USB3300 module controller init! ");
+    ESP_LOGI(TAG, "USB3300 module controller init!\n");
 
     clk_evt_queue = xQueueCreate(15, sizeof(USB3300_msg_t));
-    xTaskCreate(USB3300_task, "USB3300_task", USB3300_TASK_STACK_DEPTH, USB3300_handle, USB3300_TASK_PRIORITY, USB3300_handle);
+    xTaskCreate(USB3300_task, "USB3300_task", USB3300_TASK_STACK_DEPTH, (void*) NULL, USB3300_TASK_PRIORITY, USB3300_handle);
 
     gpio_install_isr_service(ESP_INTR_DEFAULT_FLAG);
-    gpio_isr_handler_add(GPIO_USB3300_CLK, USB3300_isr_handler, MSG_TYPE_test);
+    //gpio_isr_handler_add(GPIO_USB3300_CLK, USB3300_isr_handler, (void*) NULL);
 
-    MSG("USB3300 init done! Status: %d\n", ESP_OK);
+    ESP_LOGI(TAG, "USB3300 init done! Status: %d\n", ESP_OK);
     return ESP_OK;
 }

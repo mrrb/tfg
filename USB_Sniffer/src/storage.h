@@ -33,6 +33,7 @@
 #include "nvs_flash.h"
 #include "nvs.h"
 #include "esp_err.h"
+#include "esp_log.h"
 
 /*
  * 

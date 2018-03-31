@@ -28,3 +28,5 @@
  */
 
 #include "storage.h"
+
+static const char* TAG = "storage";

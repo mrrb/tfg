@@ -31,6 +31,7 @@
 #define MAIN_WEB_H
 
 #include "esp_wifi.h"
+#include "esp_log.h"
 
 /*
  *

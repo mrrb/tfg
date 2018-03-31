@@ -31,38 +31,45 @@
 #include "config.h"
 #include "USB3300.h"
 #include "web_server.h"
+#include "esp_log.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+static const char* TAG = "main";
+
 void app_main(void)
 {
-    /*
-     * Configuration > config.h
-     */
-    main_uart_init();
-    main_gpio_init();
-    main_wifi_init(C_WIFI_AP);
+    // /*
+    //  * Configuration > config.h
+    //  */
+    // main_app_config();
+    // main_uart_init();
+    // main_gpio_init();
+    // main_wifi_init(C_WIFI_AP);
 
-    /*
-     * Web server initialization > web_server.h
-     */
-    // main_web_server_init();
-    // main_web_communication_init();
+    // /*
+    //  * Web server initialization > web_server.h
+    //  */
+    // // main_web_server_init();
+    // // main_web_communication_init();
 
 
-    /*
-     * USB3300 related stuff > USB3300.h
-     */
-    TaskHandle_t USB3300_task_handle;
-    USB3300_controller_init(&USB3300_task_handle);
+    // /*
+    //  * USB3300 related stuff > USB3300.h
+    //  */
+    // TaskHandle_t USB3300_task_handle;
+    // USB3300_controller_init(&USB3300_task_handle);
 
     /*
      * App MAIN loop
      */
+    uint16_t delay_time = 1000;
+    uint32_t beat_counter = 0;
     for(;;)
     {
-        vTaskDelay(1000 / portTICK_RATE_MS);
+        vTaskDelay(delay_time / portTICK_RATE_MS);
+        ESP_LOGV(TAG, "Beat! See you in %dms! [%d, ]\n", delay_time, beat_counter++);
     }
 
     fflush(stdout);
