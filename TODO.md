@@ -1,4 +1,7 @@
+# ToDo
+
 ## Código ESP32
+
 * Terminar configuración del ESP32.
 * Controlador USB3300
   * Adjudicar todo el procesamiento del USB3300 a un único nucleo.
@@ -20,16 +23,26 @@
   * Añadir control de errores en funciones
 
 ___
+
 ## PC (Equipo de analisis)
+
 ___
+
 ## Memoria
+
 * Decidir si utilizar LaTeX o Libreoffice.
 * Creación de las partes de la memoria.
+
 ___
+
 ## KiCAD
+
 * Mirar como hacer la placa.
 * Mirar que componentes poner.
+
 ___
+
 ## Otras cosas
+
 * Redactar una mejor descripción del del TFG en el archivo README principal.
 * ~~test~~ _[27/03/2018]_

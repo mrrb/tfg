@@ -1,0 +1,11 @@
+set_io clk_int 21
+set_io clk_ext 90
+
+set_io clks[0] 112
+set_io clks[1] 113
+
+set_io LEDs[4] 95
+set_io LEDs[3] 96
+set_io LEDs[2] 97
+set_io LEDs[1] 98
+set_io LEDs[0] 99
