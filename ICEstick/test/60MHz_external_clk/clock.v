@@ -6,18 +6,21 @@
 module counter(input clk_int,
                input clk_ext,
                output [1:0]clks,
-               output [4:0]LEDs);
+               output [4:0]LEDs,
+               output div_out);
 
     localparam div_val = 27;
 
     reg [div_val:0] divider;
 
-    always @(posedge clk_ext) begin
+    always @(posedge clk_int) begin
         divider <= divider + 1;
     end
 
     assign LEDs[4:0] = divider[div_val:div_val-4];
     
     assign clks = {clk_ext, clk_int};
+
+    assign div_out = divider[div_val-1];
 
 endmodule

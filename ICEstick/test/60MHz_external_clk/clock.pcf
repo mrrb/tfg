@@ -4,6 +4,8 @@ set_io clk_ext 90
 set_io clks[0] 112
 set_io clks[1] 113
 
+set_io div_out 114
+
 set_io LEDs[4] 95
 set_io LEDs[3] 96
 set_io LEDs[2] 97
