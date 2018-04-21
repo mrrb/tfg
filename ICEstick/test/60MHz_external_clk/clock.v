@@ -13,7 +13,7 @@ module counter(input clk_int,
 
     reg [div_val:0] divider;
 
-    always @(posedge clk_int) begin
+    always @(posedge clk_ext) begin
         divider <= divider + 1;
     end
 

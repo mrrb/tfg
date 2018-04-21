@@ -1,4 +1,4 @@
-FNAME := clock
+FNAME := USB3300_parser
 
 all: sim sint
 

@@ -6,3 +6,4 @@ Sistema de monitorización pasivo del trafico existente en un bus USB (Tanto low
 ___
 
 * __26/03/2018__ - _Reestructuración y nuevo punto de partida_
+* __12/04/2018__ - _Añadida prueba de 60MHz externos en la placa ICEstick_

@@ -124,7 +124,7 @@ esp_err_t USB3300_controller_init(TaskHandle_t *USB3300_handle)
     xTaskCreate(USB3300_task, "USB3300_task", USB3300_TASK_STACK_DEPTH, (void*) NULL, USB3300_TASK_PRIORITY, USB3300_handle);
 
     gpio_install_isr_service(ESP_INTR_DEFAULT_FLAG);
-    //gpio_isr_handler_add(GPIO_USB3300_CLK, USB3300_isr_handler, (void*) NULL);
+    gpio_isr_handler_add(GPIO_USB3300_CLK, USB3300_isr_handler, (void*) NULL);
 
     ESP_LOGI(TAG, "USB3300 init done! Status: %d\n", ESP_OK);
     return ESP_OK;
