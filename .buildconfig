@@ -1,0 +1,10 @@
+[default]
+name=Default
+runtime=host
+config-opts=
+run-opts=
+prefix=/home/mra/.cache/gnome-builder/install/60MHz_external_clk/host
+app-id=
+postbuild=
+prebuild=
+default=true

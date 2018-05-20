@@ -24,48 +24,71 @@
 
 /*
  * Revision History:
- *     Initial: 2018/04/21      Mario Rubio
+ *     Initial: 2018/04/22      Mario Rubio
  */
 
+// Transmisión de datos por el puerto serie del integrado FTDI
+// Partes
+// 1. Generador del reloj de baudios
+// 2. 
 
-// 
-module serial_write #(parameter BAUD_DIVIDER = 234,
-                      parameter DATA_BITS    = 8)
-                     (input clk,
-                      input tx,
-                      input [DATA_BITS-1:0]data,
-                      output TiP,
-                      input save_data);
+module serial_write #(parameter BAUD_DIVIDER = 9)       // Divider used to generate the baud serial clock
+                     (input  wire clk,                  // Reference clock
+                      input  wire [N_BITS-1:0]tx_data,  // Data to send
+                      input  wire send_data,            // Send the current data in tx_data IF there isn't any trasmission in progress
+                      output wire  TiP,                 // Trasmission in Progress flag
+                      output wire  ctrl,
+                      output wire  ctrl2,
+                      output wire  tx);                 // TX pin output
 
-    localparam CTRL_LEN = $clog2(DATA_BITS)/$clog2(2);
+    localparam CTRL_LEN = $ceil((N_BITS+1)/2);
 
-    // Baud clk generator
-    reg [BAUD_DIVIDER-1:0]clk_baud;
-    
+    // Baud clock gen
+    reg  [BAUD_DIVIDER-1:0]baud_r = {BAUD_DIVIDER{1'b_0}};
+    wire clk_baud;
+    assign clk_baud = baud_r[BAUD_DIVIDER-1];
+
     // Data buffer
-    reg [DATA_BITS-1:0]buffer;
+    reg [N_BITS+END_BITS+1-1:0]buffer = {(N_BITS+END_BITS+1){1'b_1}};
 
-    // Tx register
-    reg tx_r = 1'b1;
+    // Serial controller
+    reg TiP_r = 1'b_0;
+    reg [CTRL_LEN-1:0]counter_ctrl = {CTRL_LEN{1'b_0}};
 
-    // Transmission in progress and counter registers
-    reg TiP_r = 1'b0;
-    reg [CTRL_LEN-1:0]tx_ctrl_r = {CTRL_LEN, 1'b0};
-
+    // Serial data flow
     always @(posedge clk_baud) begin
-        if((write_enable == 1'b1) and !TiP_r) begin
-            TiP_r  <= 1'b1;
-            buffer <= data;
-        end 
+      if (TiP_r == 1'b_1) begin
+        buffer <= {1'b_1, buffer>>1};
+        counter_ctrl <= {counter_comp<<1, 1'b_1};
+      end
+      else if(counter_ctrl[CTRL_LEN-1]) begin
+        // counter_ctrl <= {(CTRL_LEN){1'b_0}};
+        // buffer <= {(N_BITS+END_BITS+1){1'b_1}};
+        // TiP_r <= 1'b_0;
+        // baud_r <= {BAUD_DIVIDER{1'b_0}};
+      end
     end
 
-    always @(posedge clk_baud) begin
-        if(TiP_r == 1'b1) begin
-
-        end
+    // Data load
+    always @(posedge clk) begin
+      if(send_data&(!TiP_r) == 1'b_1) begin
+        buffer <= {1'b_0, tx_data[0:N_BITS-1], {END_BITS{1'b_0}}};
+        test <= !test;
+        TiP_r  <= 1'b_1;
+        counter_ctrl <= {(CTRL_LEN){1'b_0}};        
+        baud_r <= {BAUD_DIVIDER{1'b_0}};
+      end
+      else if(TiP_r == 1'b1) begin
+        baud_r <= baud_r + 1;
+      end
     end
 
-    assign tx  = tx_r;
+    // tx output and TiP
+    assign tx  = (TiP_r == 1'b_1) ? buffer[0] : 1'b_1;
     assign TiP = TiP_r;
+
+    reg test = 1'b0;
+    assign ctrl  = clk_baud;
+    assign ctrl2 = buffer[7];
 
 endmodule

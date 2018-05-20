@@ -4,7 +4,7 @@
 import sys
 
 def gen_baud_divider(freq, baud):
-    return int(freq/baud)
+    return int((freq/100)/baud)
 
 if __name__ == "__main__":
     freq = int(sys.argv[1])

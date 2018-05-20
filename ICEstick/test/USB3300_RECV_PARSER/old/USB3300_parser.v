@@ -36,12 +36,15 @@
 // 6. Configurar un registro de desplazamiento que envia toda eas información por el puerto serie
 
 `include "FIFO_STACK.v" 
+`include "serial_write.v" 
 
 module USB3300_parser(input wire clk_ext,
                       input wire clk_int,
                       input wire [7:0]DATA,
                       input wire DIR,
                       input wire NXT,
+                      output wire tx,
+                      output wire [1:0]LEDs,
                       output wire STP);
 
     // Storage settings
@@ -62,16 +65,32 @@ module USB3300_parser(input wire clk_ext,
     FIFO_STACK #(.N_STACK_SIZE(BUFF_SIZE)) D6(.data_in(DATA[6]), .clk(!clk_ext), .in_ctrl(in_ctrl), .out_ctrl(out_ctrl), .data_out(stored_data[6]), .no_data(no_data[6]), .overflow(overflow[6]));
     FIFO_STACK #(.N_STACK_SIZE(BUFF_SIZE)) D7(.data_in(DATA[7]), .clk(!clk_ext), .in_ctrl(in_ctrl), .out_ctrl(out_ctrl), .data_out(stored_data[7]), .no_data(no_data[7]), .overflow(overflow[7]));
 
+    // Serial module
+    reg save_data = 1'b0;
+    reg TiP; // Transmit in Place
+    reg tx_save = 1'b0;
+    serial_write tx_w(.clk(clk_ext), .tx(tx), .data(stored_data), .TiP(TiP), .save_data(tx_save));
 
     always @(posedge clk_ext) begin
         if(DIR == 1'b_1) begin
             in_ctrl  <= 1'b1;
             out_ctrl <= 1'b0;
+            save_data <= 1'b0;
+        end
+        else if((TiP != 1'b1) && (no_data == 8'b0)) begin
+            in_ctrl  <= 1'b0;
+            out_ctrl <= 1'b1;
+            save_data <= 1'b1;
         end
         else begin
             in_ctrl  <= 1'b0;
             out_ctrl <= 1'b0;
+            save_data <= 1'b0;
         end
     end
+
+    assign LEDs[0] = TiP;
+    assign LEDs[1] = in_ctrl;
+    assign LEDs[2] = DIR;
 
 endmodule

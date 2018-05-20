@@ -1,4 +1,4 @@
-FNAME := USB3300_receive
+FNAME := USB3300_parser
 
 all: sim sint
 
@@ -12,7 +12,7 @@ $(FNAME)_tb.vcd: $(FNAME).v $(FNAME)_tb.v
 
 	./$(FNAME)_tb.out
 
-	# gtkwave $@ $(FNAME)_tb.gtkw &
+	gtkwave $@ $(FNAME)_tb.gtkw &
 
 $(FNAME).bin: $(FNAME).v $(FNAME).pcf
 

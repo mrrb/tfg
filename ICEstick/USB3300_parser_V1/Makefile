@@ -1,4 +1,4 @@
-FNAME := USB3300_receive
+FNAME := USB3300_parser
 
 all: sim sint
 

@@ -66,16 +66,16 @@ module FIFO_STACK #(parameter N_STACK_SIZE = 8)
         else if((out_ctrl & (!in_ctrl)) == 1'b_1) begin
             // Output mode
             stack_ctrl <= stack_ctrl-1;
-            stack = stack>>1;
+            stack <= stack>>1;
         end
         else begin
         end
 
         if(stack_ctrl == 0) begin
-            no_data_r = 1'b1;
+            no_data_r <= 1'b1;
         end
         else begin
-            no_data_r = 1'b0;
+            no_data_r <= 1'b0;
         end
     end
 

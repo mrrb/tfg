@@ -1,0 +1,25 @@
+set_io clk_int 21
+set_io clk_ext 44
+
+set_io DATA[0] 78
+set_io DATA[1] 79
+set_io DATA[2] 80
+set_io DATA[3] 81
+set_io DATA[4] 87
+set_io DATA[5] 88
+set_io DATA[6] 90
+set_io DATA[7] 91
+
+set_io DIR 112
+set_io NXT 113
+set_io STP 114
+
+set_io Tx 119
+set_io Rx 9
+set_io bauds 115
+
+set_io LEDs[0] 95
+set_io LEDs[1] 96
+set_io LEDs[2] 97
+set_io LEDs[3] 98
+set_io LEDs[4] 99

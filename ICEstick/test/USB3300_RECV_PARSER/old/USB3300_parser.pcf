@@ -13,3 +13,9 @@ set_io DATA[7] 91
 set_io DIR 112
 set_io NXT 113
 set_io STP 114
+
+set_io tx 8
+
+set_io LEDs[0] 97
+set_io LEDs[1] 99
+set_io LEDs[2] 95
