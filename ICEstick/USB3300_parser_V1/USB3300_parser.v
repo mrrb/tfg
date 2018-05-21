@@ -30,6 +30,8 @@
 `default_nettype none
 
 `include "modules/UART.v"
+`include "modules/clk_gen.v"
+`include "modules/fifo_stack.v"
 
 module USB3300_parser #(parameter test = 1)
                        (input  wire clk_int,    // Internal clock input (12MHz)
@@ -44,34 +46,89 @@ module USB3300_parser #(parameter test = 1)
                         output wire bauds       // Baud clock
                         );
 
-    // UART module init
+    /// UART module
     wire [7:0]Tx_data_w;
     wire [7:0]Rx_data_w;
     wire send_data_w;
     wire TiP_w;
     wire NrD_w;
-    wire [1:0]ctrl;
     UART UART_m(Rx, clk_ext, Tx_data_w,
                 send_data_w, Tx, TiP_w,
-                NrD_w, Rx_data_w, bauds, ctrl);
+                NrD_w, Rx_data_w, bauds);
+    /// End of UART module
+
+    /// FIFO module
+    wire FIFO_full;
+    wire FIFO_empty;
+    wire [7:0]FIFO_out;
+    reg  [7:0]FIFO_in_r  = {8{1'b0}};
+    reg  FIFO_save_r   = 1'b0;
+    reg  FIFO_pop_r    = 1'b0;
+    fifo_stack FIFO(clk_ext, FIFO_in_r, FIFO_save_r, FIFO_pop_r,
+                    FIFO_out, FIFO_full, FIFO_empty);
+    /// End of FIFO module
 
     /// TESTS
-    reg  [26:0]ctrl_r = {27{1'b_0}};
     wire clk_ctrl;
-    assign clk_ctrl = ctrl_r[26]&ctrl_r[25]&ctrl_r[24]&ctrl_r[23]&ctrl_r[22]&ctrl_r[21]&ctrl_r[20]&ctrl_r[19]&ctrl_r[18]&ctrl_r[17];
-    always @(posedge clk_ext) begin
-        ctrl_r <= ctrl_r + 1;
-    end
+    wire clk_ctrl_pulse;
+    clk_gen #(26) pulse (clk_ext, 1'b1, clk_ctrl, clk_ctrl_pulse);
 
-    reg [7:0]a = ">";
+    reg [7:0]a = "D";
     // reg [7:0]a = 8'b0;
     assign Tx_data_w = a;
-    assign send_data_w = (TiP_w == 1'b1) ? 1'b0 : clk_ctrl;
+    assign send_data_w = (TiP_w == 1'b1) ? 1'b0 : clk_ctrl_pulse;
     assign LEDs[0] = send_data_w;
     assign LEDs[1] = TiP_w;
     assign LEDs[2] = clk_ctrl;
-    assign LEDs[3] = ctrl[0];
-    assign LEDs[4] = ctrl[1];
-    /// END OF TESTS
+    assign LEDs[3] = 1'b0;
+    assign LEDs[4] = 1'b0;
+
+    // Init FIFO
+    reg [2:0]init_state = 3'b0;
+    wire stt1; assign stt1 = (init_state == 3'b000) ? 1'b1: 1'b0;
+    wire stt2; assign stt2 = (init_state == 3'b001) ? 1'b1: 1'b0;
+    wire stt3; assign stt3 = (init_state == 3'b010) ? 1'b1: 1'b0;
+    wire stt4; assign stt4 = (init_state == 3'b011) ? 1'b1: 1'b0;
+    wire stt5; assign stt5 = (init_state == 3'b100) ? 1'b1: 1'b0;
+    always @(posedge clk_ext) begin
+        case(init_state)
+            3'b000: begin
+                init_state <= 3'b001;
+            end
+            3'b001: begin
+                init_state <= 3'b010;
+            end
+            3'b010: begin
+                init_state <= 3'b011;
+            end
+            3'b011: begin
+                init_state <= 3'b100;
+            end
+            3'b100: begin
+                init_state <= 3'b100;
+            end
+            default:
+                init_state <= 3'b000;
+        endcase
+    end
+    always @(posedge clk_ext) begin
+        if(stt1 == 1'b1) begin
+            FIFO_in_r <= "H";
+            FIFO_save_r <= 1'b1; 
+        end
+        if(stt2 == 1'b1) begin
+            FIFO_in_r <= "o";
+            FIFO_save_r <= 1'b1; 
+        end
+        if(stt3 == 1'b1) begin
+            FIFO_in_r <= "l";
+            FIFO_save_r <= 1'b1; 
+        end
+        if(stt4 == 1'b1) begin
+            FIFO_in_r <= "a";
+            FIFO_save_r <= 1'b1; 
+        end
+    end
+    /// End of TESTS
 
 endmodule

@@ -34,7 +34,7 @@
 
 `default_nettype none
 
-`include "clk_gen.v"
+// `include "clk_gen.v"
 
 module UART #(parameter BAUD_DIVIDER = 9)
              (input  wire Rx,          // Rx input pin
@@ -45,15 +45,13 @@ module UART #(parameter BAUD_DIVIDER = 9)
               output wire TiP,         // Trasmission in Progress flag
               output wire NrD,         // New received Data flag
               output wire [7:0]O_DATA, // 8-bits data received
-              output wire clk_baud,    // Baudrate output
-              output wire [1:0]ctrl
+              output wire clk_baud     // Baudrate output
               );
 
 
     /// Baud clock gen
     wire baud_pulse;
     clk_gen #(.DIVIDER(BAUD_DIVIDER)) baud (clk, TiP, clk_baud, baud_pulse);
-    assign ctrl = Tx_buf_r[1:0];
     /// End Baud clock gen
 
     /// Tx regs and wires
@@ -82,11 +80,13 @@ module UART #(parameter BAUD_DIVIDER = 9)
     wire Tx_s_IDLE;
     wire Tx_s_TRANS;
     wire Tx_s_LOAD;
+    wire Tx_s_WAIT;
 
     // Assigns
     assign Tx_s_IDLE  = (Tx_state_r == Tx_IDLE)  ? 1'b1 : 1'b0;
     assign Tx_s_LOAD  = (Tx_state_r == Tx_LOAD)  ? 1'b1 : 1'b0;
     assign Tx_s_TRANS = (Tx_state_r == Tx_TRANS) ? 1'b1 : 1'b0;
+    assign Tx_s_WAIT  = (Tx_state_r == Tx_WAIT)  ? 1'b1 : 1'b0;
     assign TiP        = !Tx_s_IDLE;
 
     /// End of Tx regs and wires
