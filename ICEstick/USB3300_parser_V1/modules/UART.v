@@ -52,17 +52,9 @@ module UART #(parameter BAUD_DIVIDER = 9)
 
     /// Baud clock gen
     wire baud_pulse;
-    // clk_gen #(.DIVIDER(BAUD_DIVIDER)) baud (clk, 1'b1, clk_baud, baud_pulse);
     clk_gen #(.DIVIDER(BAUD_DIVIDER)) baud (clk, TiP, clk_baud, baud_pulse);
-    assign ctrl = {Tx_s_TRANS, Tx_s_IDLE};
-    // assign ctrl = Tx_buf_r[1:0];
+    assign ctrl = Tx_buf_r[1:0];
     /// End Baud clock gen
-
-    /// Tx States
-    localparam Tx_IDLE   = 2'b00;
-    localparam Tx_LOAD   = 2'b01;
-    localparam Tx_TRANS  = 2'b10;
-    /// End of Tx States
 
     /// Tx regs and wires
     // Outputs
@@ -99,6 +91,13 @@ module UART #(parameter BAUD_DIVIDER = 9)
 
     /// End of Tx regs and wires
 
+    /// Tx States
+    localparam Tx_IDLE   = 2'b00;
+    localparam Tx_LOAD   = 2'b01;
+    localparam Tx_TRANS  = 2'b10;
+    localparam Tx_WAIT   = 2'b11;
+    /// End of Tx States
+
     /// Tx controller
     always @(posedge clk) begin
         case (Tx_state_r)
@@ -114,11 +113,22 @@ module UART #(parameter BAUD_DIVIDER = 9)
                 Tx_state_r <= Tx_TRANS;
             end
             Tx_TRANS: begin
-                if(Tx_ctrl_r == 4'b1011) begin
-                    Tx_state_r <= Tx_IDLE;
+                if(clk_baud == 1'b1) begin
+                    Tx_state_r <= Tx_WAIT;
                 end
                 else begin
                     Tx_state_r <= Tx_TRANS;
+                end
+            end 
+            Tx_WAIT: begin
+                if(Tx_ctrl_r == 4'b1011) begin
+                    Tx_state_r <= Tx_IDLE;
+                end
+                else if(clk_baud == 1'b0) begin
+                    Tx_state_r <= Tx_TRANS;
+                end
+                else begin
+                    Tx_state_r <= Tx_WAIT;
                 end
             end 
             default: begin
@@ -128,28 +138,31 @@ module UART #(parameter BAUD_DIVIDER = 9)
     end
 
     always @(posedge clk) begin
-        Tx_r <= Tx_buf_r[0];
+        
     end
 
-    // always @(posedge clk) begin
-    //     if(Tx_s_IDLE) begin
-    //         Tx_buf_r <= {10{1'b1}};
-    //     end
-    // end
+    // Tx buffer
+    always @(posedge clk) begin
+        if(Tx_s_LOAD == 1'b1) begin
+            Tx_buf_r <= {I_DATA_r, 2'b01};
+        end
+        else if(Tx_s_LOAD == 1'b0 && baud_pulse == 1'b1) begin
+            Tx_r <= Tx_buf_r[0];
+            Tx_buf_r <= {1'b1, Tx_buf_r[9:1]};
+        end
+    end
 
-    // always @(posedge clk) begin
-    //     if(Tx_s_LOAD) begin
-    //         Tx_buf_r  <= {I_DATA_r, 2'b01};
-    //         Tx_ctrl_r <= 4'b0;
-    //     end
-    // end
-    
-    // always @(posedge clk_baud) begin
-    //     if(Tx_s_TRANS) begin
-    //         Tx_ctrl_r <= Tx_ctrl_r + 1;
-    //         Tx_buf_r  <= {1'b1, Tx_buf_r[9:1]};
-    //     end
-    // end
+    // Tx transmission counter
+    always @(posedge clk) begin
+        if(Tx_s_LOAD == 1'b1) begin
+            Tx_ctrl_r <= 4'b0;
+        end
+        else if(Tx_s_LOAD == 1'b0 && baud_pulse == 1'b1) begin
+            Tx_r <= Tx_buf_r[0];
+            Tx_ctrl_r <= Tx_ctrl_r + 1'b1;
+        end
+    end
+
     /// End of Tx controller
 
 

@@ -35,13 +35,13 @@ module clk_gen #(parameter DIVIDER = 9)
 
     // Main clock gen
     reg  [DIVIDER-1:0]new_clk_r = {DIVIDER{1'b0}};
-    assign new_clk = new_clk_r[DIVIDER-1];
+    assign new_clk = (enable == 1'b1) ? new_clk_r[DIVIDER-1] : 1'b0;
     always @(posedge clk) begin
         if(enable) begin
             new_clk_r <= new_clk_r + 1;
         end
         else begin
-            new_clk_r <= {DIVIDER{1'b0}};
+            new_clk_r <= {DIVIDER{1'b1}};
         end
     end
 
@@ -55,5 +55,6 @@ module clk_gen #(parameter DIVIDER = 9)
         if(enable)
             baud_last_r <= new_clk;
     end
+    assign clk_pulse = baud_posedge_r;
 
 endmodule

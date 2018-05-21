@@ -51,7 +51,7 @@ module USB3300_parser #(parameter test = 1)
     wire TiP_w;
     wire NrD_w;
     wire [1:0]ctrl;
-    UART UART_m(Rx, clk_int, Tx_data_w,
+    UART UART_m(Rx, clk_ext, Tx_data_w,
                 send_data_w, Tx, TiP_w,
                 NrD_w, Rx_data_w, bauds, ctrl);
 
@@ -63,7 +63,7 @@ module USB3300_parser #(parameter test = 1)
         ctrl_r <= ctrl_r + 1;
     end
 
-    reg [7:0]a = "a";
+    reg [7:0]a = ">";
     // reg [7:0]a = 8'b0;
     assign Tx_data_w = a;
     assign send_data_w = (TiP_w == 1'b1) ? 1'b0 : clk_ctrl;
