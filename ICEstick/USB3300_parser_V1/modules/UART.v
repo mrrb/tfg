@@ -138,7 +138,7 @@ module UART #(parameter BAUD_DIVIDER = 9)
     end
 
     always @(posedge clk) begin
-        
+        Tx_r <= Tx_buf_r[0];
     end
 
     // Tx buffer
@@ -147,7 +147,6 @@ module UART #(parameter BAUD_DIVIDER = 9)
             Tx_buf_r <= {I_DATA_r, 2'b01};
         end
         else if(Tx_s_LOAD == 1'b0 && baud_pulse == 1'b1) begin
-            Tx_r <= Tx_buf_r[0];
             Tx_buf_r <= {1'b1, Tx_buf_r[9:1]};
         end
     end
@@ -158,11 +157,9 @@ module UART #(parameter BAUD_DIVIDER = 9)
             Tx_ctrl_r <= 4'b0;
         end
         else if(Tx_s_LOAD == 1'b0 && baud_pulse == 1'b1) begin
-            Tx_r <= Tx_buf_r[0];
             Tx_ctrl_r <= Tx_ctrl_r + 1'b1;
         end
     end
-
     /// End of Tx controller
 
 
