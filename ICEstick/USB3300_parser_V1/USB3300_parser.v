@@ -65,7 +65,7 @@ module USB3300_parser #(parameter test = 1)
     reg  FIFO_save_r   = 1'b0;
     reg  FIFO_pop_r    = 1'b0;
     fifo_stack FIFO(clk_ext, FIFO_in_r, FIFO_save_r, FIFO_pop_r,
-                    FIFO_out, FIFO_full, FIFO_empty);
+                    1'b0, FIFO_out, FIFO_full, FIFO_empty);
     /// End of FIFO module
 
     /// TESTS

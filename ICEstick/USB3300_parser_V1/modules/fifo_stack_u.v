@@ -114,17 +114,22 @@ module fifo_stack_u #(parameter STACK_SIZE = 8)
         endcase
     end
 
+    always @(posedge clk) begin
+        o_data_r <= memory[0];
+    end
+
     // Memory modify
     always @(posedge clk) begin
         if(fifo_s_IDLE == 1'b1) begin
         end
         else if(fifo_s_SAVE == 1'b1) begin
             if(fifo_full == 1'b0) begin
+                memory[position] <= i_data_r;
             end
         end
         else if(fifo_s_POP == 1'b1) begin
             if(fifo_empty == 1'b0) begin
-                
+                memory <= memory>>1;
             end
         end
         else if(fifo_s_RST == 1'b1) begin
