@@ -1,8 +1,9 @@
-USB3300_receive.bin
-USB3300_receive.blif
-USB3300_receive.txt
 __pycache__
 veriwell.log
 veriwell.key
 *.out
 modules/*.out
+*.blif
+*.txt
+modules/*.txt
+modules/*.blif
