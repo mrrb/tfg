@@ -27,7 +27,7 @@
  *     Initial: 2018/05/22      Mario Rubio
  */
 
-module fifo_stack_tb();
+module fifo_stack_u_tb();
 
     reg clk = 1'b0;
     reg I_DATA = 1'b0;
@@ -147,14 +147,14 @@ module fifo_stack_tb();
     always #1 clk = ~clk;
 
     initial begin
-        $dumpfile("fifo_stack.vcd");
-        $dumpvars(0, fifo_stack_tb);
+        $dumpfile("fifo_stack_u.vcd");
+        $dumpvars(0, fifo_stack_u_tb);
 
         // $monitor("Input: %1b  Output: %1b  Save: %1b  Pop: %1b  Full: %1b  Empty: %1b", I_DATA, O_DATA, save, pop, full, empty);
         
-        $display("IN  . SAVE. OUT . EMPT.");
+        $display(" IN   SAVE   OUT  EMPT ");
+        $display("Save 1 [1]");
         #2 
-           $display("Guardado 1 [1]")
         #2 save <= 0; pop <= 0;
 
            $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
@@ -170,26 +170,29 @@ module fifo_stack_tb();
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         
-           $display("Guardado 2 [0]")
+           $display("Save 2 [0]");
         #2 I_DATA <= 0; save <= 1;
         
            $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 I_DATA <= 0; save <= 0;
+           $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
 
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         
-           $display("Guardado 3 [1]")
+           $display("Save 3 [1]");
         #2 I_DATA <= 1; save <= 1;
         
            $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 I_DATA <= 0; save <= 0;
+           $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
 
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
 
+           $display("Pop 1");
         #2 pop <=1;
         
            $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
@@ -199,6 +202,7 @@ module fifo_stack_tb();
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         
+           $display("Pop 2");
         #2 pop <=1;
         
            $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
@@ -208,6 +212,7 @@ module fifo_stack_tb();
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         
+           $display("Pop 3");
         #2 pop <=1;
         
            $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);

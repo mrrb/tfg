@@ -38,17 +38,20 @@ module fifo_stack #(parameter STACK_SIZE  = 15,
                     input  wire FIFO_reset,              // Input to reset the stack
                     output wire [STACK_WIDTH-1:0]O_DATA, // Output data, always the first row in the stack
                     output wire FIFO_full,               // Stack full flag
-                    output wire FIFO_empty               // Stack empty flag
+                    output wire FIFO_empty,              // Stack empty flag
+                    output wire FIFO_busy                // Stack busy flag
                    );
 
     /// Registers and wires
     wire [STACK_WIDTH-1:0]full;
     wire [STACK_WIDTH-1:0]empty;
+    wire [STACK_WIDTH-1:0]busy;
     /// End of Registers and wires
 
     /// Assigns
-    assign FIFO_full  = (full  == {STACK_WIDTH{1'b0}}) ? 1'b0 : 1'b0; 
-    assign FIFO_empty = (empty == {STACK_WIDTH{1'b0}}) ? 1'b0 : 1'b0; 
+    assign FIFO_full  = (full  == {STACK_WIDTH{1'b0}}) ? 1'b0 : 1'b1; 
+    assign FIFO_empty = (empty == {STACK_WIDTH{1'b0}}) ? 1'b0 : 1'b1; 
+    assign FIFO_busy  = (busy  == {STACK_WIDTH{1'b0}}) ? 1'b0 : 1'b1; 
     /// End of Assigns
 
     /// Stack gen with STACK_SIZE sub 1-bit stacks
@@ -56,8 +59,10 @@ module fifo_stack #(parameter STACK_SIZE  = 15,
 
     generate
         for(i=0; i<STACK_WIDTH; i=i+1) begin
-           fifo_stack_u #(.STACK_SIZE(STACK_SIZE)) subFIFO(clk, I_DATA[i], FIFO_save, FIFO_pop,
-                             FIFO_reset, O_DATA[i], full[i], empty[i]); 
+           fifo_stack_u #(.STACK_SIZE(STACK_SIZE))
+                subFIFO  (clk, I_DATA[i], FIFO_save,
+                          FIFO_pop, FIFO_reset, O_DATA[i],
+                          full[i], empty[i], busy[i]); 
         end
     endgenerate
     /// End of Stack gen with STACK_SIZE sub 1-bit stacks

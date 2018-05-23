@@ -30,61 +30,16 @@
 module fifo_stack_tb();
 
     reg clk = 1'b0;
-    reg [7:0]I_DATA = 8'b0;
+    reg [7:0]I_DATA = 1'b0;
     reg save = 1'b0;
     reg pop = 1'b0;
     wire reset; assign reset = 1'b0;
     wire [7:0]O_DATA;
     wire full;
     wire empty;
+    wire busy;
     fifo_stack FIFO(clk, I_DATA, save, pop, reset, 
-                O_DATA, full, empty);
-
-    reg [2:0]init_state = 3'b0;
-    wire stt1; assign stt1 = (init_state == 3'b000) ? 1'b1: 1'b0;
-    wire stt2; assign stt2 = (init_state == 3'b001) ? 1'b1: 1'b0;
-    wire stt3; assign stt3 = (init_state == 3'b010) ? 1'b1: 1'b0;
-    wire stt4; assign stt4 = (init_state == 3'b011) ? 1'b1: 1'b0;
-    wire stt5; assign stt5 = (init_state == 3'b100) ? 1'b1: 1'b0;
-    always @(posedge clk) begin
-        case(init_state)
-            3'b000: begin
-                init_state <= 3'b001;
-            end
-            3'b001: begin
-                init_state <= 3'b010;
-            end
-            3'b010: begin
-                init_state <= 3'b011;
-            end
-            3'b011: begin
-                init_state <= 3'b100;
-            end
-            3'b100: begin
-                init_state <= 3'b000;
-            end
-            default:
-                init_state <= 3'b000;
-        endcase
-    end
-    always @(posedge clk) begin
-        if(stt1 == 1'b1) begin
-            I_DATA <= "H";
-            save <= 1'b1; 
-        end
-        if(stt2 == 1'b1) begin
-            I_DATA <= "o";
-            save <= 1'b1; 
-        end
-        if(stt3 == 1'b1) begin
-            I_DATA <= "l";
-            save <= 1'b1; 
-        end
-        if(stt4 == 1'b1) begin
-            I_DATA <= "a";
-            save <= 1'b1; 
-        end
-    end
+                        O_DATA, full, empty, busy);
 
     // Clock
     always #1 clk = ~clk;
@@ -93,7 +48,77 @@ module fifo_stack_tb();
         $dumpfile("fifo_stack.vcd");
         $dumpvars(0, fifo_stack_tb);
 
-        $monitor("Input: %8b  Output: %8b  Save: %1b  Full: %1b  Empty: %1b", I_DATA, O_DATA, save, full, empty);
+        // $monitor("Input: %1b  Output: %1b  Save: %1b  Pop: %1b  Full: %1b  Empty: %1b", I_DATA, O_DATA, save, pop, full, empty);
+        
+        $display("IN  . SAVE. OUT . EMPT.");
+        #2 
+        #2 save <= 0; pop <= 0;
+
+           $display("Save 1 [%b]", "A");
+           $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 I_DATA <= "A";
+
+           $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 save <= 1;
+
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+           save <= 0; I_DATA <= 0;
+
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        
+           $display("Save 2 [%b]", "[");
+        #2 I_DATA <= "["; save <= 1;
+        
+           $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 I_DATA <= 0; save <= 0;
+           $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        
+           $display("Save 3 [%b]", "c");
+        #2 I_DATA <= "c"; save <= 1;
+        
+           $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 I_DATA <= 0; save <= 0;
+           $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+
+           $display("Pop 1");
+        #2 pop <=1;
+        
+           $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 pop <= 0;
+
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        
+           $display("Pop 2");
+        #2 pop <=1;
+        
+           $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 pop <= 0;
+
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        
+           $display("Pop 3");
+        #2 pop <=1;
+        
+           $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 pop <= 0;
+
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
+        #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
 
         #64 $finish;
     end
