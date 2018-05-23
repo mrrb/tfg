@@ -50,7 +50,7 @@ module fifo_stack_tb();
 
         // $monitor("Input: %1b  Output: %1b  Save: %1b  Pop: %1b  Full: %1b  Empty: %1b", I_DATA, O_DATA, save, pop, full, empty);
         
-        $display("IN  . SAVE. OUT . EMPT.");
+        $display("     IN      SAVE       OUT     EMPT");
         #2 
         #2 save <= 0; pop <= 0;
 
@@ -120,6 +120,7 @@ module fifo_stack_tb();
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
 
+        #1 $display("Test Done!");
         #64 $finish;
     end
 

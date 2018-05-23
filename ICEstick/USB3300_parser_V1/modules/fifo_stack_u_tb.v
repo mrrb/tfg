@@ -222,6 +222,7 @@ module fifo_stack_u_tb();
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
 
+        #1 $display("Test Done!");
         #64 $finish;
     end
 

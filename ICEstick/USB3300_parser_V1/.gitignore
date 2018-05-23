@@ -5,5 +5,7 @@ veriwell.key
 modules/*.out
 *.blif
 *.txt
+*.vcd
 modules/*.txt
 modules/*.blif
+modules/*.vcd
