@@ -65,7 +65,7 @@ module UART #(parameter BAUD_DIVIDER = 9)
         send_data_r <= send_data;
     end
     always @(posedge clk) begin
-        if((Tx_state_r == Tx_IDLE) && send_data == 1'b1)
+        if(Tx_s_IDLE && send_data == 1'b1)
             I_DATA_r <= I_DATA;
     end
 

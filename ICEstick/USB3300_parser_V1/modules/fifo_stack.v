@@ -29,7 +29,7 @@
 
 `include "fifo_stack_u.v"
 
-module fifo_stack #(parameter STACK_SIZE  = 10,
+module fifo_stack #(parameter STACK_SIZE  = 15,
                     parameter STACK_WIDTH = 8)
                    (input  wire clk,                     // Master clock signal
                     input  wire [STACK_WIDTH-1:0]I_DATA, // Input data [STACK_WIDTH]
@@ -56,7 +56,7 @@ module fifo_stack #(parameter STACK_SIZE  = 10,
 
     generate
         for(i=0; i<STACK_WIDTH; i=i+1) begin
-           fifo_stack_u #() (clk, I_DATA[i], FIFO_save, FIFO_pop,
+           fifo_stack_u #(.STACK_SIZE(STACK_SIZE)) subFIFO(clk, I_DATA[i], FIFO_save, FIFO_pop,
                              FIFO_reset, O_DATA[i], full[i], empty[i]); 
         end
     endgenerate

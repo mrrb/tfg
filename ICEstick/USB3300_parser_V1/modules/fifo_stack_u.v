@@ -35,7 +35,8 @@ module fifo_stack_u #(parameter STACK_SIZE = 8)
                       input  wire reset,     // Input to reset the stack
                       output wire o_data,    // Output bit, always the first bit in the stack
                       output wire fifo_full, // Stack full flag
-                      output wire fifo_empty // Stack empty flag
+                      output wire fifo_empty,// Stack empty flag
+                      output wire fifo_busy  // Module Busy, no new operation allowed
                       );
 
     localparam STACK_SIZE_N = $clog2(STACK_SIZE+1)/$clog2(2);
@@ -50,7 +51,11 @@ module fifo_stack_u #(parameter STACK_SIZE = 8)
     reg pop_r    = 1'b0;
     reg reset_r  = 1'b0;
     always @(posedge clk) begin
-        i_data_r <= i_data;
+        if(fifo_s_IDLE && save == 1'b1) begin
+            i_data_r <= i_data;
+        end
+    end
+    always @(posedge clk) begin
         save_r   <= save;
         pop_r    <= pop;
         reset_r  <= reset;
@@ -73,45 +78,50 @@ module fifo_stack_u #(parameter STACK_SIZE = 8)
     assign fifo_s_IDLE = (fifo_state_r == FIFO_IDLE) ? 1'b1 : 1'b0;
     assign fifo_s_SAVE = (fifo_state_r == FIFO_SAVE) ? 1'b1 : 1'b0;
     assign fifo_s_POP  = (fifo_state_r == FIFO_POP)  ? 1'b1 : 1'b0;
-    assign fifo_s_RST  = (fifo_state_r == FIFO_RST)  ? 1'b1 : 1'b0;
     assign fifo_full   = (fifo_position_r == (STACK_SIZE+1)) ? 1'b1 : 1'b0;
     assign fifo_empty  = (fifo_position_r == 0) ? 1'b1 : 1'b0;
+    assign fifo_busy   = !fifo_s_IDLE;
 
     /// End of FIFO regs and wires
 
     /// FIFO states
-    localparam FIFO_IDLE = 2'b00; 
-    localparam FIFO_SAVE = 2'b01; 
-    localparam FIFO_POP  = 2'b10;
-    localparam FIFO_RST  = 2'b11;
+    localparam FIFO_IDLE = 2'b00; // Default state. Do nothing.
+    localparam FIFO_SAVE = 2'b01; // Save a new value into the memory
+    localparam FIFO_POP  = 2'b10; // Pop the first value of the memory
+    localparam FIFO_WAIT = 2'b11; // Delay to show the new values in the output
     /// End of FIFO states
 
     /// FIFO controller
     always @(posedge clk) begin
-        case(fifo_state_r)
-            FIFO_IDLE: begin
-                if(save_r)
-                    fifo_state_r <= FIFO_SAVE;
-                else if(pop_r)
-                    fifo_state_r <= FIFO_POP;
-                else if(reset_r)
-                    fifo_state_r <= FIFO_RST;
-                else
+        if(reset_r) begin
+            fifo_state_r <= FIFO_IDLE;
+            memory <= {STACK_SIZE{1'b0}};
+            fifo_position_r <= {STACK_SIZE_N{1'b0}};
+        end
+        else begin
+            case(fifo_state_r)
+                FIFO_IDLE: begin
+                    if(save_r && !pop_r)
+                        fifo_state_r <= FIFO_SAVE;
+                    else if(pop_r && !save_r)
+                        fifo_state_r <= FIFO_POP;
+                    else
+                        fifo_state_r <= FIFO_IDLE;
+                end
+                FIFO_SAVE: begin
+                    fifo_state_r <= FIFO_WAIT;
+                end
+                FIFO_POP: begin
+                    fifo_state_r <= FIFO_WAIT;
+                end
+                FIFO_WAIT: begin
                     fifo_state_r <= FIFO_IDLE;
-            end
-            FIFO_SAVE: begin
-                fifo_state_r <= FIFO_IDLE;
-            end
-            FIFO_POP: begin
-                fifo_state_r <= FIFO_IDLE;
-            end
-            FIFO_RST: begin
-                fifo_state_r <= FIFO_IDLE;
-            end
-            default: begin
-                fifo_state_r <= FIFO_IDLE;
-            end
-        endcase
+                end
+                default: begin
+                    fifo_state_r <= FIFO_IDLE;
+                end
+            endcase
+        end
     end
 
     always @(posedge clk) begin
@@ -124,16 +134,13 @@ module fifo_stack_u #(parameter STACK_SIZE = 8)
         end
         else if(fifo_s_SAVE == 1'b1) begin
             if(fifo_full == 1'b0) begin
-                memory[position] <= i_data_r;
+                memory[fifo_position_r] <= i_data_r;
             end
         end
         else if(fifo_s_POP == 1'b1) begin
             if(fifo_empty == 1'b0) begin
                 memory <= memory>>1;
             end
-        end
-        else if(fifo_s_RST == 1'b1) begin
-            memory <= {STACK_SIZE{1'b0}};
         end
     end
 
@@ -150,9 +157,6 @@ module fifo_stack_u #(parameter STACK_SIZE = 8)
             if(fifo_empty == 1'b0) begin
                 fifo_position_r <= fifo_position_r - 1'b1;
             end
-        end
-        else if(fifo_s_RST == 1'b1) begin
-            fifo_position_r <= {STACK_SIZE_N{1'b0}};
         end
     end
     /// End of FIFO controller

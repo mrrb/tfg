@@ -4,3 +4,5 @@ USB3300_receive.txt
 __pycache__
 veriwell.log
 veriwell.key
+*.out
+modules/*.out

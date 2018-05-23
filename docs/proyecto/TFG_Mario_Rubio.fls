@@ -1,0 +1,9 @@
+PWD /home/mra/Pc_Sync/TFG/GIT/tfg/docs/proyecto
+INPUT /usr/share/texmf-dist/web2c/texmf.cnf
+INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
+INPUT /home/mra/Pc_Sync/TFG/GIT/tfg/docs/proyecto/TFG_Mario_Rubio.tex
+OUTPUT TFG_Mario_Rubio.log
+INPUT TFG_Mario_Rubio.aux
+INPUT TFG_Mario_Rubio.aux
+OUTPUT TFG_Mario_Rubio.aux
+INPUT TFG_Mario_Rubio.aux
