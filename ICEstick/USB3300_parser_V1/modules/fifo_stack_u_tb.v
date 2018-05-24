@@ -33,7 +33,7 @@ module fifo_stack_u_tb();
     reg I_DATA = 1'b0;
     reg save = 1'b0;
     reg pop = 1'b0;
-    wire reset; assign reset = 1'b0;
+    reg reset = 1'b0;
     wire O_DATA;
     wire full;
     wire empty;
@@ -193,7 +193,7 @@ module fifo_stack_u_tb();
         #2 $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
 
            $display("Pop 1");
-        #2 pop <=1;
+        #2 pop <=1; reset <= 1;
         
            $display("I: %b. S: %b. O: %b. E: %b. [%b]", I_DATA, save, O_DATA, empty, busy);
         #2 pop <= 0;
