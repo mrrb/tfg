@@ -33,7 +33,7 @@ module USB3300_receiver_tb ();
     reg  DIR = 1'b0;
     reg  NXT = 1'b0;
     reg  [7:0]DATA = 8'b0;
-    reg  ME  = 8'b0;
+    reg  ME  = 8'b1;
     wire [7:0]PID;
     wire [7:0]D2;
     wire [7:0]D1;
@@ -50,53 +50,63 @@ module USB3300_receiver_tb ();
         $dumpfile("USB3300_receiver.vcd");
         $dumpvars(0, USB3300_receiver_tb);
 
-        #10
+        #2
 
-        $display("Turn Around");
-        $display("DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
-        $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
-                  PID, D1, D2, CMD, NP, busy);
-        #2 DATA = "~"; DIR = 1; NXT = 0;
-
-        $display("Rxd CMD");
-        $display("DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        $display("Initial>DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
         $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
                   PID, D1, D2, CMD, NP, busy);
         #2 DATA = "A"; DIR = 1; NXT = 0;
-        
-        $display("PID");
-        $display("DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+
+        $display("Turn Around>DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
         $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
                   PID, D1, D2, CMD, NP, busy);
-        #2 DATA = "H"; DIR = 1; NXT = 0;
-        
-        $display("D1");
-        $display("DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        #2 DATA = "B"; DIR = 1; NXT = 0;
+
+        $display("Rxd CMD>DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
         $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
                   PID, D1, D2, CMD, NP, busy);
-        #2 DATA = "l"; DIR = 1; NXT = 0;
+        #2 DATA = "C"; DIR = 1; NXT = 0;
         
-        $display("Rxd CDM");
-        $display("DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        $display("PID>DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
         $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
                   PID, D1, D2, CMD, NP, busy);
-        #2 DATA = "~"; DIR = 1; NXT = 0;
+        #2 DATA = "D"; DIR = 1; NXT = 0;
         
-        $display("D2");
-        $display("DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        $display("D1>DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
         $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
                   PID, D1, D2, CMD, NP, busy);
-        #2 DATA = "A"; DIR = 1; NXT = 0;
-        #2 DATA = ""; DIR = 1; NXT = 0;
+        #2 DATA = "B"; DIR = 1; NXT = 0;
         
-        $display("DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        $display("Rxd CMD>DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
+                  PID, D1, D2, CMD, NP, busy);
+        #2 DATA = "E"; DIR = 1; NXT = 0;
+        
+        $display("D2>DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
         $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
                   PID, D1, D2, CMD, NP, busy);
         #2 DATA = 0; DIR = 0; NXT = 0;
-
-        $display("DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        
+        $display(">DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
         $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
                   PID, D1, D2, CMD, NP, busy);
+
+        $display(">DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
+                  PID, D1, D2, CMD, NP, busy);
+        #2
+        $display(">DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
+                  PID, D1, D2, CMD, NP, busy);
+        #2
+        $display(">DATA: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        $display("PID: %8b  D1: %8b  D2: %8b  CMD: %8b  [%1b %1b]\n",
+                  PID, D1, D2, CMD, NP, busy);
+        #2
+
+        $display("Should be: PID: %8b. D1: %8b. D2: %8b. CMD: %8b", PID, D1, D2, CMD);
+
+        #2
 
         #10 $finish;
     end

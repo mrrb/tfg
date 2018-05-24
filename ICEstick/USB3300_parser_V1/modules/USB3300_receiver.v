@@ -81,7 +81,7 @@ module USB3300_receiver
     assign receiver_s_CMD2 = (receiver_status_r == receiver_READ_CMD2) ? 1'b1 : 1'b0;
     assign receiver_s_D2   = (receiver_status_r == receiver_READ_D2)   ? 1'b1 : 1'b0;
     assign receiver_s_WAIT = (receiver_status_r == receiver_WAIT)      ? 1'b1 : 1'b0;
-    assign busy = !receiver_s_IDLE;
+    assign busy            = !receiver_s_IDLE;
 
     /// End of USB3300 receiver regs and wires
 
@@ -99,7 +99,6 @@ module USB3300_receiver
     always @(posedge clk) begin
         if(ME == 1'b0) begin
             receiver_status_r <= receiver_IDLE;
-            {PID_r, D2_r, D1_r, CMD_r, NP_r} <= 33'b0;
         end
         else begin
             case(receiver_status_r)
@@ -163,24 +162,32 @@ module USB3300_receiver
     
     // Store USB frame
     always @(posedge clk) begin
-        if(receiver_s_IDLE) begin
+        if(ME == 1'b0) begin
+            PID_r <= 8'b0;
+            D2_r  <= 8'b0;
+            D1_r  <= 8'b0;
+            CMD_r <= 8'b0;
+            NP_r  <= 1'b0;
+            // {PID_r, D2_r, D1_r, CMD_r, NP_r} <= 33'b0;
         end
-        else if(receiver_READ_CMD1) begin
+        else if(receiver_s_IDLE) begin
+            NP_r  <= 1'b0;
+        end
+        else if(receiver_s_CMD1) begin
             CMD_r <= DATA_r;
-            NP_r <= 1'b0;
         end
-        else if(receiver_READ_PID) begin
+        else if(receiver_s_PID) begin
             PID_r <= DATA_r;
         end
-        else if(receiver_READ_D1) begin
-            D1_r <= DATA_r;
+        else if(receiver_s_D1) begin
+            D1_r  <= DATA_r;
         end
-        else if(receiver_READ_CMD2) begin
+        else if(receiver_s_CMD2) begin
             CMD_r <= DATA_r;
         end
-        else if(receiver_READ_D2) begin
-            D2_r <= DATA_r;
-            NP_r <= 1'b1;
+        else if(receiver_s_D2) begin
+            D2_r  <= DATA_r;
+            NP_r  <= 1'b1;
         end
         else if(receiver_s_WAIT) begin
         end
