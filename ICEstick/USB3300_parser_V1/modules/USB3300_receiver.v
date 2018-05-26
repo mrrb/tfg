@@ -62,7 +62,7 @@ module USB3300_receiver
     // Buffers
 
     // Control registers
-    reg [2:0]receiver_status_r = 3'b0;
+    reg [2:0]receiver_state_r = 3'b0;
 
     // Flags
     wire receiver_s_IDLE;
@@ -74,13 +74,13 @@ module USB3300_receiver
     wire receiver_s_WAIT;
 
     // Assigns
-    assign receiver_s_IDLE = (receiver_status_r == receiver_IDLE)      ? 1'b1 : 1'b0;
-    assign receiver_s_CMD1 = (receiver_status_r == receiver_READ_CMD1) ? 1'b1 : 1'b0;
-    assign receiver_s_PID  = (receiver_status_r == receiver_READ_PID)  ? 1'b1 : 1'b0;
-    assign receiver_s_D1   = (receiver_status_r == receiver_READ_D1)   ? 1'b1 : 1'b0;
-    assign receiver_s_CMD2 = (receiver_status_r == receiver_READ_CMD2) ? 1'b1 : 1'b0;
-    assign receiver_s_D2   = (receiver_status_r == receiver_READ_D2)   ? 1'b1 : 1'b0;
-    assign receiver_s_WAIT = (receiver_status_r == receiver_WAIT)      ? 1'b1 : 1'b0;
+    assign receiver_s_IDLE = (receiver_state_r == receiver_IDLE)      ? 1'b1 : 1'b0;
+    assign receiver_s_CMD1 = (receiver_state_r == receiver_READ_CMD1) ? 1'b1 : 1'b0;
+    assign receiver_s_PID  = (receiver_state_r == receiver_READ_PID)  ? 1'b1 : 1'b0;
+    assign receiver_s_D1   = (receiver_state_r == receiver_READ_D1)   ? 1'b1 : 1'b0;
+    assign receiver_s_CMD2 = (receiver_state_r == receiver_READ_CMD2) ? 1'b1 : 1'b0;
+    assign receiver_s_D2   = (receiver_state_r == receiver_READ_D2)   ? 1'b1 : 1'b0;
+    assign receiver_s_WAIT = (receiver_state_r == receiver_WAIT)      ? 1'b1 : 1'b0;
     assign busy            = !receiver_s_IDLE;
 
     /// End of USB3300 receiver regs and wires
@@ -98,63 +98,63 @@ module USB3300_receiver
     /// USB3300 receiver controller
     always @(posedge clk) begin
         if(ME == 1'b0) begin
-            receiver_status_r <= receiver_IDLE;
+            receiver_state_r <= receiver_IDLE;
         end
         else begin
-            case(receiver_status_r)
+            case(receiver_state_r)
                 receiver_IDLE: begin
                     if(DIR_r) begin
-                        receiver_status_r <= receiver_READ_CMD1;
+                        receiver_state_r <= receiver_READ_CMD1;
                     end
                     else begin
-                        receiver_status_r <= receiver_IDLE;
+                        receiver_state_r <= receiver_IDLE;
                     end
                 end
                 receiver_READ_CMD1: begin
                     if(DIR_r) begin
-                        receiver_status_r <= receiver_READ_PID;
+                        receiver_state_r <= receiver_READ_PID;
                     end
                     else begin
-                        receiver_status_r <= receiver_IDLE;
+                        receiver_state_r <= receiver_IDLE;
                     end
                 end
                 receiver_READ_PID: begin
                     if(DIR_r) begin
-                        receiver_status_r <= receiver_READ_D1;
+                        receiver_state_r <= receiver_READ_D1;
                     end
                     else begin
-                        receiver_status_r <= receiver_IDLE;
+                        receiver_state_r <= receiver_IDLE;
                     end
                 end
                 receiver_READ_D1: begin
                     if(DIR_r) begin
-                        receiver_status_r <= receiver_READ_CMD2;
+                        receiver_state_r <= receiver_READ_CMD2;
                     end
                     else begin
-                        receiver_status_r <= receiver_IDLE;
+                        receiver_state_r <= receiver_IDLE;
                     end
                 end
                 receiver_READ_CMD2: begin
                     if(DIR_r) begin
-                        receiver_status_r <= receiver_READ_D2;
+                        receiver_state_r <= receiver_READ_D2;
                     end
                     else begin
-                        receiver_status_r <= receiver_IDLE;
+                        receiver_state_r <= receiver_IDLE;
                     end
                 end
                 receiver_READ_D2: begin
                     if(DIR_r) begin
-                        receiver_status_r <= receiver_WAIT;
+                        receiver_state_r <= receiver_IDLE;
                     end
                     else begin
-                        receiver_status_r <= receiver_IDLE;
+                        receiver_state_r <= receiver_IDLE;
                     end
                 end
                 receiver_WAIT: begin
-                    receiver_status_r <= receiver_IDLE;
+                    receiver_state_r <= receiver_IDLE;
                 end
                 default: begin
-                    receiver_status_r <= receiver_IDLE;
+                    receiver_state_r <= receiver_IDLE;
                 end
             endcase
         end

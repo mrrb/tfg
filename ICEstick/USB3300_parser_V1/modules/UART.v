@@ -34,8 +34,6 @@
 
 `default_nettype none
 
-// `include "clk_gen.v"
-
 module UART #(parameter BAUD_DIVIDER = 9)
              (input  wire Rx,          // Rx input pin
               input  wire clk,         // reference clock input pin

@@ -32,9 +32,9 @@
 `include "modules/UART.v"
 `include "modules/clk_gen.v"
 `include "modules/fifo_stack.v"
+`include "modules/USB3300_receiver.v"
 
-module USB3300_parser #(parameter test = 1)
-                       (input  wire clk_int,    // Internal clock input (12MHz)
+module USB3300_parser  (input  wire clk_int,    // Internal clock input (12MHz)
                         input  wire clk_ext,    // External clock input (60MHz)
                         input  wire [7:0]DATA,  // USB3300 8-bit DATA input
                         input  wire DIR,        // USB3300 DIR input
@@ -45,6 +45,15 @@ module USB3300_parser #(parameter test = 1)
                         output wire [4:0]LEDs,  // Status LEDs
                         output wire bauds       // Baud clock
                         );
+
+    /// Master clock
+    wire clk;
+    assign clk = clk_ext;
+    /// End of Master clock
+
+    /// Regs and wires
+    wire MASTER_RST; assign MASTER_RST = 1'b0;
+    /// End of Regs and wires
 
     /// UART module
     wire [7:0]Tx_data_w;
@@ -57,78 +66,108 @@ module USB3300_parser #(parameter test = 1)
                 NrD_w, Rx_data_w, bauds);
     /// End of UART module
 
-    /// FIFO module
-    wire FIFO_full;
-    wire FIFO_empty;
-    wire [7:0]FIFO_out;
-    reg  [7:0]FIFO_in_r  = {8{1'b0}};
-    reg  FIFO_save_r   = 1'b0;
-    reg  FIFO_pop_r    = 1'b0;
-    fifo_stack FIFO(clk_ext, FIFO_in_r, FIFO_save_r, FIFO_pop_r,
-                    1'b0, FIFO_out, FIFO_full, FIFO_empty);
+    /// FIFO modules
+    // Common control pins to all 4 FIFO stacks
+    reg  FIFO_all_save_r = 1'b0;
+    reg  FIFO_all_pop_r  = 1'b0;
+
+    // FIFO for the CMD data
+    wire FIFO_CMD_full;
+    wire FIFO_CMD_empty;
+    wire FIFO_CMD_busy;
+    wire [7:0]FIFO_CMD_out;
+    fifo_stack FIFO_CMD(clk_ext, CMD, FIFO_all_save_r, FIFO_all_pop_r,
+                        MASTER_RST, FIFO_CMD_out,
+                        FIFO_CMD_full, FIFO_CMD_empty, FIFO_CMD_busy);
+                        
+    // FIFO for the PID data
+    wire FIFO_PID_full;
+    wire FIFO_PID_empty;
+    wire FIFO_PID_busy;
+    wire [7:0]FIFO_PID_out;
+    fifo_stack FIFO_PID(clk_ext, PID, FIFO_all_save_r, FIFO_all_pop_r,
+                        MASTER_RST, FIFO_PID_out,
+                        FIFO_PID_full, FIFO_PID_empty, FIFO_PID_busy);
+                        
+    // FIFO for the D1 data
+    wire FIFO_D1_full;
+    wire FIFO_D1_empty;
+    wire FIFO_D1_busy;
+    wire [7:0]FIFO_D1_out;
+    fifo_stack FIFO_D1(clk_ext, D1, FIFO_all_save_r, FIFO_all_pop_r,
+                        MASTER_RST, FIFO_D1_out,
+                        FIFO_D1_full, FIFO_D1_empty, FIFO_D1_busy);
+                        
+    // FIFO for the D2 data
+    wire FIFO_D2_full;
+    wire FIFO_D2_empty;
+    wire FIFO_D2_busy;
+    wire [7:0]FIFO_D2_out;
+    fifo_stack FIFO_D2(clk_ext, D2, FIFO_all_save_r, FIFO_all_pop_r,
+                        MASTER_RST, FIFO_D2_out,
+                        FIFO_D2_full, FIFO_D2_empty, FIFO_D2_busy);
     /// End of FIFO module
 
-    /// TESTS
-    wire clk_ctrl;
-    wire clk_ctrl_pulse;
-    clk_gen #(26) pulse (clk_ext, 1'b1, clk_ctrl, clk_ctrl_pulse);
+    /// USB3300 receiver module
+    wire [7:0]PID;
+    wire [7:0]D2;
+    wire [7:0]D1;
+    wire [7:0]CMD;
+    wire receiver_NP;
+    wire receiver_busy;
+    USB3300_receiver receiver(clk_ext, DIR, NXT, DATA, !MASTER_RST, PID,
+                              D2, D1, CMD, receiver_NP, receiver_busy);
+    /// End of USB3300 receiver module
 
-    reg [7:0]a = "D";
-    // reg [7:0]a = 8'b0;
-    assign Tx_data_w = a;
-    assign send_data_w = (TiP_w == 1'b1) ? 1'b0 : clk_ctrl_pulse;
-    assign LEDs[0] = send_data_w;
-    assign LEDs[1] = TiP_w;
-    assign LEDs[2] = clk_ctrl;
-    assign LEDs[3] = 1'b0;
-    assign LEDs[4] = 1'b0;
+    /// Subcontroller 1 [S1]
+    // Save in the FIFO module the new incoming data
+    // Regs and wires
+    reg  [2:0]S1_state_r = 3'b0;
+    wire S1_s_IDLE;
+    wire S1_s_SAVE_CMD;
+    wire S1_s_SAVE_PID;
+    wire S1_s_SAVE_D1;
+    wire S1_s_SAVE_D2;
 
-    // Init FIFO
-    reg [2:0]init_state = 3'b0;
-    wire stt1; assign stt1 = (init_state == 3'b000) ? 1'b1: 1'b0;
-    wire stt2; assign stt2 = (init_state == 3'b001) ? 1'b1: 1'b0;
-    wire stt3; assign stt3 = (init_state == 3'b010) ? 1'b1: 1'b0;
-    wire stt4; assign stt4 = (init_state == 3'b011) ? 1'b1: 1'b0;
-    wire stt5; assign stt5 = (init_state == 3'b100) ? 1'b1: 1'b0;
-    always @(posedge clk_ext) begin
-        case(init_state)
-            3'b000: begin
-                init_state <= 3'b001;
-            end
-            3'b001: begin
-                init_state <= 3'b010;
-            end
-            3'b010: begin
-                init_state <= 3'b011;
-            end
-            3'b011: begin
-                init_state <= 3'b100;
-            end
-            3'b100: begin
-                init_state <= 3'b100;
-            end
-            default:
-                init_state <= 3'b000;
-        endcase
-    end
-    always @(posedge clk_ext) begin
-        if(stt1 == 1'b1) begin
-            FIFO_in_r <= "H";
-            FIFO_save_r <= 1'b1; 
+    // Flags
+    assign S1_s_IDLE     = (S1_state_r == S1_IDLE)     ? 1'b1 : 1'b0;
+    assign S1_s_SAVE_CMD = (S1_state_r == S1_SAVE_CMD) ? 1'b1 : 1'b0;
+    assign S1_s_SAVE_PID = (S1_state_r == S1_SAVE_PID) ? 1'b1 : 1'b0;
+    assign S1_s_SAVE_D1  = (S1_state_r == S1_SAVE_D1)  ? 1'b1 : 1'b0;
+    assign S1_s_SAVE_D2  = (S1_state_r == S1_SAVE_D2)  ? 1'b1 : 1'b0;
+
+    // S1 states
+    localparam S1_IDLE     = 3'b000;
+    localparam S1_SAVE_CMD = 3'b001;
+    localparam S1_SAVE_PID = 3'b010;
+    localparam S1_SAVE_D1  = 3'b011;
+    localparam S1_SAVE_D2  = 3'b100;
+
+    // S1 subcontroller
+    always @(posedge clk) begin
+        if(MASTER_RST == 1'b1) begin
         end
-        if(stt2 == 1'b1) begin
-            FIFO_in_r <= "o";
-            FIFO_save_r <= 1'b1; 
-        end
-        if(stt3 == 1'b1) begin
-            FIFO_in_r <= "l";
-            FIFO_save_r <= 1'b1; 
-        end
-        if(stt4 == 1'b1) begin
-            FIFO_in_r <= "a";
-            FIFO_save_r <= 1'b1; 
+        else begin
+            case(S1_state)
+                S1_IDLE: begin
+                    if(receiver_NP == 1'b1)
+                        S1_state_r <= S1_SAVE_CMD;
+                    else
+                        S1_state_r <= S1_IDLE;
+                end
+                S1_SAVE_CMD: begin
+                end
+                S1_SAVE_PID: begin
+                end
+                S1_SAVE_D1: begin
+                end
+                S1_SAVE_D2: begin
+                end
+                default: begin
+                end
+            endcase
         end
     end
-    /// End of TESTS
+    /// End of Subcontroller 1 [S1]
 
 endmodule

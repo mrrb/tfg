@@ -27,6 +27,8 @@
  *     Initial: 2018/05/01      Mario Rubio
  */
 
+`include "clk_gen.v"
+
 module UART_tb();
    
     // Registers and wires
@@ -52,9 +54,9 @@ module UART_tb();
         $dumpvars(0, UART_tb);
 
         $monitor("data=%8b send_data=%1b Tx=%1b TiP=%1b",data, send_data, Tx, TiP);
-
-        #1   data = 8'b01010101; send_data =1'b1;
-        #1   send_data =1'b0;
+        #2
+        #2   data = 8'b01010101; send_data =1'b1;
+        #2   send_data =1'b0;
         #100 $display("End!"); $finish;
     end
 
