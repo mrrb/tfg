@@ -45,7 +45,8 @@ module USB3300_parser  (input  wire clk_int,    // Internal clock input (12MHz)
                         output wire Tx,         // UART Tx data output
                         output wire STP,        // USB3300 STP output
                         output wire [4:0]LEDs,  // Status LEDs
-                        output wire bauds       // Baud clock
+                        output wire bauds,      // Baud clock
+                        output wire reset       // 
                         );
 
     /// Config
@@ -348,7 +349,8 @@ module USB3300_parser  (input  wire clk_int,    // Internal clock input (12MHz)
     /// End of Indicator LEDs
 
     /// Other stuff
-    assign STP = 1'b0;
+    assign STP   = 1'b0;
+    assign reset = 1'b0;
     /// End of Other stuff
 
 endmodule

@@ -1,5 +1,6 @@
 set_io clk_int 21
 set_io clk_ext 44
+set_io reset   45
 
 set_io DATA[0] 78
 set_io DATA[1] 79
@@ -14,7 +15,7 @@ set_io DIR 112
 set_io NXT 113
 set_io STP 114
 
-set_io Tx 119
+set_io Tx 8
 set_io Rx 9
 set_io bauds 115
 
