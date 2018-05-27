@@ -1,5 +1,7 @@
 all: UART fifo
 
+delay: delay_tb.vcd
+
 UART: UART_tb.vcd
 
 fifo: fifo_stack_tb.vcd
@@ -13,6 +15,14 @@ UART_tb.vcd: UART.v UART_tb.v
 	iverilog $^ -o UART_tb.out
 
 	./UART_tb.out
+
+	# gtkwave $@ UART_tb.gtkw &
+
+delay_tb.vcd: delay.v delay_tb.v
+
+	iverilog $^ -o delay_tb.out
+
+	./delay_tb.out
 
 	# gtkwave $@ UART_tb.gtkw &
 

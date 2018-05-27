@@ -27,6 +27,8 @@
  *     Initial: 2018/05/22      Mario Rubio
  */
 
+`include "fifo_stack_u.v"
+
 module fifo_stack_tb();
 
     reg clk = 1'b0;

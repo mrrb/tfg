@@ -49,7 +49,7 @@ module UART #(parameter BAUD_DIVIDER = 9)
 
     /// Baud clock gen
     wire baud_pulse;
-    clk_gen #(.DIVIDER(BAUD_DIVIDER)) baud (clk, TiP, clk_baud, baud_pulse);
+    clk_gen #(.DIVIDER(BAUD_DIVIDER)) baud (clk, 1'b1, clk_baud, baud_pulse);
     /// End Baud clock gen
 
     /// Tx regs and wires

@@ -12,7 +12,7 @@ $(FNAME)_tb.vcd: $(FNAME).v $(FNAME)_tb.v
 
 	./$(FNAME)_tb.out
 
-	# gtkwave $@ $(FNAME)_tb.gtkw &
+	#gtkwave $@ &
 
 $(FNAME).bin: $(FNAME).v $(FNAME).pcf
 

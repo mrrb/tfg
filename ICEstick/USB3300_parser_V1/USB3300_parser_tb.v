@@ -30,12 +30,12 @@
 module USB3300_parser_tb ();
 
 
-    wire clk1;
+    reg  clk1 = 1'b0;
     reg  clk2 = 1'b0;
-    wire [7:0]DATA;
-    wire DIR;
-    wire NXT;
-    wire Rx;
+    reg  [7:0]DATA = 8'b0;
+    reg  DIR  = 1'b0;
+    reg  NXT  = 1'b0;
+    reg  Rx   = 1'b0;
     wire Tx;
     wire STP;
     wire [4:0]LEDs;
@@ -47,12 +47,39 @@ module USB3300_parser_tb ();
     always #1 clk2 = ~clk2;
 
     initial begin
-        $dumpfile("USB3300_parser.vcd");
+        $dumpfile("USB3300_parser_tb.vcd");
         $dumpvars(0, USB3300_parser_tb);
 
-        $monitor("Tx: %1b", Tx);
+        #4
 
-        #1000 $finish;
+        $display("Data: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        #2 DIR = 1; DATA = "A";
+
+        $display("Data: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        #2 DIR = 1; DATA = "B";
+
+        $display("Data: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        #2 DIR = 1; DATA = "C";
+
+        $display("Data: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        #2 DIR = 1; DATA = "D";
+
+        $display("Data: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        #2 DIR = 1; DATA = "E";
+
+        $display("Data: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        #2 DIR = 1; DATA = "F";
+
+        $display("Data: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        #2 DIR = 0; DATA = 0;
+
+        $display("Data: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        #2 DIR = 0; DATA = 0;
+
+        $display("Data: %8b  DIR: %1b  NXT: %1b", DATA, DIR, NXT);
+        #2 DIR = 0; DATA = 0;
+
+        #60000 $finish;
     end
 
 endmodule

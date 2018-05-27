@@ -14,7 +14,7 @@ set_io DIR 112
 set_io NXT 113
 set_io STP 114
 
-set_io Tx 8
+set_io Tx 119
 set_io Rx 9
 set_io bauds 115
 

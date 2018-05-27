@@ -27,7 +27,7 @@
  *     Initial: 2018/05/21      Mario Rubio
  */
 
-`include "fifo_stack_u.v"
+// `include "fifo_stack_u.v"
 
 module fifo_stack #(parameter STACK_SIZE  = 15,
                     parameter STACK_WIDTH = 8)
