@@ -49,6 +49,26 @@ module USB3300_parser  (input  wire clk_int,    // Internal clock input (12MHz)
                         output wire reset       // 
                         );
 
+
+    reg test_state_r = 1'b0;
+    reg stp_r = 1'b0;
+
+    assign STP = stp_r;
+
+    always @(posedge clk) begin
+        case(test_state_r) 
+            1'b0: begin
+                test_state_r <= 1'b1;
+                if(!DIR)
+                    stp_r <= 1'b1;
+            end
+            1'b1: begin
+                test_state_r <= 1'b1;
+                stp_r <= 1'b0;
+            end
+        endcase
+    end
+
     /// Config
     // UART divider 9->115200 bauds; 8->256000 bauds
     parameter UD = 9;
@@ -345,11 +365,13 @@ module USB3300_parser  (input  wire clk_int,    // Internal clock input (12MHz)
     assign LEDs[0] = FIFO_all_empty;
     assign LEDs[1] = TiP_w;
     assign LEDs[2] = receiver_busy;
-    assign LEDs[3] = receiver_NP;
+    assign LEDs[3] = STP;
+    assign LEDs[4] = DIR;
+    // assign LEDs[4] = !S2_s_IDLE;
     /// End of Indicator LEDs
 
     /// Other stuff
-    assign STP   = 1'b0;
+    // assign STP   = 1'b0;
     assign reset = 1'b0;
     /// End of Other stuff
 

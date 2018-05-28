@@ -40,8 +40,9 @@ module USB3300_parser_tb ();
     wire STP;
     wire [4:0]LEDs;
     wire bauds;
+    wire reset;
 
-    USB3300_parser usb (clk1, clk2, DATA, DIR, NXT, Rx, Tx, STP, LEDs, bauds);
+    USB3300_parser usb (clk1, clk2, DATA, DIR, NXT, Rx, Tx, STP, LEDs, bauds, reset);
 
     // Clock
     always #1 clk2 = ~clk2;
