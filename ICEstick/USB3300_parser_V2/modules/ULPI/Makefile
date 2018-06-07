@@ -1,4 +1,4 @@
-M_NAME  := clk_gen
+M_NAME  := ULPI
 
 TB_DIR  := ./tb
 RTL_DIR := ./rtl

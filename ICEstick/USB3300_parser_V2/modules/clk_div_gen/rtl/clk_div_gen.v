@@ -27,7 +27,7 @@
  *     Initial: 2018/05/17      Mario Rubio
  */
 
-module clk_gen #(parameter DIVIDER = 9)
+module clk_div_gen #(parameter DIVIDER = 9)
                 (input  wire clk,
                  input  wire enable,
                  output wire new_clk,
