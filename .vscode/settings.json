@@ -2,5 +2,9 @@
     "spellright.language": "Spanish",
     "spellright.documentTypes": [
         "latex"
-    ]
+    ],
+    "terminal.integrated.env.linux": {
+        "PATH": "/home/mra/.platformio/penv/bin:/home/mra/.platformio/penv:/usr/local/bin:/usr/local/sbin/:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl",
+        "PLATFORMIO_CALLER": "vscode"
+    }
 }

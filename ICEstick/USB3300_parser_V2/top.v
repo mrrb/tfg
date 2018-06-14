@@ -27,6 +27,9 @@
  *     Initial: 2018/05/28      Mario Rubio
  */
 
+`inclue "ULPI_REG_ADDR.vh"
+
+
 module USB3300_parser() #()
                          ();
 
