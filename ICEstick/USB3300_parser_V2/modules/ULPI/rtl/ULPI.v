@@ -71,6 +71,8 @@ module ULPI #()
 
 
     /// Output buffers
+    reg [7:0]ULPI_TXCMD_buf_r = 8'b0;
+    reg [7:0]ULPI_D0_buf_r = 8'b0;
     /// End of Output buffers
 
 

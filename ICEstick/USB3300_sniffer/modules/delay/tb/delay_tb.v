@@ -24,15 +24,34 @@
 
 /*
  * Revision History:
- *     Initial: 2018/05/28      Mario Rubio
+ *     Initial: 2018/05/27      Mario Rubio
  */
 
-`include "ULPI_REG_ADDR.vh"
+module delay_tb();
 
+    reg  d_in = 1'b0;
+    reg  clk  = 1'b1;
+    wire d_out;
+    delay del (clk, d_in, d_out); // Module under test init
 
-module USB3300_parser() #()
-                         ();
+    // Clock
+    always #1 clk = ~clk;
 
-    
+    initial begin
+        $dumpfile("sim/delay_tb.vcd");
+        $dumpvars(0, delay_tb);
+
+        #2 d_in = 1;
+        #4 d_in = 0;
+        #2 d_in = 1;
+        #2 d_in = 0;
+        #2 d_in = 1;
+        #2 d_in = 0;
+        #2 d_in = 1;
+        #4 d_in = 0;
+        #4 d_in = 1;
+
+        #10 $finish;
+    end
 
 endmodule

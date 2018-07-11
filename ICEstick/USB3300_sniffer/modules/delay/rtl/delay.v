@@ -24,15 +24,20 @@
 
 /*
  * Revision History:
- *     Initial: 2018/05/28      Mario Rubio
+ *     Initial: 2018/05/27      Mario Rubio
  */
 
-`include "ULPI_REG_ADDR.vh"
+module delay #(parameter DELAY_VAL = 2) // Number of delay steps
+              (input  wire clk,         // Reference clock
+               input  wire sig_in,      // Input signal
+               output wire sig_out);    // Delayed signal
 
-
-module USB3300_parser() #()
-                         ();
-
-    
+    /// Delay controller
+    reg [DELAY_VAL-1+1:0]buffer = {DELAY_VAL+1{1'b0}};
+    always @(posedge clk) begin
+        buffer <= {sig_in, buffer[DELAY_VAL-1+1:1]};
+    end
+    assign sig_out = buffer[0];
+    /// End of Delay controller
 
 endmodule
