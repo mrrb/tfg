@@ -29,25 +29,18 @@ SOFTWARE.
 
 /*
  * Revision History:
- *     Initial:        2018/06/15        Mario Rubio
+ *     Initial:        2018/07/12        Mario Rubio
  */
 
-/*
- * This module enables the communication between the FPGA and the USB3300 module using the ULPI protocol.
- * 
- * Submodules:
- *  - ULPI detect
- *  - 
- *
- */
+module mux #(
+             parameter n = 2 // Bits of the multiplexer
+            )
+            (
+             input  wire [2**n-1:0]ch,  // Input channels (2^n)
+             input  wire [n-1:0]sel, // Selecction input (n)
+             output wire out      // Mux output
+            );
 
-`default_nettype none
-
-`include "ULPI_REG_READ.v"
-`include "ULPI_REG_WRITE.v"
-
-module ULPI ();
-
-    
+    assign out = ch[sel];
 
 endmodule
