@@ -45,6 +45,8 @@ SOFTWARE.
 
  */
 
+`default_nettype none
+
 module ULPI_REG_READ (
                       // System signals
                       input  wire clk, // Clock input signal
@@ -62,6 +64,7 @@ module ULPI_REG_READ (
 
     // CMD used to perform a register read 11xxxxxx
     parameter [1:0]REG_READ_CMD = 2'b11;
+
 
     /// ULPI_REG_READ Regs and wires
     // Outputs
@@ -92,12 +95,14 @@ module ULPI_REG_READ (
     assign ULPI_DATA        = (DIR == 1'b1) ? {8{1'bz}} : ULPI_DATA_OUT_r; // #INOUT
     /// End of ULPI_REG_READ Regs and wires
 
+
     /// ULPI_REG_READ States (See module description at the beginning to get more info)
     localparam READ_IDLE      = 2'b00;
     localparam READ_TXCMD     = 2'b01;
     localparam READ_WAIT      = 2'b10;
     localparam READ_SAVE_DATA = 2'b11;
     /// End of ULPI_REG_READ States
+
 
     /// ULPI_REG_READ controller
     // States and actions

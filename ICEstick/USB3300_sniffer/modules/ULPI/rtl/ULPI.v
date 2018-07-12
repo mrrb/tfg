@@ -46,8 +46,45 @@ SOFTWARE.
 `include "ULPI_REG_READ.v"
 `include "ULPI_REG_WRITE.v"
 
-module ULPI ();
+module ULPI (
+             // System signals
+             input  wire clk, // Clock input signal
+             input  wire rst, // Master reset signal
+             // ULPI pins
+             input  wire NXT,
+             input  wire DIR,
+             output wire STP,
+             inout  wire [7:0]DATA
+            );
 
+    /// ULPI submodules load
+    ULPI_REG_READ  UReg_R (clk, rst, , , , , DIR, NXT, );
+    ULPI_REG_WRITE UReg_W (clk, rst, , , , ,);
+    /// End of ULPI submodules load
+
+    /// ULPI Regs and wires
+    // Outputs
+
+    // Inputs
+
+    // Buffers
+
+    // Control registers
+
+    // Flags
     
+    // Assigns
+
+    /// End of ULPI Regs and wires
+
+
+    /// ULPI States (See module description at the beginning to get more info)
+    
+    /// End of ULPI States
+
+
+    /// ULPI controller
+    
+    /// End of ULPI controller
 
 endmodule

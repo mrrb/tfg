@@ -65,6 +65,7 @@ module ULPI_REG_WRITE (
     // CMD used to perform a register write 10xxxxxx
     parameter [1:0]REG_WRITE_CMD = 2'b10;
 
+
     /// ULPI_REG_WRITE Regs and wires
     // Outputs
     reg STP_r = 1'b0;
@@ -95,12 +96,14 @@ module ULPI_REG_WRITE (
     assign STP               = STP_r;           // #OUTPUT
     /// End of ULPI_REG_WRITE Regs and wires
 
+
     /// ULPI_REG_WRITE States (See module description at the beginning to get more info)
     localparam WRITE_IDLE      = 2'b00;
     localparam WRITE_TXCMD     = 2'b01;
     localparam WRITE_SEND_DATA = 2'b10;
     localparam WRITE_STP       = 2'b11;
     /// End of ULPI_REG_WRITE States
+
 
     /// ULPI_REG_WRITE controller
     // States and actions
