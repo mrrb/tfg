@@ -27,7 +27,7 @@
  *     Initial: 2018/05/01      Mario Rubio
  */
 
-`include "../clk_gen/rtl/clk_gen.v"
+// `include "../clk_div_gen/rtl/clk_div_gen.v";
 
 module UART_tb();
    

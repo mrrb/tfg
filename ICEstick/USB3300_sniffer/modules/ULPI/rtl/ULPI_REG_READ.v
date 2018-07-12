@@ -29,25 +29,58 @@ SOFTWARE.
 
 /*
  * Revision History:
- *     Initial:        2018/06/15        Mario Rubio
+ *     Initial:        2018/07/12        Mario Rubio
  */
 
 /*
- * This module enables the communication between the FPGA and the USB3300 module using the ULPI protocol.
- * 
- * Submodules:
- *  - ULPI detect
- *  - 
- *
+ This module has the instructions set that let read data from the PHY registers
+
+ States:
+    1. 
+
  */
 
-`default_nettype none
+module ULPI_REG_READ ();
 
-`include "ULPI_REG_READ.v"
-`include "ULPI_REG_WRITE.v"
+    // CMD used to perform a register read 11xxxxxx
+    parameter [1:0]REG_READ_CMD = 2'b11;
 
-module ULPI (input );
+    /// ULPI_REG_READ Regs and wires
+    // Outputs
 
+    // Inputs
+    // #NONE
+
+    // Buffers
+
+    // Control registers
+    reg [2:0]READ_state_r = 3'b0; // Register to store the current state of the ULPI_REG_READ module
+
+    // Flags
     
+    // Assigns
+
+    /// End of ULPI_REG_READ Regs and wires
+
+    /// ULPI_REG_READ States (See module description at the beginning to get more info)
+    localparam READ_IDLE = 3'b0;
+    localparam READ_IDLE = 3'b0;
+    /// End of ULPI_REG_READ States
+
+    /// ULPI_REG_READ controller
+    // States and actions
+    // #FIGURE_NUMBER READ_state_machine
+    always @(posedge clk) begin
+        if(rst == 1'b1) begin
+
+        end
+        else begin
+            case(READ_state_r)
+                default: begin
+                end
+            endcase
+        end
+    end
+    /// End of ULPI_REG_READ controller
 
 endmodule

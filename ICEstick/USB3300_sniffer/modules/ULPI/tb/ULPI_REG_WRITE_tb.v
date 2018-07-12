@@ -29,25 +29,45 @@ SOFTWARE.
 
 /*
  * Revision History:
- *     Initial:        2018/06/15        Mario Rubio
+ *     Initial:        2018/07/11        Mario Rubio
  */
 
-/*
- * This module enables the communication between the FPGA and the USB3300 module using the ULPI protocol.
- * 
- * Submodules:
- *  - ULPI detect
- *  - 
- *
- */
+module ULPI_REG_WRITE_tb ();
 
-`default_nettype none
+    // Registers and wires
+    reg clk = 1'b0;
+    reg rst = 1'b0;
+    reg WD  = 1'b0;
+    reg NXT = 1'b0;
+    reg [7:0]DATA = 8'b0;
+    reg [5:0]ADDR = 6'b0;
 
-`include "ULPI_REG_READ.v"
-`include "ULPI_REG_WRITE.v"
+    wire [7:0]ULPI_DATA;
+    wire STP;
+    wire busy;
 
-module ULPI (input );
+    // Module init
+    ULPI_REG_WRITE WRITE_tb (clk, rst, WD, DATA, ADDR, busy, NXT, STP, ULPI_DATA);
 
-    
+    // CLK gen
+    always #1 clk <= ~clk;
+
+    // Simulation
+    initial begin
+      
+        $dumpfile("sim/ULPI_REG_WRITE_tb.vcd");
+        $dumpvars(0, ULPI_REG_WRITE_tb);
+
+        #1 ADDR = 6'h1A; DATA = 8'h3A;
+
+        #1 WD = 1;
+        #2 WD = 0;
+
+        #2 NXT = 1;
+        #4 NXT = 0;
+        
+        #100 $finish;
+    end
 
 endmodule
+        

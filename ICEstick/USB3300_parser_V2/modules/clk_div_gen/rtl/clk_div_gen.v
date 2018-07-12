@@ -28,10 +28,10 @@
  */
 
 module clk_div_gen #(parameter DIVIDER = 9)
-                (input  wire clk,
-                 input  wire enable,
-                 output wire new_clk,
-                 output wire clk_pulse);
+                    (input  wire clk,
+                     input  wire enable,
+                     output wire new_clk,
+                     output wire clk_pulse);
 
     // Main clock gen
     reg  [DIVIDER-1:0]new_clk_r = {DIVIDER{1'b0}};

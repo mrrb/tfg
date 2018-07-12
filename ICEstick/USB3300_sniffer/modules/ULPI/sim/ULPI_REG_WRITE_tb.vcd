@@ -1,0 +1,319 @@
+$date
+	Thu Jul 12 00:20:42 2018
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module ULPI_REG_WRITE_tb $end
+$var wire 1 ! busy $end
+$var wire 8 " ULPI_DATA [7:0] $end
+$var wire 1 # STP $end
+$var reg 6 $ ADDR [5:0] $end
+$var reg 8 % DATA [7:0] $end
+$var reg 1 & NXT $end
+$var reg 1 ' WD $end
+$var reg 1 ( clk $end
+$var reg 1 ) rst $end
+$scope module WRITE_tb $end
+$var wire 6 * ADDR [5:0] $end
+$var wire 8 + DATA [7:0] $end
+$var wire 1 & NXT $end
+$var wire 1 # STP $end
+$var wire 8 , ULPI_DATA [7:0] $end
+$var wire 1 ' WRITE_DATA $end
+$var wire 1 ( clk $end
+$var wire 1 ) rst $end
+$var wire 1 - WRITE_s_TXCMD $end
+$var wire 1 . WRITE_s_STP $end
+$var wire 1 / WRITE_s_SEND_DATA $end
+$var wire 1 0 WRITE_s_IDLE $end
+$var wire 1 ! BUSY $end
+$var reg 8 1 DATA_buf_r [7:0] $end
+$var reg 1 2 STP_r $end
+$var reg 8 3 ULPI_DATA_buf_r [7:0] $end
+$var reg 2 4 WRITE_state_r [1:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 4
+b0 3
+02
+b0 1
+10
+0/
+0.
+0-
+b0 ,
+b0 +
+b0 *
+0)
+0(
+0'
+0&
+b0 %
+b0 $
+0#
+b0 "
+0!
+$end
+#1
+1(
+b111010 %
+b111010 +
+b11010 $
+b11010 *
+#2
+0(
+1'
+#3
+1!
+00
+1-
+b10011010 "
+b10011010 ,
+b10011010 3
+b111010 1
+b1 4
+1(
+#4
+0(
+0'
+#5
+1(
+#6
+0(
+1&
+#7
+0-
+1/
+b111010 "
+b111010 ,
+b111010 3
+b10 4
+1(
+#8
+0(
+#9
+0/
+1.
+b0 "
+b0 ,
+b0 3
+1#
+12
+b11 4
+1(
+#10
+0(
+0&
+#11
+0!
+10
+0.
+0#
+02
+b0 4
+1(
+#12
+0(
+#13
+1(
+#14
+0(
+#15
+1(
+#16
+0(
+#17
+1(
+#18
+0(
+#19
+1(
+#20
+0(
+#21
+1(
+#22
+0(
+#23
+1(
+#24
+0(
+#25
+1(
+#26
+0(
+#27
+1(
+#28
+0(
+#29
+1(
+#30
+0(
+#31
+1(
+#32
+0(
+#33
+1(
+#34
+0(
+#35
+1(
+#36
+0(
+#37
+1(
+#38
+0(
+#39
+1(
+#40
+0(
+#41
+1(
+#42
+0(
+#43
+1(
+#44
+0(
+#45
+1(
+#46
+0(
+#47
+1(
+#48
+0(
+#49
+1(
+#50
+0(
+#51
+1(
+#52
+0(
+#53
+1(
+#54
+0(
+#55
+1(
+#56
+0(
+#57
+1(
+#58
+0(
+#59
+1(
+#60
+0(
+#61
+1(
+#62
+0(
+#63
+1(
+#64
+0(
+#65
+1(
+#66
+0(
+#67
+1(
+#68
+0(
+#69
+1(
+#70
+0(
+#71
+1(
+#72
+0(
+#73
+1(
+#74
+0(
+#75
+1(
+#76
+0(
+#77
+1(
+#78
+0(
+#79
+1(
+#80
+0(
+#81
+1(
+#82
+0(
+#83
+1(
+#84
+0(
+#85
+1(
+#86
+0(
+#87
+1(
+#88
+0(
+#89
+1(
+#90
+0(
+#91
+1(
+#92
+0(
+#93
+1(
+#94
+0(
+#95
+1(
+#96
+0(
+#97
+1(
+#98
+0(
+#99
+1(
+#100
+0(
+#101
+1(
+#102
+0(
+#103
+1(
+#104
+0(
+#105
+1(
+#106
+0(
+#107
+1(
+#108
+0(
+#109
+1(
+#110
+0(
