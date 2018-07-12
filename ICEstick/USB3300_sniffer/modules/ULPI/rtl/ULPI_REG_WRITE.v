@@ -67,7 +67,7 @@ module ULPI_REG_WRITE (
 
     /// ULPI_REG_WRITE Regs and wires
     // Outputs
-    reg STP_r = 1'b0; assign STP = STP_r;
+    reg STP_r = 1'b0;
 
     // Inputs
     // #NONE
@@ -92,6 +92,7 @@ module ULPI_REG_WRITE (
     assign WRITE_s_STP       = (WRITE_state_r == WRITE_STP)       ? 1'b1 : 1'b0; // #FLAG
     assign BUSY              = !WRITE_s_IDLE;   // #OUTPUT
     assign ULPI_DATA         = ULPI_DATA_buf_r; // #OUTPUT
+    assign STP               = STP_r;           // #OUTPUT
     /// End of ULPI_REG_WRITE Regs and wires
 
     /// ULPI_REG_WRITE States (See module description at the beginning to get more info)

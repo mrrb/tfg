@@ -57,7 +57,7 @@ module ULPI_REG_READ (
                       // ULPI pins
                       input  wire DIR,
                       input  wire NXT,
-                      inout  wire ULPI_DATA
+                      inout  wire [7:0]ULPI_DATA
                      );
 
     // CMD used to perform a register read 11xxxxxx
@@ -65,12 +65,13 @@ module ULPI_REG_READ (
 
     /// ULPI_REG_READ Regs and wires
     // Outputs
-    reg [7:0]DATA_r = 8'b0; assign DATA = DATA_r;
+    reg [7:0]DATA_r = 8'b0;
 
     // Inputs
     // #NONE
 
     // Buffers
+    reg [7:0]ULPI_DATA_OUT_r = 8'b0;
 
     // Control registers
     reg [1:0]READ_state_r = 3'b0; // Register to store the current state of the ULPI_REG_READ module
@@ -88,7 +89,7 @@ module ULPI_REG_READ (
     assign READ_s_SAVE_DATA = (READ_state_r == READ_SAVE_DATA) ? 1'b1 : 1'b0; // #FLAG
     assign DATA             = DATA_r;       // #OUTPUT
     assign BUSY             = !READ_s_IDLE; // #OUTPUT
-
+    assign ULPI_DATA        = (DIR == 1'b1) ? {8{1'bz}} : ULPI_DATA_OUT_r; // #INOUT
     /// End of ULPI_REG_READ Regs and wires
 
     /// ULPI_REG_READ States (See module description at the beginning to get more info)
@@ -103,7 +104,10 @@ module ULPI_REG_READ (
     // #FIGURE_NUMBER READ_state_machine
     always @(posedge clk) begin
         if(rst == 1'b1) begin
+            // When a reset occurs, the default state is loaded, and the registers are purged
             READ_state_r <= READ_IDLE;
+            DATA_r <= 8'b0;
+            ULPI_DATA_OUT_r <= 8'b0;
         end
         else begin
             case(READ_state_r)
@@ -111,6 +115,9 @@ module ULPI_REG_READ (
                     if(READ_DATA == 1'b1) begin
                         // The READ process start whenever the READ_DATA signal is activated, otherwise, we do nothing
                         READ_state_r <= READ_TXCMD;
+
+                        // The TXCMD is loaded in the ULPI OUTPUT buffer
+                        ULPI_DATA_OUT_r <= {REG_READ_CMD, ADDR};
                     end
                     else begin
                         READ_state_r <= READ_IDLE;
@@ -118,6 +125,7 @@ module ULPI_REG_READ (
                 end
                 READ_TXCMD: begin
                     if(NXT == 1'b1) begin
+                        // We wait for an assertion of the NXT input
                         READ_state_r <= READ_WAIT;
                     end
                     else begin
@@ -126,15 +134,20 @@ module ULPI_REG_READ (
                 end
                 READ_WAIT: begin
                     // We wait 1 clock pulse for the "Turn around" to occur
+                    // Also, the PHY has now the ownership of the bus
                     READ_state_r <= READ_SAVE_DATA;
+                    ULPI_DATA_OUT_r <= 8'b0;
                 end
-                READ_SAVE_DATA:
+                READ_SAVE_DATA: begin
                     if(DIR == 1'b0) begin
                         // We wait until the PHY free the bus to go back to the IDLE state (DIR goes from HIGH to LOW)
                         READ_state_r <= READ_IDLE;
                     end
                     else begin
                         READ_state_r <= READ_SAVE_DATA;
+
+                        // We save the value of the ULPI register before the last "Turn Around"
+                        DATA_r <= ULPI_DATA;
                     end
                 end
                 default: begin
