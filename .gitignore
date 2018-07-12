@@ -4,4 +4,6 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ftp-sync.json
+.vscode
+.travis.yml
 lib
