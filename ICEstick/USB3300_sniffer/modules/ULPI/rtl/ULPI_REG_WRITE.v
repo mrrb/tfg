@@ -30,6 +30,7 @@ SOFTWARE.
 /*
  * Revision History:
  *     Initial:        2018/07/04        Mario Rubio
+ *     
  */
 
 /*
@@ -56,7 +57,9 @@ module ULPI_REG_WRITE (
                       input  wire [7:0]DATA,  // Input that transmit the 8 bit DATA to be written in the ULPI register
                       input  wire [5:0]ADDR,  // Input that transmit the 6 bit address where we want to write the DATA
                       output wire BUSY,       // Output signal activated whenever is a Write operationn in progress
+                    //   output wire QUICK_EXIT, // In case the PHY take control over the BUS in the first 
                       // ULPI pins
+                    //   input  wire DIR,
                       input  wire NXT,
                       output wire STP,
                       output wire [7:0]ULPI_DATA

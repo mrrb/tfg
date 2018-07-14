@@ -70,6 +70,7 @@ module ULPI (
     // Buffers
 
     // Control registers
+    reg [2:0]ULPI_state_r = 3'b0;
 
     // Flags
     
