@@ -50,6 +50,12 @@ module ULPI (
              // System signals
              input  wire clk, // Clock input signal
              input  wire rst, // Master reset signal
+             // ULPI controller signals
+             input  wire WD,                // Input to write DATA in a register given an Address (ADDR)
+             input  wire RD,                // Input to read DATA from a register given an Address (ADDR)
+             input  wire [5:0]ADDR,         // Address wher ewe have to read/write
+             input  wire [7:0]REG_DATA_IN,  // Data to write in register
+             output wire [7:0]REG_DATA_OUT, // Data readed from a register
              // ULPI pins
              input  wire NXT,
              input  wire DIR,
@@ -80,12 +86,41 @@ module ULPI (
 
 
     /// ULPI States (See module description at the beginning to get more info)
-    
+    localparam ULPI_IDLE      = 0;
+    localparam ULPI_REG_READ  = 1;
+    localparam ULPI_REG_WRITE = 2;
     /// End of ULPI States
 
 
     /// ULPI controller
-    
+    always @(posedge clk) begin
+        if(rst == 1'b1) begin
+            // Master reset actions
+        end
+        else begin
+            case(ULPI_state_r)
+                ULPI_IDLE: begin
+                    if(DIR == 1'b1) begin
+                    end
+                    else if(WD == 1'b1) begin
+                        ULPI_state_r <= ULPI_REG_WRITE;
+                    end
+                    else if(RD == 1'b1) begin
+                        ULPI_state_r <= ULPI_REG_READ;
+                    end
+                    else begin
+                        ULPI_state_r <= ULPI_IDLE;
+                    end
+                end
+                ULPI_REG_READ: begin
+                end
+                ULPI_REG_WRITE: begin
+                end
+                default: begin
+                end
+            endcase
+        end
+    end
     /// End of ULPI controller
 
 endmodule
