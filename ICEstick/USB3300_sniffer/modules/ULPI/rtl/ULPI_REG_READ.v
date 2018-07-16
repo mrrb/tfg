@@ -58,6 +58,7 @@ module ULPI_REG_READ (
                       output wire BUSY,      // Output signal activated whenever is a READ operationn in progress
                       // ULPI pins
                       input  wire DIR,
+                      output wire STP,
                       input  wire NXT,
                       inout  wire [7:0]ULPI_DATA
                      );

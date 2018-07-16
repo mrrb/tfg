@@ -29,56 +29,40 @@ SOFTWARE.
 
 /*
  * Revision History:
- *     Initial:        2018/07/12        Mario Rubio
+ *     Initial:        2018/07/15        Mario Rubio
  */
 
-module ULPI_REG_READ_tb ();
+module impedance_tb ();
 
-    // Registers and wires
-    reg clk = 1'b0;
-    reg rst = 1'b0;
-    reg RD  = 1'b0;
-    reg NXT = 1'b0;
-    reg DIR = 1'b0;
-    reg [5:0]ADDR = 6'b0;
-    reg [7:0]ULPI_DATA_r = 8'b0;
 
-    wire [7:0]DATA;
-    wire [7:0]ULPI_DATA_w;
-    wire STP;
-    wire busy;
+    reg I_r    = 1'b0; wire I;    assign I    = I_r;
+    reg IO_r   = 1'b0; wire IO;   assign IO   = (ctrl == 1'b1) ? IO_r : 1'bz;
+    reg ctrl_r = 1'b0; wire ctrl; assign ctrl = ctrl_r;
+    wire O;
 
-    wire [7:0]ULPI_DATA;
-    assign ULPI_DATA = (DIR == 1'b1) ? ULPI_DATA_r : ULPI_DATA_w;
-
-    // Module init
-    ULPI_REG_READ READ_tb (clk, rst, RD, ADDR, DATA, busy, DIR, STP, NXT, ULPI_DATA);
-
-    // CLK gen
-    always #1 clk <= ~clk;
-
-    // Simulation
+    impedance IM_tb (IO, I, ctrl, O);
     initial begin
-      
-        $dumpfile("sim/ULPI_REG_READ_tb.vcd");
-        $dumpvars(0, ULPI_REG_READ_tb);
-
-        ULPI_DATA_r = 8'h3D;
-
-        #1;
-
-        #1 RD = 1;
-           ADDR = 6'h1B;
-        #2 RD = 0;
-           ADDR = 0;
-
-        #2 NXT = 1;
-        #2 NXT = 0;
-           DIR = 1;
-
-        #4 DIR = 0;
+    
+        $dumpfile("sim/impedance_tb.vcd");
+        $dumpvars(0, impedance_tb);
         
-        #100 $finish;
+        #1 I_r = 1;        
+        #1 I_r = 0;        
+        #1 I_r = 1;        
+        #2 I_r = 0;
+
+        #1 ctrl_r = 1;        
+        #1 I_r = 1; IO_r = 1;     
+        #1 I_r = 0; IO_r = 0;     
+        #1 I_r = 1; IO_r = 1; 
+        #2 I_r = 0; IO_r = 0;
+
+        #1 ctrl_r = 0;
+        #1 I_r = 1; 
+
+        #20 $finish;
+
     end
+
 
 endmodule

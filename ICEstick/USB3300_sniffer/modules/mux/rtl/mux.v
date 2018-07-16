@@ -33,11 +33,11 @@ SOFTWARE.
  */
 
 module mux #(
-             parameter n = 2 // Bits of the multiplexer
+             parameter n_bits = 2 // Bits of the multiplexer
             )
             (
-             input  wire [2**n-1:0]ch,  // Input channels (2^n)
-             input  wire [n-1:0]sel, // Selecction input (n)
+             input  wire [2**n_bits-1:0]ch,  // Input channels (2^n_bits)
+             input  wire [n_bits-1:0]sel, // Selecction input (n_bits)
              output wire out      // Mux output
             );
 

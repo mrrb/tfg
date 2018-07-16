@@ -1,3 +1,4 @@
 ##FIGURE_NUMBER
 WRITE_state_machine > ./modules/ULPI/rtl/ULPI_REG_WRITE.v
 READ_state_machine  > ./modules/ULPI/rtl/ULPI_REG_READ.v
+ULPI_state_machine  > ./modules/ULPI/rtl/ULPI.v

@@ -29,56 +29,19 @@ SOFTWARE.
 
 /*
  * Revision History:
- *     Initial:        2018/07/12        Mario Rubio
+ *     Initial:        2018/07/15        Mario Rubio
  */
 
-module ULPI_REG_READ_tb ();
+`default_nettype none
 
-    // Registers and wires
-    reg clk = 1'b0;
-    reg rst = 1'b0;
-    reg RD  = 1'b0;
-    reg NXT = 1'b0;
-    reg DIR = 1'b0;
-    reg [5:0]ADDR = 6'b0;
-    reg [7:0]ULPI_DATA_r = 8'b0;
+module impedance (
+                  inout  wire IO,
+                  input  wire I,
+                  input  wire ctrl,
+                  output wire O
+                 );
 
-    wire [7:0]DATA;
-    wire [7:0]ULPI_DATA_w;
-    wire STP;
-    wire busy;
-
-    wire [7:0]ULPI_DATA;
-    assign ULPI_DATA = (DIR == 1'b1) ? ULPI_DATA_r : ULPI_DATA_w;
-
-    // Module init
-    ULPI_REG_READ READ_tb (clk, rst, RD, ADDR, DATA, busy, DIR, STP, NXT, ULPI_DATA);
-
-    // CLK gen
-    always #1 clk <= ~clk;
-
-    // Simulation
-    initial begin
-      
-        $dumpfile("sim/ULPI_REG_READ_tb.vcd");
-        $dumpvars(0, ULPI_REG_READ_tb);
-
-        ULPI_DATA_r = 8'h3D;
-
-        #1;
-
-        #1 RD = 1;
-           ADDR = 6'h1B;
-        #2 RD = 0;
-           ADDR = 0;
-
-        #2 NXT = 1;
-        #2 NXT = 0;
-           DIR = 1;
-
-        #4 DIR = 0;
-        
-        #100 $finish;
-    end
+    assign IO = (ctrl == 1'b1) ? 1'bz : I;
+    assign O  = (ctrl == 1'b1) ? IO   : 1'b1;
 
 endmodule

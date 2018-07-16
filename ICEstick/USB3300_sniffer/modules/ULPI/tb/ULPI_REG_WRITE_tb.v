@@ -45,9 +45,10 @@ module ULPI_REG_WRITE_tb ();
     wire [7:0]ULPI_DATA;
     wire STP;
     wire busy;
+    wire DIR;
 
     // Module init
-    ULPI_REG_WRITE WRITE_tb (clk, rst, WD, DATA, ADDR, busy, NXT, STP, ULPI_DATA);
+    ULPI_REG_WRITE WRITE_tb (clk, rst, WD, ADDR, DATA, busy, DIR, STP, NXT, ULPI_DATA);
 
     // CLK gen
     always #1 clk <= ~clk;

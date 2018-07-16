@@ -1,4 +1,4 @@
-M_NAME  := mux
+M_NAME  := impedance
 
 TB_DIR  := ./tb
 RTL_DIR := ./rtl
@@ -12,6 +12,7 @@ sim: $(SIM_DIR)/$(M_NAME)_tb.out
 $(SIM_DIR)/$(M_NAME)_tb.out: $(TB_DIR)/$(M_NAME)_tb.v $(RTL_DIR)/$(M_NAME).v
 	mkdir -p $(SIM_DIR)/
 	iverilog $^ -o $(SIM_DIR)/$(M_NAME)_tb.out
+
 
 gtk: $(SIM_DIR)/$(M_NAME)_tb.vcd
 	gtkwave $< &
