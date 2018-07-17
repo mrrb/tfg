@@ -66,8 +66,13 @@ module ULPI_tb ();
         $dumpfile("sim/ULPI_tb.vcd");
         $dumpvars(0, ULPI_tb);
 
-        #2 WD = 1;
+        #1 ADDR = 6'h1A; DATA_IN = 8'h3A;
+
+        #1 WD = 1;
         #2 WD = 0;
+
+        #2 NXT = 1;
+        #4 NXT = 0;
         
         #100 $finish;
     end

@@ -102,9 +102,6 @@ module ULPI (
     // Control registers
     reg [2:0]ULPI_state_r = 3'b0; // Register to store the current state of the controller
     reg clk_sel_r         = 1'b0; // Clock selector between the external 60MHz clock and the internal 12MHz one
-    reg WD_r = 1'b0; wire WD_w;   // Reg and wire to make a register WRITE operation
-    reg RD_r = 1'b0; wire RD_w;   // Reg and wire to make a register READ  operation
-    reg TD_r = 1'b0; wire TD_w;   // Reg and wire to make a package transfer
 
     // Flags
     wire ULPI_CTRL_s_IDLE;      // 1 if ULPI_state_r == ULPI_CTRL_IDLE, else 0
@@ -116,13 +113,18 @@ module ULPI (
     wire ULPI_CTRL_s_EXIT_LP;   // 1 if ULPI_state_r == ULPI_CTRL_EXIT_LP, else 0
     wire busy_read;  // Busy signal from the ULPI_REG_READ  submodule
     wire busy_write; // Busy signal from the ULPI_REG_WRITE submodule
-    wire clk; // Controller clock
+    wire clk;   // Controller clock
+    wire WD_w;  // Wire to make a register WRITE operation
+    wire RD_w;  // Wire to make a register READ  operation
+    wire TD_w;  // Wire to make a package transfer
+    wire DCTRL; // Flag activated when there is only 1 or less of the following signals HIGH: WD, RD, TD
 
     // Assigns
-    assign clk     = (clk_sel_r == 1'b0) ? clk_ext : clk_int; // #CTRL
-    assign WD_w    = WD_r;    // #CTRL
-    assign RD_w    = RD_r;    // #CTRL
-    assign TD_w    = TD_r;    // #CTRL
+    assign clk  = (clk_sel_r == 1'b0) ? clk_ext : clk_int; // #CTRL
+    assign WD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? WD : 1'b0; // #FLAG
+    assign RD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? RD : 1'b0; // #FLAG
+    assign TD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? TD : 1'b0; // #FLAG
+    assign DCTRL = (0) ? 1'b1 : 1'b0;
     assign ULPI_CTRL_s_IDLE      = (ULPI_state_r == ULPI_CTRL_IDLE)      ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_CTRL_s_REG_READ  = (ULPI_state_r == ULPI_CTRL_REG_READ)  ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_CTRL_s_REG_WRITE = (ULPI_state_r == ULPI_CTRL_REG_WRITE) ? 1'b1 : 1'b0; // #FLAG
@@ -163,9 +165,6 @@ module ULPI (
                     else if(WD == 1'b1 && DIR == 1'b0) begin
                         // Register WRITE request
                         ULPI_state_r <= ULPI_CTRL_REG_WRITE;
-
-                        // The Write signal is activated
-                        WD_r <= 1'b1;
                     end
                     else if(RD == 1'b1 && DIR == 1'b0) begin
                         // Register READ request
@@ -191,7 +190,6 @@ module ULPI (
                     else ULPI_state_r <= ULPI_CTRL_REG_READ;
                 end
                 ULPI_CTRL_REG_WRITE: begin
-                    WD_r <= 1'b0;
                     // Once the write process finished, we go back to the IDLE state
                     if(busy_write == 1'b0) begin
                         ULPI_state_r <= ULPI_CTRL_IDLE;
