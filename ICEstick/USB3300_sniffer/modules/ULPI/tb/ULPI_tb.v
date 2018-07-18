@@ -66,6 +66,7 @@ module ULPI_tb ();
         $dumpfile("sim/ULPI_tb.vcd");
         $dumpvars(0, ULPI_tb);
 
+        // REG Write test
         #1 ADDR = 6'h1A; DATA_IN = 8'h3A;
 
         #1 WD = 1;
@@ -73,6 +74,21 @@ module ULPI_tb ();
 
         #2 NXT = 1;
         #4 NXT = 0;
+
+        #6
+        // REG Read test
+        ULPI_DATA_r = 8'h3D;
+
+        #1 RD = 1;
+           ADDR = 6'h1B;
+        #2 RD = 0;
+           ADDR = 0;
+
+        #2 NXT = 1;
+        #2 NXT = 0;
+           DIR = 1;
+
+        #4 DIR = 0;
         
         #100 $finish;
     end
