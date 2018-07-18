@@ -52,7 +52,7 @@ module ULPI_REG_READ_tb ();
     assign ULPI_DATA = (DIR == 1'b1) ? ULPI_DATA_r : ULPI_DATA_w;
 
     // Module init
-    ULPI_REG_READ READ_tb (clk, rst, RD, ADDR, DATA, busy, DIR, STP, NXT, ULPI_DATA);
+    ULPI_REG_READ READ_tb (clk, rst, RD, ADDR, DATA, busy, DIR, STP, NXT, ULPI_DATA_r, ULPI_DATA_w);
 
     // CLK gen
     always #1 clk <= ~clk;

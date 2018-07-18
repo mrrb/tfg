@@ -62,7 +62,8 @@ module ULPI_REG_WRITE (
                       input  wire DIR,
                       output wire STP,
                       input  wire NXT,
-                      output wire [7:0]ULPI_DATA
+                      input  wire [7:0]ULPI_DATA_IN,
+                      output wire [7:0]ULPI_DATA_OUT
                       );
 
     // CMD used to perform a register write 10xxxxxx
@@ -95,7 +96,7 @@ module ULPI_REG_WRITE (
     assign WRITE_s_SEND_DATA = (WRITE_state_r == WRITE_SEND_DATA) ? 1'b1 : 1'b0; // #FLAG
     assign WRITE_s_STP       = (WRITE_state_r == WRITE_STP)       ? 1'b1 : 1'b0; // #FLAG
     assign BUSY              = !WRITE_s_IDLE;   // #OUTPUT
-    assign ULPI_DATA         = ULPI_DATA_buf_r; // #OUTPUT
+    assign ULPI_DATA_OUT     = ULPI_DATA_buf_r; // #OUTPUT
     assign STP               = STP_r;           // #OUTPUT
     /// End of ULPI_REG_WRITE Regs and wires
 

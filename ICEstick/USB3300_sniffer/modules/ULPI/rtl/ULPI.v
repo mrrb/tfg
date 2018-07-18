@@ -69,27 +69,52 @@ module ULPI (
 
     /// ULPI DATA input/output tristate controller
     // Wires for the ULPI_DATA signals
-    wire [7:0]ULPI_DATA_READ;  // ULPI DATA inout for the ULPI_REG_READ submodule
-    wire [7:0]ULPI_DATA_WRITE; // ULPI DATA input output for the ULPI_REG_WRITE submodule
+    wire [7:0]ULPI_DATA_REG_READ;  // DATA signal from the ULPI_REG_READ submodule
+    wire [7:0]ULPI_DATA_REG_WRITE; // DATA signal from the ULPI_REG_WRITE submodule
+    wire [7:0]ULPI_DATA_TRS_PCK;   // DATA signal from the ULPI_TRS_PCK submodule
+    wire [7:0]ULPI_DATA_REC_PCK;   // DATA signal from the ULPI_REC_PCK submodule
+    wire [1:0]ULPI_DATA_CTRL;      // Signal to control the ULPI_DATA mux
+    wire [7:0]ULPI_DATA_w;
 
     // Assigns for the ULPI_DATA signals
-    assign ULPI_DATA_READ  = (ULPI_CTRL_s_REG_READ  == 1'b1) ? ULPI_DATA : 8'bz; // ULPI_DATA link to the READ  module
-    assign ULPI_DATA_WRITE = (ULPI_CTRL_s_REG_WRITE == 1'b1) ? ULPI_DATA : 8'bz; // ULPI_DATA link to the WRITE module
-    assign ULPI_DATA       = (ULPI_CTRL_s_IDLE && !DIR)      ? 8'b0      : 8'bz; // Default state and High impedance switcher whenever PHY has the ownership of the bus
+    assign ULPI_DATA_CTRL = ULPI_CTRL_s_REG_READ  ? 2'b01 :
+                           (ULPI_CTRL_s_REG_WRITE ? 2'b10 : 
+                           (ULPI_CTRL_s_TRANS_PCK ? 2'b11 : 2'b00));
+    assign ULPI_DATA = DIR ? {8{1'bz}} : ULPI_DATA_w;
+    
+    // ULPI_DATA mux
+    localparam DATA_WIDTH = 8;
+    genvar i;
+    generate
+        for(i=0; i<DATA_WIDTH; i=i+1) begin
+           mux #(.n_bits(2)) ULPI_DATA_MUX ({1'b0,
+                                             ULPI_DATA_REG_READ[i],
+                                             ULPI_DATA_REG_WRITE[i],
+                                             ULPI_DATA_TRS_PCK[i]
+                                             },
+                                            ULPI_DATA_CTRL,
+                                            ULPI_DATA_w[i]);
+        end
+    endgenerate
 
     // Wires for the STP signal
-    wire STP_READ;  // STP signal from the ULPI_REG_READ  submodule
-    wire STP_WRITE; // STP signal from the ULPI_REG_WRITE submodule
+    wire STP_READ;      // STP signal from the ULPI_REG_READ submodule
+    wire STP_WRITE;     // STP signal from the ULPI_REG_WRITE submodule
+    wire STP_TRS_PCK;   // STP signal from the ULPI_TRS_PCK submodule
+    wire STP_REC_PCK;   // STP signal from the ULPI_REC_PCK submodule
+    wire [1:0]STP_CTRL; // Signal to control the STP mux
 
-    // Assigns for the STP signal
-    assign STP_READ  = (ULPI_CTRL_s_REG_READ  == 1'b1) ? STP : 1'bz;
-    assign STP_WRITE = (ULPI_CTRL_s_REG_WRITE == 1'b1) ? STP : 1'bz;
-    assign STP       = (ULPI_CTRL_s_IDLE == 1'b1) ? 1'b0 : 1'bz;
+    // STP assigns
+    assign STP_CTRL = ULPI_CTRL_s_REG_WRITE ? 2'b01 :
+                     (ULPI_CTRL_s_TRANS_PCK ? 2'b10 : 2'b00);
+
+    // STP mux
+    mux #(.n_bits(2)) STP_MUX ({1'b0, STP_WRITE, STP_TRS_PCK, 1'b0}, STP_CTRL, STP);
     /// End of ULPI DATA input/output tristate controller
 
     /// ULPI submodules load
-    ULPI_REG_READ  UR (clk_ext, rst, RD_w, ADDR, REG_DATA_OUT, busy_read,  DIR, STP_READ,  NXT, ULPI_DATA_READ);
-    ULPI_REG_WRITE UW (clk_ext, rst, WD_w, ADDR, REG_DATA_IN,  busy_write, DIR, STP_WRITE, NXT, ULPI_DATA_WRITE);
+    ULPI_REG_READ  UR (clk_ext, rst, RD_w, ADDR, REG_DATA_OUT, busy_read,  DIR, STP_READ,  NXT, ULPI_DATA, ULPI_DATA_REG_READ);
+    ULPI_REG_WRITE UW (clk_ext, rst, WD_w, ADDR, REG_DATA_IN,  busy_write, DIR, STP_WRITE, NXT, ULPI_DATA, ULPI_DATA_REG_WRITE);
     /// End of ULPI submodules load
 
     /// ULPI Regs and wires

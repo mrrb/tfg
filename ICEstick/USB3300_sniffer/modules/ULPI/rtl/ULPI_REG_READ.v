@@ -60,7 +60,8 @@ module ULPI_REG_READ (
                       input  wire DIR,
                       output wire STP,
                       input  wire NXT,
-                      inout  wire [7:0]ULPI_DATA
+                      input  wire [7:0]ULPI_DATA_IN,
+                      output wire [7:0]ULPI_DATA_OUT
                      );
 
     // CMD used to perform a register read 11xxxxxx
@@ -91,9 +92,9 @@ module ULPI_REG_READ (
     assign READ_s_TXCMD     = (READ_state_r == READ_TXCMD)     ? 1'b1 : 1'b0; // #FLAG
     assign READ_s_WAIT      = (READ_state_r == READ_WAIT)      ? 1'b1 : 1'b0; // #FLAG
     assign READ_s_SAVE_DATA = (READ_state_r == READ_SAVE_DATA) ? 1'b1 : 1'b0; // #FLAG
-    assign DATA             = DATA_r;       // #OUTPUT
-    assign BUSY             = !READ_s_IDLE; // #OUTPUT
-    assign ULPI_DATA        = (DIR == 1'b1) ? {8{1'bz}} : ULPI_DATA_OUT_r; // #INOUT
+    assign DATA             = DATA_r;          // #OUTPUT
+    assign BUSY             = !READ_s_IDLE;    // #OUTPUT
+    assign ULPI_DATA_OUT    = ULPI_DATA_OUT_r; // #OUTPUT
     /// End of ULPI_REG_READ Regs and wires
 
 
@@ -118,6 +119,7 @@ module ULPI_REG_READ (
         else begin
             case(READ_state_r)
                 READ_IDLE: begin
+                    ULPI_DATA_OUT_r <= 8'b0;
                     if(READ_DATA == 1'b1) begin
                         // The READ process start whenever the READ_DATA signal is activated, otherwise, we do nothing
                         READ_state_r <= READ_TXCMD;
@@ -153,7 +155,7 @@ module ULPI_REG_READ (
                         READ_state_r <= READ_SAVE_DATA;
 
                         // We save the value of the ULPI register before the last "Turn Around"
-                        DATA_r <= ULPI_DATA;
+                        DATA_r <= ULPI_DATA_IN;
                     end
                 end
                 default: begin
