@@ -60,6 +60,7 @@ module ULPI (
              input  wire [5:0]ADDR,         // Address wher ewe have to read/write
              input  wire [7:0]REG_DATA_IN,  // Data to write in register
              output wire [7:0]REG_DATA_OUT, // Data readed from a register
+             output wire BUSY,              // Singal activated whenever the ULPI controller is not in the IDLE state
              // ULPI pins
              input  wire DIR,
              output wire STP,
@@ -77,10 +78,10 @@ module ULPI (
     wire [7:0]ULPI_DATA_w;
 
     // Assigns for the ULPI_DATA signals
+    assign ULPI_DATA = DIR ? {8{1'bz}} : ULPI_DATA_w;
     assign ULPI_DATA_CTRL = ULPI_CTRL_s_REG_READ  ? 2'b01 :
                            (ULPI_CTRL_s_REG_WRITE ? 2'b10 : 
                            (ULPI_CTRL_s_TRANS_PCK ? 2'b11 : 2'b00));
-    assign ULPI_DATA = DIR ? {8{1'bz}} : ULPI_DATA_w;
     
     // ULPI_DATA mux
     localparam DATA_WIDTH = 8;
@@ -149,7 +150,7 @@ module ULPI (
     assign WD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? WD : 1'b0; // #FLAG
     assign RD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? RD : 1'b0; // #FLAG
     assign TD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? TD : 1'b0; // #FLAG
-    assign DCTRL = (0) ? 1'b1 : 1'b0;
+    assign DCTRL = !{^{WD,RD,TD,1'b0}};
     assign ULPI_CTRL_s_IDLE      = (ULPI_state_r == ULPI_CTRL_IDLE)      ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_CTRL_s_REG_READ  = (ULPI_state_r == ULPI_CTRL_REG_READ)  ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_CTRL_s_REG_WRITE = (ULPI_state_r == ULPI_CTRL_REG_WRITE) ? 1'b1 : 1'b0; // #FLAG
@@ -157,6 +158,7 @@ module ULPI (
     assign ULPI_CTRL_s_TRANS_PCK = (ULPI_state_r == ULPI_CTRL_TRANS_PCK) ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_CTRL_s_ENTER_LP  = (ULPI_state_r == ULPI_CTRL_ENTER_LP)  ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_CTRL_s_EXIT_LP   = (ULPI_state_r == ULPI_CTRL_EXIT_LP)   ? 1'b1 : 1'b0; // #FLAG
+    assign BUSY = !ULPI_CTRL_s_IDLE; // #OUTPUT
     /// End of ULPI Regs and wires
 
 
@@ -187,15 +189,15 @@ module ULPI (
                         // Package incoming
                         ULPI_state_r <= ULPI_CTRL_RECV_PCK;
                     end
-                    else if(WD == 1'b1 && DIR == 1'b0) begin
+                    else if(WD_w == 1'b1) begin
                         // Register WRITE request
                         ULPI_state_r <= ULPI_CTRL_REG_WRITE;
                     end
-                    else if(RD == 1'b1 && DIR == 1'b0) begin
+                    else if(RD_w == 1'b1) begin
                         // Register READ request
                         ULPI_state_r <= ULPI_CTRL_REG_READ;
                     end
-                    else if(TD == 1'b1 && DIR == 1'b0) begin
+                    else if(TD_w == 1'b1 && DIR == 1'b0) begin
                         // Package transmission request
                         ULPI_state_r <= ULPI_CTRL_TRANS_PCK;
                     end

@@ -51,12 +51,13 @@ module ULPI_tb ();
     wire [7:0]DATA_OUT;
     wire STP;
     wire [7:0]ULPI_DATA_w;
+    wire busy;
 
     wire [7:0]ULPI_DATA;
     assign ULPI_DATA = (DIR == 1'b1) ? ULPI_DATA_r : ULPI_DATA_w;
 
     // Module Init
-    ULPI UP_tb (clk_ext, clk_int, rst, WD, RD, TD, LP, ADDR, DATA_IN, DATA_OUT, DIR, STP, NXT, ULPI_DATA);
+    ULPI UP_tb (clk_ext, clk_int, rst, WD, RD, TD, LP, ADDR, DATA_IN, DATA_OUT, busy, DIR, STP, NXT, ULPI_DATA);
 
     // CLK gen
     always #1 clk_ext <= ~clk_ext;
@@ -74,7 +75,7 @@ module ULPI_tb ();
 
         #2 NXT = 1;
         #4 NXT = 0;
-
+        #1
         #6
         // REG Read test
         ULPI_DATA_r = 8'h3D;
