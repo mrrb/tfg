@@ -29,15 +29,6 @@ SOFTWARE.
 
 /*
  * Revision History:
- *     Initial:        2018/06/15        Mario Rubio
+ *     Initial:        2018/07/20        Mario Rubio
  */
 
-`include "ULPI_REG_ADDR.vh"
-
-
-module USB3300_parser() #()
-                         ();
-
-    
-
-endmodule

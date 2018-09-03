@@ -43,9 +43,9 @@ SOFTWARE.
 
 `default_nettype none
 
-`include "rtl/ULPI_REG_READ.v"
-`include "rtl/ULPI_REG_WRITE.v"
-`include "../mux/rtl/mux.v"
+`include "./modules/ULPI/rtl/ULPI_REG_READ.v"
+`include "./modules/ULPI/rtl/ULPI_REG_WRITE.v"
+`include "./modules/mux/rtl/mux.v"
 
 module ULPI (
              // System signals

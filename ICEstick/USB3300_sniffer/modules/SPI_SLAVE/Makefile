@@ -1,4 +1,4 @@
-M_NAME  := clk_div_gen
+M_NAME  := SPI_SLAVE
 
 TB_DIR  := ./tb
 RTL_DIR := ./rtl
