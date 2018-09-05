@@ -63,4 +63,20 @@ module USB3300_parser (
                       REG_DATA_IN, REG_DATA_OUT, busy,
                       DIR, STP, NXT, ULPI_DATA);
 
+    /// PLL init
+    // icepll command let you obtain divider values
+    // 80MHz V
+    wire clk_PLL;
+    SB_PLL40_CORE #(.FEEDBACK_PATH("SIMPLE"),
+                    .PLLOUT_SELECT("GENCLK"),
+                    .DIVR(4'b0000),
+                    .DIVF(7'b0110100),
+                    .DIVQ(3'b011),
+                    .FILTER_RANGE(3'b001))
+              PLL  (.REFERENCECLK(clk_int),
+                    .PLLOUTCORE(clk_PLL),
+                    .RESETB(1'b1),
+                    .BYPASS(1'b0));
+    /// End of PLL init
+
 endmodule

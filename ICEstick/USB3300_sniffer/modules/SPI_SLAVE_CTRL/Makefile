@@ -1,4 +1,4 @@
-M_NAME  := SPI_SLAVE
+M_NAME  := SPI_SLAVE_CTRL
 
 TB_DIR  := ./tb
 RTL_DIR := ./rtl

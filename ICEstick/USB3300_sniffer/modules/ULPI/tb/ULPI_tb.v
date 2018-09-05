@@ -76,7 +76,7 @@ module ULPI_tb ();
         #2 NXT = 1;
         #4 NXT = 0;
         #1
-        #6
+        #2
         // REG Read test
         ULPI_DATA_r = 8'h3D;
 

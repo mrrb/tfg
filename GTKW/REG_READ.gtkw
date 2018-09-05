@@ -2,10 +2,10 @@
 [*] GTKWave Analyzer v3.3.91 (w)1999-2018 BSI
 [*] Thu Jul 12 16:00:15 2018
 [*]
-[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/sim/ULPI_REG_READ_tb.vcd"
+[dumpfile] "./ULPI_REG_READ_tb.vcd"
 [dumpfile_mtime] "Thu Jul 12 15:52:55 2018"
 [dumpfile_size] 2072
-[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/GTKW/REG_READ.gtkw"
+[savefile] "./REG_READ.gtkw"
 [timestart] 0
 [size] 1920 1053
 [pos] -1 -1

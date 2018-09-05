@@ -38,6 +38,15 @@ SOFTWARE.
  * Submodules:
  *  - ULPI_REG_READ
  *  - ULPI_REG_WRITE
+ * 
+ * States:
+ *  1. ULPI_CTRL_IDLE. Waiting for an action to occur, meanwhile the module does nothing.
+ *  2. ULPI_CTRL_REG_READ. When a petition to read data from the PHY is received (RD == 1) and the module isn't busy, a register read occurs.
+ *  3. ULPI_CTRL_REG_WRITE. When a petition to write data to the PHY is received (WD == 1) and the module isn't busy, a register write occurs.
+ *  4. ULPI_CTRL_RECV_PCK. 
+ *  5. ULPI_CTRL_TRANS_PCK
+ *  6. ULPI_CTRL_ENTER_LP
+ *  7. ULPI_CTRL_EXIT_LP
  *
  */
 
@@ -60,7 +69,7 @@ module ULPI (
              input  wire [5:0]ADDR,         // Address wher ewe have to read/write
              input  wire [7:0]REG_DATA_IN,  // Data to write in register
              output wire [7:0]REG_DATA_OUT, // Data readed from a register
-             output wire BUSY,              // Singal activated whenever the ULPI controller is not in the IDLE state
+             output wire BUSY,              // Signal activated whenever the ULPI controller is not in the IDLE state
              // ULPI pins
              input  wire DIR,
              output wire STP,
@@ -84,17 +93,23 @@ module ULPI (
                            (ULPI_CTRL_s_TRANS_PCK ? 2'b11 : 2'b00));
     
     // ULPI_DATA mux
+    // Independent FPGA ULPI signals for each bit and each submodule that required thar required it.
+    // The ULPI data bus is 8bit wide, so we need 8 multiplexers with shared CTRL signal.
+    //
+    // The only submodules that need to write in the ULPI bus are ULPI_REG_WRITE, ULPI_REG_READ and ULPI_TRS_PCK.
+    // That's why we only need a 2bit multiplexer.
     localparam DATA_WIDTH = 8;
+    localparam MUX_BITS   = 2;
     genvar i;
     generate
         for(i=0; i<DATA_WIDTH; i=i+1) begin
-           mux #(.n_bits(2)) ULPI_DATA_MUX ({1'b0,
-                                             ULPI_DATA_REG_READ[i],
-                                             ULPI_DATA_REG_WRITE[i],
-                                             ULPI_DATA_TRS_PCK[i]
-                                             },
-                                            ULPI_DATA_CTRL,
-                                            ULPI_DATA_w[i]);
+           mux #(.n_bits(MUX_BITS)) ULPI_DATA_MUX ({1'b0,
+                                                    ULPI_DATA_REG_READ[i],
+                                                    ULPI_DATA_REG_WRITE[i],
+                                                    ULPI_DATA_TRS_PCK[i]
+                                                   },
+                                                   ULPI_DATA_CTRL,
+                                                   ULPI_DATA_w[i]);
         end
     endgenerate
 
