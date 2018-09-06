@@ -19,4 +19,4 @@ STA => 8bit code
 INFO => 012345 <> 67
         xxxxxx <> xx
         CTRL      Data
-                  lenss
+                  len

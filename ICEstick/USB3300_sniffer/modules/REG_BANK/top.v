@@ -34,6 +34,7 @@ SOFTWARE.
 
 `include "./rtl/ULPI_REG_ADDR.vh"
 `include "./modules/ULPI/rtl/ULPI.v"
+`include "./modules/REG_BANK/rtl/REG_BANK.v"
 
 
 module USB3300_parser (
@@ -69,7 +70,7 @@ module USB3300_parser (
 
     /// PLL init
     // icepll command let you obtain divider values
-    // 80MHz V
+    // 80MHz from internal 12MHz V
     wire clk_PLL;
     SB_PLL40_CORE #(.FEEDBACK_PATH("SIMPLE"),
                     .PLLOUT_SELECT("GENCLK"),
