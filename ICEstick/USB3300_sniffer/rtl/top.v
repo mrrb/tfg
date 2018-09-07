@@ -32,55 +32,89 @@ SOFTWARE.
  *     Initial:        2018/06/15        Mario Rubio
  */
 
-`include "./rtl/ULPI_REG_ADDR.vh"
-`include "./modules/ULPI/rtl/ULPI.v"
+/*
+ * 
+ * This is the main file for the USB3300 sniffer
+ * 
+ */
 
+`default_nettype none
+
+`include "./rtl/ULPI_REG_ADDR.vh" // USB3300 register addresses definitions
+`include "./modules/ULPI/rtl/ULPI.v" // ULPI module
+`include "./modules/UART/rtl/UART.v" // UART module
+`include "./modules/SPI_SLAVE_CTRL/rtl/SPI_SLAVE_CTRL.v" // SPI module
 
 module USB3300_parser (
-                       input  wire clk_ext,
-                       input  wire clk_int,
+                       // Clocks
+                       input  wire clk_int, // FPGA 12MHz clock
+                       input  wire clk_ext, // USB3300 60MHz clock
 
-                       // ULPI pins
-                       input  wire DIR,
-                       output wire STP,
-                       input  wire NXT,
-                       inout  wire [7:0]ULPI_DATA
+                       // USB3300/ULPI pins
+                       input  wire ULPI_DIR, // ULPI DIR input
+                       input  wire ULPI_NXT, // ULPI NXT input
+                       output wire ULPI_STP, // ULPI STP output
+                       inout  wire [7:0]ULPI_DATA, // ULPI Data inout
+
+                       // SPI pins
+                       input  wire SPI_SCK,  // SPI reference clock
+                       input  wire SPI_SS,   // SPI Slave Select pin
+                       input  wire SPI_MOSI, // SPI input  'Master Out Slave In'
+                       output wire SPI_MISO, // SPI output 'Master In  Slave Out'
+
+                       // UART pins
+                       input  wire UART_RX, // UART serial data input
+                       output wire UART_TX  // UART serial data output
                       );
 
-    wire rst; assign rst = 1'b0;
-    wire WD;  assign WD = 1'b0;
-    wire RD;  assign RD = 1'b0;
-    wire TD;  assign TD = 1'b0;
-    wire LP;  assign LP = 1'b0;
-    wire [5:0]ADDR;  assign ADDR = 6'b0;
-    wire [7:0]REG_DATA_IN;  assign REG_DATA_IN = 8'b0;
+    /// Main clock generator from PLL
+    /*
+     * PLL configuration
+     *
+     * This configuration was generated automatically
+     * using the icepll tool from the IceStorm project.
+     * Use at your own risk.
+     *
+     * Given input frequency:        12.000 MHz
+     * Requested output frequency:  100.000 MHz
+     * Achieved output frequency:   100.500 MHz
+     */
+    wire clk_ctrl; // Master controller clock signal
+    wire locked;   // Locked control signal
+    SB_PLL40_CORE #(
+		            .FEEDBACK_PATH("SIMPLE"),
+		            .DIVR(4'b0000),		    // DIVR =  0
+		            .DIVF(7'b1000010),	    // DIVF = 66
+		            .DIVQ(3'b011),		    // DIVQ =  3
+		            .FILTER_RANGE(3'b001)	// FILTER_RANGE = 1
+	               )
+               uut (
+		            .LOCK(locked),
+		            .RESETB(1'b1),
+		            .BYPASS(1'b0),
+		            .REFERENCECLK(clk_int),
+		            .PLLOUTCORE(clk_ctrl)
+		           );
+    /// End of Main clock generator from PLL
 
-    wire [7:0]REG_DATA_OUT;
-    wire busy;
 
-    ULPI ULPI_Module (clk_ext, clk_int, rst,
-                      WD, RD, TD, LP, ADDR,
-                      REG_DATA_IN, REG_DATA_OUT, busy,
-                      DIR, STP, NXT, ULPI_DATA);
+    /// Main controller register bank init
+    /// End of Main controller register bank init
     
-    /// Register map
-    `include "./rtl/registers/REG_MAP.v"
-    /// End of Register map
 
-    /// PLL init
-    // icepll command let you obtain divider values
-    // 80MHz V
-    wire clk_PLL;
-    SB_PLL40_CORE #(.FEEDBACK_PATH("SIMPLE"),
-                    .PLLOUT_SELECT("GENCLK"),
-                    .DIVR(4'b0000),
-                    .DIVF(7'b0110100),
-                    .DIVQ(3'b011),
-                    .FILTER_RANGE(3'b001))
-              PLL  (.REFERENCECLK(clk_int),
-                    .PLLOUTCORE(clk_PLL),
-                    .RESETB(1'b1),
-                    .BYPASS(1'b0));
-    /// End of PLL init
+    /// Main memory init
+    /// End of Main memory init
+
+
+    /// UART module init
+    /// End of UART module init
+
+
+    /// SPI module init
+    /// End of SPI module init
+
+
+    /// ULPI module init
+    /// End of ULPI module init
 
 endmodule

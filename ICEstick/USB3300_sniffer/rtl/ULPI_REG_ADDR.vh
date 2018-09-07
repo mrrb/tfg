@@ -27,6 +27,13 @@
  *     Initial: 2018/06/01      Mario Rubio
  */
 
+/*
+ *
+ * In this file are defined all the possible register address that can be read/write/set/clear in the USB3300 IC using the ULPI protocol.
+ * For more info, refer to 'Table 6-3' in the USB3300 Datasheet.
+ *
+ */
+
 `define ADDR_READ_VENDOR_ID_LOW       5'h00
 `define ADDR_READ_VENDOR_ID_HIGH      5'h01
 `define ADDR_READ_PRODUCT_ID_LOW      5'h02
