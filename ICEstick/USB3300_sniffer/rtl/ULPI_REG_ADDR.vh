@@ -29,7 +29,7 @@
 
 /*
  *
- * In this file are defined all the possible register address that can be read/write/set/clear in the USB3300 IC using the ULPI protocol.
+ * In this file are defined all the possible register address that can be read/write/clear in the USB3300 IC using the ULPI protocol.
  * For more info, refer to 'Table 6-3' in the USB3300 Datasheet.
  *
  */

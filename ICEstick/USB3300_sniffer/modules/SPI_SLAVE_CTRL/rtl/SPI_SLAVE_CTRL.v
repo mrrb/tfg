@@ -45,8 +45,10 @@ SOFTWARE.
 module SPI_SLAVE_CTRL (
                        // System
                        input  wire clk,   // FPGA clock
-                       input  wire STA_F, // FPGA+USB3300 status code
-                       output wire STA_C, // Controller status code (code given by the computer)
+                       input  wire [7:0]DATA_in,
+                       output wire [7:0]CMD,
+                       output wire [7:0]DATA_out,
+
                        // SPI pins   
                        input  wire SCK,  // SPI clock
                        input  wire SS,   // Slave Select SPI pin 
@@ -56,6 +58,7 @@ module SPI_SLAVE_CTRL (
 
     /// SPI_SLAVE_CTRL Regs and wires
     // Outputs
+    reg [7:0]DATA_out_r = 8'b0;
 
     // Inputs
 
@@ -66,6 +69,7 @@ module SPI_SLAVE_CTRL (
     // Flags
 
     // Assigns
+    assign DATA_out = DATA_out_r; // #OUTPUT
     
     /// End of SPI_SLAVE_CTRL Regs and wires
 
