@@ -45,7 +45,7 @@ module ULPI_REG_READ (
     reg [7:0]ULPI_DATA_OUT_r = 8'b0;
 
     // Control registers
-    reg [1:0]READ_state_r = 3'b0; // Register to store the current state of the ULPI_REG_READ module
+    reg [1:0]READ_state_r = 2'b0; // Register to store the current state of the ULPI_REG_READ module
 
     // Flags
     wire READ_s_IDLE;      // 1 if READ_state_r == READ_IDLE, else 0
