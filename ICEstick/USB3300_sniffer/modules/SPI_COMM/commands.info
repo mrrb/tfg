@@ -1,0 +1,52 @@
+/*
+ *
+ * List of commands:
+ * 
+ *   7 6 5 4 3 2 1 0
+ *   x x x x x x x x
+ *
+ *   0 x x x x x x x => Short Format [First CMD]
+ *   1 x x x x x x x => Long Format [Second CMD]
+ *
+ *   x 0 x x x x x x => Send Data
+ *   x 1 x x x x x x => Read Data
+ *
+ *   x x 0 x x x x x => DOESN'T have second CMD
+ *   x x 1 x x x x x => DOES have second CMD
+ *
+ *   x x x A B C D x => Command It self
+ * 
+ *   x x x x x x x 0 => 
+ *   x x x x x x x 1 => 
+ *
+ *
+ * Info:
+ *   
+ *   A B C x x x x x => Status of command
+ *   x x x A B C D E => Len
+ *
+ *
+ * General secondary CMDs:
+ *   
+ * > 1 x x 1 1 0 0 x => Cancel
+ *
+ *
+ * List of CMDs:
+ *
+ *   0 1 0 0 0 0 0 x => Ping, do nothing [retrieve STA from FPGA]; DATA = NULL
+ *
+ *   0 1 1 0 0 0 0 x => Ping, do nothing [retrieve STA from FPGA]; DATA = NULL
+ * > 1 x x x x x x x [CMD]
+ * > x x x A B C D E [INFO]
+ * > x x x x x x x x [DATA] {len ABCDE}
+ *
+ *   0 1 1 0 0 1 0 x => Read buffer block A [Max. 512 bytes -> 5bits len]; DATA = NULL
+ * > 1 x x x x x x x [CMD]
+ * > x x x A B C D E [INFO]
+ * > x x x x x x x x [DATA] {len ABCDE}
+ *   0 1 1 0 0 1 1 x => Read buffer block B [Max. 512 bytes -> 5bits len]; DATA = NULL
+ *   0 1 1 0 0 0 1 x => Read buffer ULPI ADDR.; DATA = ULPI_ADDR
+ *   
+ *
+ */
+
