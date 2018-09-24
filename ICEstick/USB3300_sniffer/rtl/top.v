@@ -56,6 +56,8 @@ SOFTWARE.
 // `include "./modules/SPI_SLAVE_CTRL/rtl/SPI_SLAVE_CTRL.v" // SPI module
 `include "./modules/REG_BANK/rtl/REG_BANK.v" // SPI module
 `include "./modules/clk_div_gen/rtl/clk_div_gen.v" // Clock divider module
+`include "./modules/mux/rtl/mux.v" // Multiplexer module 
+`include "./modules/shift_register/rtl/shift_register.v" // Shift register module 
 
 module USB3300_parser (
                        // Clocks
