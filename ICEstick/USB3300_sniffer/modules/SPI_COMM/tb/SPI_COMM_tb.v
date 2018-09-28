@@ -35,8 +35,19 @@ module SPI_COMM_tb ();
         #5
 
         SS_r = 0;
+        DATA_in_r = 8'hAA;
+        
+        #0  MOSI_r = 0;
+        #20
+        #20
+        #20
+        #20
+        #20 MOSI_r = 1;
+        #20 MOSI_r = 1;
+        #20 MOSI_r = 0;
 
-        #160
+
+        #180
 
         SS_r = 1;
 

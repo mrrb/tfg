@@ -53,11 +53,12 @@ SOFTWARE.
 
 `include "./modules/ULPI/rtl/ULPI.v" // ULPI module
 `include "./modules/UART/rtl/UART.v" // UART module
-// `include "./modules/SPI_SLAVE_CTRL/rtl/SPI_SLAVE_CTRL.v" // SPI module
+`include "./modules/SPI_COMM/rtl/SPI_COMM.v" // SPI module
 `include "./modules/REG_BANK/rtl/REG_BANK.v" // SPI module
 `include "./modules/clk_div_gen/rtl/clk_div_gen.v" // Clock divider module
 `include "./modules/mux/rtl/mux.v" // Multiplexer module 
 `include "./modules/shift_register/rtl/shift_register.v" // Shift register module 
+`include "./modules/clk_pulse/rtl/clk_pulse.v" // Clock pulses
 
 module USB3300_parser (
                        // Clocks
@@ -152,7 +153,7 @@ module USB3300_parser (
     UART #(
            .BAUD_DIVIDER(7) // We use a 12MHz clock to get 115200 baud, so we must use 7th order divider (see ./tools/get_divider.py).
           )
-     uart (
+    uart  (
            .clk(clk_int), // [Input] 12MHz internal clock
            .Rx(UART_RX),  // [Input]
            .I_DATA(UART_DATA_in), // [Input]
@@ -168,11 +169,50 @@ module USB3300_parser (
 
     /// SPI module init
     // #MODULE_INIT SPI
+    wire [2:0]SPI_status;
+    wire SPI_err;
+    wire SPI_EoB;
+    wire SPI_out_latched;
+    wire [7:0]DATA_out;
+    SPI_COMM spi(
+                 .clk(clk_ctrl),
+                 .rst(0'b0),
+                 .SCLK(SPI_SCK),
+                 .SS(SPI_SS),
+                 .MOSI(SPI_MOSI),
+                 .MISO(SPI_MISO),
+                 .DATA_in(8'b0),
+                 .data_out_latched(0'b1),
+                 .DATA_out(DATA_out),
+                 .data_in_latched(SPI_out_latched),
+                 .err(SPI_err),
+                 .EoB(SPI_EoB),
+                 .status(SPI_status)
+                );
     /// End of SPI module init
 
 
     /// ULPI module init
     // #MODULE_INIT ULPI
+    wire [7:0]ULPI_DATA_out;
+    wire ULPI_busy;
+    ULPI ulpi (
+               .clk_ext(clk_ctrl),
+               .clk_int(clk_ext),
+               .rst(0'b0),
+               .WD(0'b0),
+               .RD(0'b0),
+               .TD(0'b0),
+               .LP(0'b0),
+               .ADDR(8'b0),
+               .REG_DATA_IN(8'b0),
+               .REG_DATA_OUT(ULPI_DATA_out),
+               .BUSY(ULPI_busy),
+               .DIR(ULPI_DIR),
+               .STP(ULPI_STP),
+               .NXT(ULPI_NXT),
+               .ULPI_DATA(ULPI_DATA)
+              );
     /// End of ULPI module init
 
 endmodule

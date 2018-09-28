@@ -1,6 +1,6 @@
 /*
  *
- *
+ * CPOL = 0; CPHA = 1;
  *
  */
 
@@ -45,7 +45,8 @@ module SPI_COMM(
     /// MISO shift register init
     wire MISO_shift_par; reg MISO_shift_par_r = 1'b0; assign MISO_shift_par = MISO_shift_par_r;
     wire [7:0]MISO_out;
-    shift_register shift_MISO (.clk(clk_shift), .enable(shift_enable_r), .bit_in(1'b0), .bit_out(MISO), .DATA_out(MISO_out), .DATA_in(DATA_in), .PARALLEL_EN(MISO_shift_par));
+    wire MISO_bit_out;
+    shift_register shift_MISO (.clk(clk_shift), .enable(shift_enable_r), .bit_in(1'b0), .bit_out(MISO_bit_out), .DATA_out(MISO_out), .DATA_in(DATA_in), .PARALLEL_EN(MISO_shift_par));
     /// End of MISO shift register init
 
     /// SPI_COMM Regs and wires
@@ -77,15 +78,16 @@ module SPI_COMM(
     wire SPI_s_RST;   // 1 if SPI_state_r == SPI_RST,   else 0
 
     // Assigns
-    assign SPI_s_IDLE      = (SPI_state_r == SPI_IDLE)  ? 1'b1 : 1'b0; // #FLAG
-    assign SPI_s_LOAD      = (SPI_state_r == SPI_LOAD)  ? 1'b1 : 1'b0; // #FLAG
-    assign SPI_s_TRANS     = (SPI_state_r == SPI_TRANS) ? 1'b1 : 1'b0; // #FLAG
-    assign SPI_s_SAVE      = (SPI_state_r == SPI_SAVE)  ? 1'b1 : 1'b0; // #FLAG
-    assign SPI_s_BACK      = (SPI_state_r == SPI_BACK)  ? 1'b1 : 1'b0; // #FLAG
-    assign SPI_s_RST       = (SPI_state_r == SPI_RST)   ? 1'b1 : 1'b0; // #FLAG
-    assign DATA_out        = DATA_out_r; // #OUTPUT
-    assign EoB             = SPI_s_SAVE; // #OUTPUT
-    assign status          = SPI_state_r; // #OUTPUT
+    assign SPI_s_IDLE  = (SPI_state_r == SPI_IDLE)  ? 1'b1 : 1'b0; // #FLAG
+    assign SPI_s_LOAD  = (SPI_state_r == SPI_LOAD)  ? 1'b1 : 1'b0; // #FLAG
+    assign SPI_s_TRANS = (SPI_state_r == SPI_TRANS) ? 1'b1 : 1'b0; // #FLAG
+    assign SPI_s_SAVE  = (SPI_state_r == SPI_SAVE)  ? 1'b1 : 1'b0; // #FLAG
+    assign SPI_s_BACK  = (SPI_state_r == SPI_BACK)  ? 1'b1 : 1'b0; // #FLAG
+    assign SPI_s_RST   = (SPI_state_r == SPI_RST)   ? 1'b1 : 1'b0; // #FLAG
+    assign DATA_out    = DATA_out_r;  // #OUTPUT
+    assign EoB         = SPI_s_BACK;  // #OUTPUT
+    assign status      = SPI_state_r; // #OUTPUT
+    assign MISO        = MISO_out[0]; // #OUTPUT
     /// End of SPI_COMM Regs and wires
 
 
@@ -147,7 +149,7 @@ module SPI_COMM(
         else begin
             case(SPI_state_r)
                 SPI_IDLE: begin
-                    TR_count_r <= 5'b0;
+                    TR_count_r <= 5'b10;
                     SPI_ctrl_r <= 4'b0;
                     SET_A_r    <= 1'b0;
                     SET_B_r    <= 1'b0;
@@ -165,7 +167,8 @@ module SPI_COMM(
                     force_shift_r    <= 1'b0;
                     MISO_shift_par_r <= 1'b0; // Once the data is loaded, the parallel input pin is set to '0' again
 
-                    SPI_ctrl_r <= SPI_ctrl_r + 1'b1; // 1 bit less to read
+                    // if(shift_pulse) SPI_ctrl_r <= SPI_ctrl_r + 1'b1; // 1 bit less to read
+                    if(SPI_ctrl_r == 4'b1000) TR_count_r <= TR_count_r - 1'b1;
                 end
                 SPI_SAVE: begin
                     DATA_out_r <= MOSI_data;
@@ -179,9 +182,9 @@ module SPI_COMM(
                         end
                     end
                     else if(TR_count_r == 8'b1 && !SET_A_r) begin
-                        sec_CMD_r <= DATA_out[5];
-                        read_r    <= DATA_out[6];
-                        format_r  <= DATA_out[7];
+                        sec_CMD_r <= MOSI_data[5];
+                        read_r    <= MOSI_data[6];
+                        format_r  <= MOSI_data[7];
                         SET_A_r   <= 1'b1;
                     end
                     else if(TR_count_r == 8'b1 && format_r) begin
@@ -195,8 +198,10 @@ module SPI_COMM(
                     end
                 end
                 SPI_BACK: begin
+                    SPI_ctrl_r <= 8'b0;
                 end
                 SPI_RST: begin
+                    TR_count_r <= 5'b10;
                     read_r    <= 1'b0;
                     format_r  <= 1'b0;
                     sec_CMD_r <= 1'b0;
@@ -207,6 +212,8 @@ module SPI_COMM(
             endcase
         end
     end
+
+    always @(posedge shift_pulse) SPI_ctrl_r <= SPI_ctrl_r + 1'b1;
     /// End of SPI_COMM controller
     
 
