@@ -87,7 +87,7 @@ module SPI_COMM(
     assign DATA_out    = DATA_out_r;  // #OUTPUT
     assign EoB         = SPI_s_BACK;  // #OUTPUT
     assign status      = SPI_state_r; // #OUTPUT
-    assign MISO        = MISO_out[0]; // #OUTPUT
+    assign MISO        = !SPI_s_IDLE ? MISO_out[0] : 1'b0; // #OUTPUT
     /// End of SPI_COMM Regs and wires
 
 
@@ -126,9 +126,16 @@ module SPI_COMM(
                     SPI_state_r <= SPI_BACK;
                 end
                 SPI_BACK: begin
-                    if(!(TR_count_r == 8'b0))       SPI_state_r <= SPI_LOAD;
-                    else if(!format_r && sec_CMD_r) SPI_state_r <= SPI_IDLE;
-                    else                            SPI_state_r <= SPI_RST;
+                    if(!(TR_count_r == 8'b0))
+                        SPI_state_r <= SPI_LOAD;
+                    else if(!format_r && sec_CMD_r && SS)
+                        SPI_state_r <= SPI_IDLE;
+                    else if(!format_r && sec_CMD_r && !SS)
+                        SPI_state_r <= SPI_BACK;
+                    else if(SET_A_r && DATA_out_r[4:0])
+                        SPI_state_r <= SPI_RST;
+                    else
+                        SPI_state_r <= SPI_RST;
                 end
                 SPI_RST: begin
                     if(SS) SPI_state_r <= SPI_IDLE;
@@ -182,13 +189,13 @@ module SPI_COMM(
                         end
                     end
                     else if(TR_count_r == 8'b1 && !SET_A_r) begin
-                        sec_CMD_r <= MOSI_data[5];
-                        read_r    <= MOSI_data[6];
-                        format_r  <= MOSI_data[7];
+                        // sec_CMD_r <= MOSI_data[5];
+                        // read_r    <= MOSI_data[6];
+                        // format_r  <= MOSI_data[7];
                         SET_A_r   <= 1'b1;
                     end
-                    else if(TR_count_r == 8'b1 && format_r) begin
-                        if(read_r) begin
+                    else if(TR_count_r == 8'b0 && MOSI_data[7] && !SET_B_r) begin
+                        if(MOSI_data[6]) begin
                             TR_count_r <= TR_count_r + DATA_in_buff_r[4:0];
                         end
                         else begin
@@ -215,6 +222,5 @@ module SPI_COMM(
 
     always @(posedge shift_pulse) SPI_ctrl_r <= SPI_ctrl_r + 1'b1;
     /// End of SPI_COMM controller
-    
 
 endmodule
