@@ -47,6 +47,9 @@
  *   0 1 1 0 0 1 1 x => Read buffer block B [Max. 512 bytes -> 5bits len]; DATA = NULL
  *   0 1 1 0 0 0 1 x => Read buffer ULPI ADDR.; DATA = ULPI_ADDR
  *   
+ *   0 x 1 x x x x x
+ * > x x x 0 0 0 0 0 => Cancel
+ * > x x x 1 1 1 1 1 => Cancel
  *
  */
 
