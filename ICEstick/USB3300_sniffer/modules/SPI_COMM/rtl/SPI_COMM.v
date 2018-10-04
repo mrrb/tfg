@@ -17,12 +17,20 @@ module SPI_COMM(
 
                 // Data signals
                 input  wire [7:0]DATA_in,     // Data to send to the computer
-                input  wire data_out_latched, // The data sent to the FPGA controller module has been latched
                 output wire [7:0]DATA_out,    // Data received from the computer
-                output wire data_in_latched,  // The data received from the FPGA controller module has been latched
-                output wire err,              // Error in the last SPI transaction
+
+                // Control signals
+                input  wire err_in,           // Error in the SPI transaction (catched by the SPI main controller)
+                output wire err_out,          // Error in the last SPI transaction (catched by SPI_COMM)
                 output wire EoB,              // End of Byte control signal
-                output wire [2:0]status
+                output wire busy,             // When there is a transfer in progress this signal will be High
+
+                // Frame info signals
+                output wire [4:0]CMD,         // Command => data_out[4:0]
+                output wire [7:0]INFO_out,    // INFO packet in long format transmissions
+                output wire sec_CMD,          // The frame has a secondary packet
+                output wire read,             // The PC request the FPGA to send data
+                output wire format            // The frame is a secondary transmission (long format)
                );
 
     /// Shift register pulse module init
@@ -51,9 +59,13 @@ module SPI_COMM(
 
     /// SPI_COMM Regs and wires
     // Outputs
-    reg [7:0]DATA_out_r   = 8'b0;
+    reg [7:0]DATA_out_r = 8'b0;
+    reg err_r           = 1'b0;
+    reg [4:0]CMD_r      = 5'b0;
+    reg [7:0]INFO_r     = 7'b0;
 
     // Inputs
+    // #NONE
 
     // Buffers
     reg [7:0]DATA_in_buff_r = 8'b0;
@@ -86,7 +98,13 @@ module SPI_COMM(
     assign SPI_s_RST   = (SPI_state_r == SPI_RST)   ? 1'b1 : 1'b0; // #FLAG
     assign DATA_out    = DATA_out_r;  // #OUTPUT
     assign EoB         = SPI_s_BACK;  // #OUTPUT
-    assign status      = SPI_state_r; // #OUTPUT
+    assign busy        = !SPI_s_IDLE; // #OUTPUT
+    assign err         = err_r;       // #OUTPUT
+    assign INFO_out    = INFO_r;      // #OUTPUT
+    assign CMD         = CMD_r;       // #OUTPUT
+    assign read        = read_r;      // #OUTPUT
+    assign sec_CMD     = sec_CMD_r;   // #OUTPUT
+    assign format      = format_r;    // #OUTPUT
     assign MISO        = !SPI_s_IDLE ? MISO_out[0] : 1'b0; // #OUTPUT
     /// End of SPI_COMM Regs and wires
 
@@ -126,14 +144,12 @@ module SPI_COMM(
                     SPI_state_r <= SPI_BACK;
                 end
                 SPI_BACK: begin
-                    if(!(TR_count_r == 8'b0))
+                    if(!(TR_count_r == 4'b0))
                         SPI_state_r <= SPI_LOAD;
-                    else if(!format_r && sec_CMD_r && SS)
+                    else if(sec_CMD_r && SS)
                         SPI_state_r <= SPI_IDLE;
-                    else if(!format_r && sec_CMD_r && !SS)
+                    else if(sec_CMD_r && !SS)
                         SPI_state_r <= SPI_BACK;
-                    else if(SET_A_r && DATA_out_r[4:0])
-                        SPI_state_r <= SPI_RST;
                     else
                         SPI_state_r <= SPI_RST;
                 end
@@ -189,9 +205,10 @@ module SPI_COMM(
                         end
                     end
                     else if(TR_count_r == 8'b1 && !SET_A_r) begin
-                        // sec_CMD_r <= MOSI_data[5];
-                        // read_r    <= MOSI_data[6];
-                        // format_r  <= MOSI_data[7];
+                        format_r  <= MOSI_data[7];
+                        read_r    <= MOSI_data[6];
+                        sec_CMD_r <= MOSI_data[5];
+                        CMD_r     <= MOSI_data[4:0];
                         SET_A_r   <= 1'b1;
                     end
                     else if(TR_count_r == 8'b0 && MOSI_data[7] && !SET_B_r) begin
@@ -199,28 +216,32 @@ module SPI_COMM(
                             TR_count_r <= TR_count_r + DATA_in_buff_r[4:0];
                         end
                         else begin
+                            INFO_r     <= MOSI_data;
                             TR_count_r <= TR_count_r + MOSI_data[4:0];
                         end
                         SET_B_r <= 1'b1;
                     end
                 end
                 SPI_BACK: begin
-                    SPI_ctrl_r <= 8'b0;
+                    SPI_ctrl_r    <= 4'b0;
                 end
                 SPI_RST: begin
-                    TR_count_r <= 5'b10;
-                    read_r    <= 1'b0;
-                    format_r  <= 1'b0;
-                    sec_CMD_r <= 1'b0;
+                    TR_count_r    <= 5'b10;
                     force_shift_r <= 1'b0;
+                    read_r        <= 1'b0;
+                    sec_CMD_r     <= 1'b0;
+                    INFO_r        <= 8'b0; 
+                    CMD_r         <= 5'b0; 
                 end
                 default: begin
+                    
                 end
             endcase
         end
     end
 
-    always @(posedge shift_pulse) SPI_ctrl_r <= SPI_ctrl_r + 1'b1;
+    // Every time a bit is readed, the counter is incremented by one
+    always @(negedge shift_pulse) SPI_ctrl_r <= SPI_ctrl_r + 1'b1;
     /// End of SPI_COMM controller
 
 endmodule

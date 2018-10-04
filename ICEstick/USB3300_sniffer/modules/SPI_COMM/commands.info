@@ -16,8 +16,8 @@
  *
  *   x x x A B C D x => Command It self
  * 
- *   x x x x x x x 0 => 
- *   x x x x x x x 1 => 
+ *   x x x x x x x 0 => Unused bit. LOW.
+ *   x x x x x x x 1 => Unused bit. HIGH.
  *
  *
  * Info:
@@ -33,23 +33,22 @@
  *
  * List of CMDs:
  *
- *   0 1 0 0 0 0 0 x => Ping, do nothing [retrieve STA from FPGA]; DATA = NULL
+ *   0 x 0 0 0 0 0 x => Ping, do nothing [retrieve STA from FPGA]; DATA = DC
  *
- *   0 1 1 0 0 0 0 x => Ping, do nothing [retrieve STA from FPGA]; DATA = NULL
- * > 1 x x x x x x x [CMD]
+ *   0 x 1 0 0 0 0 x => Ping, do nothing [retrieve STA from FPGA]; DATA = DC
+ * > 1 x 0 x x x x x [CMD]
  * > x x x A B C D E [INFO]
  * > x x x x x x x x [DATA] {len ABCDE}
  *
- *   0 1 1 0 0 1 0 x => Read buffer block A [Max. 512 bytes -> 5bits len]; DATA = NULL
- * > 1 x x x x x x x [CMD]
- * > x x x A B C D E [INFO]
- * > x x x x x x x x [DATA] {len ABCDE}
- *   0 1 1 0 0 1 1 x => Read buffer block B [Max. 512 bytes -> 5bits len]; DATA = NULL
  *   0 1 1 0 0 0 1 x => Read buffer ULPI ADDR.; DATA = ULPI_ADDR
+ *
+ *   0 1 1 0 0 1 0 x => Read buffer block N [Max. 32 - 2 {reserved} = 30 bytes -> 5 bits long]; DATA = N block
+ * > 1 x x x x x x x [CMD]
+ * > x x x A B C D E [INFO]
+ * > x x x x x x x x [DATA] {len ABCDE, except 00000 and 11111}
  *   
  *   0 x 1 x x x x x
  * > x x x 0 0 0 0 0 => Cancel
- * > x x x 1 1 1 1 1 => Cancel
  *
  */
 
