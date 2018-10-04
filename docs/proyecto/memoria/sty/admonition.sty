@@ -1,0 +1,14 @@
+\def\admonition#1#2{
+  \vspace{3mm}
+  {\small
+    \fboxrule=0.5pt
+    \fboxsep=3mm
+    \par\noindent\fcolorbox{gris20}{gris85}{\parbox{1.1cm}{\resizebox{.7cm}{!}{\includegraphics{sty/#1.png}}}\parbox{0.85\hsize}{#2}}
+    \vspace{3mm}
+    \fboxsep=1.5mm
+  }
+}
+
+\def\info#1{\admonition{info}{#1}}
+\def\question#1{\admonition{question}{#1}}
+\def\warning#1{\admonition{warning}{#1}}

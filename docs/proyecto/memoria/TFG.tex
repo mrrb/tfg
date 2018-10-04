@@ -1,0 +1,22 @@
+\documentclass[outputdir=..]{sty/eiitfg}
+
+% Hay muchos paquetes para LaTeX que facilitan centenares de trabajos
+% engorrosos. Busca en Internet si no sabes hacer algo con LaTeX. El
+% repositorio oficial está en https://ctan.org/
+
+\input{datos-tfg.tex}
+
+\begin{document}
+
+\input{contenido.tex}
+
+% La bibliografía la puedes descomponer en varios archivos .bib
+% Los archivos .bib se pueden escribir a mano con ayuda de un editor online
+% (e.g. http://truben.no/latex/bibtex) o generar con Mendeley u otro
+% gestor de bibliografía. Solo se incluyen las referencias que son citadas
+% en el texto.
+\bibliography{bib/main,bib/how,bib/ejemplos}
+
+\input{anexos.tex}
+
+\end{document}

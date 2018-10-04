@@ -1,0 +1,6 @@
+Esta carpeta solo se usa en el anexo de chuleta LaTeX.
+
+Bórrala sin miramientos de tu TFG, pero léela primero.
+
+Son especialmente importantes la sección figuras y la sección sobre
+bibliografía, referencias y citas.

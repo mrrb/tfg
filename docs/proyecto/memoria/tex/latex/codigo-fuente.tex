@@ -1,0 +1,98 @@
+\section{Código fuente} 
+\label{sec:codigo-fuente}
+
+Esto es un ejemplo de anexo. En este anexo se muestran algunos ejemplos de como plasmar código fuente.
+
+En mi opinión, la forma más flexible y cómoda es usar el paquete \texttt{lstlistings}.  Permite incluir archivos o parte de archivos directamente del proyecto con la orden \texttt{lstinputlisting}.
+
+\lstinputlisting[language=Matlab,
+    caption={Ejercicio 20 como texto incorporado},
+    label=src:ej20-input
+]{memoria/tex/latex/ejercicio20.m}
+
+O bien se puede copiar el texto del programa o fragmento en un entorno \texttt{lstlisting} con las mismas opciones que la orden \texttt{lstinputlisting}.
+
+\begin{lstlisting}[language=Matlab,
+    caption={Ejercicio 20 como texto en línea.},
+    label=src:ej20-online
+]
+function [T]=Ejercicio20(f,c)
+
+T = char('B'*ones(8,8));
+
+for i=1:8
+    for j=1:8
+        if ( (i==f) || (j==c) || (i+j==f+c) || (i-j==f-c) )
+            T(i,j)='*';
+        elseif ( rem(i+j,2)~=0 )
+            T(i,j)='N';
+        end
+    end
+end
+
+T(f,c)='R';
+\end{lstlisting}
+
+\info{Te recomendamos que incluyas los archivos o parte de los archivos directamente del código de tu proyecto, ya sea mediante \texttt{lstinputlisting} o mediante \texttt{inputminted}.  De esta forma mantendrás sincronizado el documento con el código fuente.}
+
+\noindent El paquete \texttt{lstlisting} te permite quitar los números y el marco, cuando el código se incluye como parte del texto. 
+
+\begin{lstlisting}[language=Matlab,
+    frame=none,numbers=none
+]
+function [T]=Ejercicio20(f,c)
+
+T = char('B'*ones(8,8));
+
+for i=1:8
+    for j=1:8
+        if ( (i==f) || (j==c) || (i+j==f+c) || (i-j==f-c) )
+            T(i,j)='*';
+        elseif ( rem(i+j,2)~=0 )
+            T(i,j)='N';
+        end
+    end
+end
+
+T(f,c)='R';
+\end{lstlisting}
+
+\noindent Otra forma de incluir código es mediante el entorno \texttt{verbatim}.  Este método no tiene resalte de sintaxis ni facilidades de ningún tipo para definir etiquetas o numerar las líneas. 
+
+\begin{verbatim}
+function [T]=Ejercicio20(f,c)
+
+T = char('B'*ones(8,8));
+
+for i=1:8
+  for j=1:8
+    if ( (i==f) || (j==c) || (i+j==f+c) || (i-j==f-c) )
+      T(i,j)='*';
+    elseif ( rem(i+j,2)~=0 )
+      T(i,j)='N';
+    end
+  end
+end
+
+T(f,c)='R';
+\end{verbatim}
+
+\noindent Otra forma alternativa a \texttt{lstlisting} es el paquete \texttt{minted}, que colorea el programa según el lenguaje empleado.  Puede resultar más agradable desde el punto de vista estético pero recuerda que las fotocopias en color son entre 5 y 10 veces más caras que las fotocopias en blanco y negro.
+
+\begin{minted}{matlab}
+function [T]=Ejercicio20(f,c)
+
+T = char('B'*ones(8,8));
+
+for i=1:8
+    for j=1:8
+        if ( (i==f) || (j==c) || (i+j==f+c) || (i-j==f-c) )
+            T(i,j)='*';
+        elseif ( rem(i+j,2)~=0 )
+            T(i,j)='N';
+        end
+    end
+end
+
+T(f,c)='R';
+\end{minted}

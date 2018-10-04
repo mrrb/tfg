@@ -1,0 +1,64 @@
+\newcommand{\portada}{%
+    \begin{titlepage}
+        \centering
+        {\LARGE
+            \includegraphics[width=6cm]{sty/uclm_to.jpg}
+            
+            \par{\bf UNIVERSIDAD DE CASTILLA-LA MANCHA}
+            
+            \par\vspace{2mm} ESCUELA DE INGENIERÍA INDUSTRIAL \\ DE TOLEDO
+            
+            \par\vspace{10mm}TRABAJO FIN DE GRADO Nº \@tfgid
+            
+            \par\vspace{15mm}\MakeUppercase{\@title}
+        }
+        \par\vspace{15mm}\begin{tabular}{llr}
+        \includegraphics[width=4cm,valign=T]{sty/logoii.jpg} % 
+        & \rule{0.5cm}{0pt} %
+        & \cajaautor \\
+        \end{tabular}
+    \end{titlepage}
+    \clearpage
+    \thispagestyle{empty}
+    \copyrightpage
+    \cleardoublepage
+}
+
+\newcommand{\cajaautor}{%
+    \DTMsavenow{thisone}
+    {\Large\begin{tabular}[t]{p{7cm}}
+     Autor:\\
+     \@author \\
+     \vspace{.5cm} Director: \\
+     \@advisor \\
+     \vspace{1cm} \MakeUppercase{\DTMspanishmonthname{\DTMfetchmonth{thisone}} de \the\year}
+    \end{tabular}}
+}
+
+
+
+\newcommand{\copyrightpage}{%
+  \begin{singlespace}
+    \null \vfill \noindent
+    \textbf{\@author} \par
+    \smallskip \noindent
+    \ifdefempty{\@address}   {}{\@address \\}
+    \ifdefempty{\@zipcode}{}{\@zipcode~}\@city\ -- \@country
+
+    \vspace{-.9cm}
+    \begin{tabbing}
+      \hspace*{1.7cm} \= \\
+      \ifdefempty{\@email}   {}{\emph{E-mail:}   \> \@email \\}
+      \ifdefempty{\@phone}   {}{\emph{Teléfono:} \> \@phone \\}
+      \ifdefempty{\@homepage}{}{\emph{Web site:} \> \url{\@homepage} \\}
+    \end{tabbing}
+    \vspace{-1cm}
+    \noindent
+    \copyright\ \number\the\year\ \ \@author \par
+    \smallskip \noindent
+    \begin{minipage}{0.8\textwidth} \raggedright \footnotesize
+      \@license
+    \end{minipage}
+  \end{singlespace}
+  \cleardoublepage
+}

@@ -1,0 +1,90 @@
+\usepackage[scaled=.73]{beramono}
+\renewcommand{\lstlistingname}{Listado}
+
+\DeclareCaptionFont{white}{\fontsize{8}{8}\selectfont\color{white}}
+\DeclareCaptionFormat{listing}{
+  \colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{0.982\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{
+  format=listing,
+  labelfont=white,
+  textfont=white,
+  singlelinecheck=false,
+  margin=0pt,
+  font={bf,footnotesize}}
+
+
+\usepackage{listingsutf8}
+\lstloadlanguages{C, C++, Python, csh}
+
+\lstset{
+  inputencoding=utf8/latin1,
+   tabsize=4,
+   showspaces=false,
+   showtabs=false,
+   showstringspaces=false,
+   frame=b,
+   framerule=1pt,
+   aboveskip=0.5cm,
+   framextopmargin=3pt,
+   framexbottommargin=3pt,
+   framexleftmargin=18pt,
+   framesep=.4pt,
+   rulesep=.4pt,
+   rulesepcolor=\color{gris20},
+   stringstyle=\ttfamily,
+   basicstyle=\footnotesize\ttfamily,
+   commentstyle=\color{gris30},
+   keywordstyle=\bfseries,
+   numbers=left,
+   numbersep=6pt,
+   numberstyle=\color[cmyk]{0.43,0.35,0.35,0.01}\bfseries\footnotesize\ttfamily,
+   numberfirstline=true,
+   breaklines=true,
+   stepnumber=1,
+   backgroundcolor=\color{white},
+   xleftmargin=18pt,
+   framexrightmargin=0pt,
+   xrightmargin=0pt,
+   texcl=true,
+}
+
+\lstdefinestyle{consoleStyle}{
+    language=,
+    basicstyle=\footnotesize\bf\ttfamily,
+    numbers=none,
+    xleftmargin=3.5pt,
+    frame=none,
+    breaklines=true,
+    framexleftmargin=3pt,
+    framexrightmargin=0pt,
+    backgroundcolor=\color{gris85},
+  }
+
+\lstnewenvironment{term}[1][]
+  {\lstset{style=consoleStyle,#1}}
+  {}
+
+\lstdefinelanguage{Slice}{%
+  morekeywords=[2]{void, bool, byte, short, int, float, sequence, string,
+    dictionary, Object},
+  morekeywords=[3]{module, interface, struct, class, exception,
+    throws, extends, idempotent},
+  morekeywords=[4]{in, out},
+  morekeywords=[5]{include},
+  sensitive=false
+}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  sensitive=true
+}

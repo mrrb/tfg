@@ -1,0 +1,86 @@
+\section{Tablas} 
+\label{sec:tablas}
+
+En esta sección se muestran algunos ejemplos de tablas.
+
+\begin{table}[htb]
+\centering
+\vspace{2mm}
+\begin{tabular}{|c|c|c|}
+\hline
+ Regulador & Función de Transferencia & orden  \\
+ \hline
+ P         & $\alpha_1$               & 2      \\
+ \hline
+\end{tabular}
+\caption{Resultados de la simulación}
+\label{tab:resultados-simulacion}
+\end{table}
+
+Las tablas en \LaTeX{} no son complejas pero puedes simplificar aún más usando un editor interactivo de tablas.  Por ejemplo, en \url{https://truben.no/table/} hay una aplicación \emph{online} para editar multitud de formatos de tablas.  Es especialmente útil para tablas complicadas.
+
+En \LaTeX{} es bastante frecuente separar la cabecera del cuerpo de la tabla poniendo dos \texttt{hline}, como en la tabla~\ref{tab:sencilla}.
+
+\begin{table}[htb]
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+País     &    Ciudad \\ \hline \hline
+España   &    Madrid \\ \hline
+España   &    Valencia \\ \hline
+Francia  &    París \\ \hline
+\end{tabular}
+\caption{Tabla muy sencilla.}
+\label{tab:sencilla}
+\end{center}
+\end{table}
+
+La complejidad empieza cuando hay que expandir celdas para ocupar varias columnas o varias filas.  Por ejemplo, la tabla (\ref{tab:dificililla}) tiene una celda multi-columna y otra celda multi-fila.  En estos casos un editor interactivo como el de \href{https://truben.no/table/}{Peder Lång Skeidsvoll} puede ser de gran ayuda para un principiante.  Explora las opciones, no son evidentes al principio.
+
+\begin{table}[htb] 
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\multicolumn{2}{|c|}{Europa} \\
+\hline
+País  & Ciudad \\ \hline \hline
+\multirow{2}{1.1cm}{España} & Madrid \\ \cline{2-2}
+& Valencia \\ \hline
+Francia & París \\ \hline
+\end{tabular}
+\caption{Fusionando celdas.}
+\label{tab:dificililla}
+\end{table}
+
+Las tablas, al igual que las figuras, tienen un parámetro opcional entre corchetes que indican las preferencias de posición.  Se puede forzar pero, al igual que con las figuras, conduce a documentos muy descompensados.  Procura evitarlo.  Dentro de la tabla se define un entorno \texttt{tabular} que indica con su argumento obligatorio las columnas.  Este entorno es muy útil en cualquier organización matricial.  Se puede usar también para presentar las subfiguras de una figura, o para definir una matriz.
+
+Las tablas muy largas deben dividirse en varias páginas.  En el estilo de este TFG hemos incluído el paquete \texttt{longtable}, que facilita enormemente escribir este tipo de tablas largas.  En ese caso, en lugar del entorno \texttt{table} y el entorno \texttt{tabular} se usaría solamente el entorno \texttt{longtable}, que es una especie de híbrido de los dos, con un montón de características opcionales.  Para ilustrar su uso reproducimos \href{https://texblog.org/2011/05/15/multi-page-tables-using-longtable/}{un ejemplo de TeXblog} en la tabla~\ref{tab:tabla-larga}.
+
+\begin{center}
+\begin{longtable}{|c|c|c|c|}
+\caption{Un ejemplo de tabla larga}
+\label{tab:tabla-larga}\\
+\hline
+\textbf{Primera} & \textbf{Segunda} & \textbf{Tercera} & \textbf{Cuarta} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}%
+{\scriptsize\textbf{\tablename\ \thetable}\ -- \textit{Continúa de la página anterior}} \\
+\hline
+\textbf{Primera} & \textbf{Segunda} & \textbf{Tercera} & \textbf{Cuarta} \\
+\hline
+\endhead
+\hline \multicolumn{4}{r}{\textit{\scriptsize Continúa en la página siguiente}} \\
+\endfoot
+\hline
+\endlastfoot
+1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\
+1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\
+1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\
+1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\
+1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\
+1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\
+1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\
+1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\ 1 & 2 & 3 & 4 \\
+\end{longtable}
+\end{center}

@@ -1,0 +1,4 @@
+Esta carpeta contiene solamente archivos auxiliares relativos al estilo.  
+En principio no tienes que tocar nada de lo que hay aquí.  Si ves algún problema
+o alguna carencia es mejor comunicarlo a sus autores para que se actualice en
+el repositorio oficial.

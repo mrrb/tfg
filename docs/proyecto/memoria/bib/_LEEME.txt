@@ -1,0 +1,7 @@
+En esta carpeta coloca solamente archivos BibTeX (extensión .bib).
+
+Para editarlos puedes usar un editor en línea, como 
+http://truben.no/latex/bibtex
+
+Ten en cuenta que el aspecto de la referencia en el documento final depende
+del estilo BibTeX

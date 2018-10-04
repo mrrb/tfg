@@ -1,0 +1,13 @@
+\newcommand{\@listofsymbols}{}
+\newcommand{\listofsymbols}[1]{\renewcommand{\@listofsymbols}{\input{#1}}}
+
+\newcommand{\indices}{%
+    \pagenumbering{roman}
+    \cleardoublepage\setcounter{page}{1}
+    \tableofcontents			%Indice General
+    \listoftables				%Indice de tablas
+    \listoffigures				%Indice de figuras
+    \@listofsymbols              %Índice de símbolos
+    \cleardoublepage\setcounter{page}{1}
+    \pagenumbering{arabic}
+}

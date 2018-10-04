@@ -1,0 +1,21 @@
+\section{Bibliografía, citas y referencias} 
+\label{sec:bibliografia-citas}
+
+Otro de los aspectos especialmente cuidados de \LaTeX{} es el manejo de bibliografía y citas.  En esta plantilla utilizamos el paquete \emph{natbib}.  Es un paquete muy flexible que permite adaptarse a casi cualquier estilo de citas existente.  Sin embargo, en los documentos de ingeniería suele haber bastante consenso en el estilo que hemos configurado en la plantilla.  A menos que tengas un motivo, no lo cambies.
+
+La bibliografía en \LaTeX{} se hace con ayuda de unos archivos auxiliares escritos en formato BibTeX.  Es otro formato textual, con una serie de campos que hay que rellenar.  Para la composición de entradas BibTeX lo más sencillo es utilizar un editor online, como \url{http://truben.no/latex/bibtex/}.  Ten presente que algunos tipos de entradas pueden no estar configurados en el estilo de bibliografía que usas.  Por ejemplo, \emph{Online} y \emph{URL}, que aparecen en el editor en línea, no están en el estilo de bibliografía que usamos en esta plantilla.  Usa en su lugar \emph{Misc} como en el archivo \texttt{bib/how.bib} de esta plantilla.  En principio todas las entradas de bibliografía que utilices en tu TFG deben ponerse en \texttt{bib/main.bib}.
+
+Con \LaTeX{} estándar se cita empleando la orden \texttt{cite} con el campo clave que contiene todo registro de BibTeX.  Esto puede valer, pero en el paquete \texttt{natbib}, se recomienda emplear \texttt{citep} en su lugar.  Por ejemplo, según el trabajo~\citep{armas2011estimation} \ldots mientras que según~\citep{castillo2010design} el control es una cosa muy buena. 
+
+Con \texttt{natbib} tienes otra opción de cita, con la orden \texttt{citet}, que también se usa, especialmente cuando se quiere destacar el autor.  Por ejemplo, según \citet{castillo2011time} la potencia sin control no sirve de nada.  Puedes usar cualquiera de los dos estilos de cita, pero debes ser consistente.  La inconsistencia confunde al lector.
+
+Una referencia bibliográfica se utiliza como argumento de autoridad, para dar peso a tu propia argumentación.  Por tanto, hay tres elementos clave que siempre deben estar: 
+\begin{itemize}
+    \item El autor, puesto que palabras anónimas no dan peso a nada.  Recuerda que el autor es lo que da peso a tu argumento.  No cites artículos divulgativos, ni autores sin un mínimo prestigio en el campo de lo que afirman.
+    \item El título, puesto que el lector debe poder buscar por sí mismo el documento original.
+    \item La fecha, puesto que un mismo autor puede cambiar de opinión a lo largo de su vida.  Por ejemplo  John Maynard Keynes es Premio Nobel pero tiene numerosos escritos contradictorios.  Su opinión era bastante cambiante con el tiempo.
+\end{itemize}
+
+Si falta alguno de estos elementos no es una referencia y no se cita.  Se puede poner como una nota a pié de página (\texttt{footnote}) o como una URL en el cuerpo del texto, pero no como una referencia.
+
+Por cierto, es conveniente citar las fuentes.  Es decir, debes tomarte la molestia de buscar quién dijo o inventó lo que citas y dónde lo publicó por primera vez.  Es la mínima cortesía que se debe tener con los colegas de profesión.  Supongo que tú también querrás crédito por tu trabajo en tu futuro profesional.
