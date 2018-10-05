@@ -11,18 +11,25 @@ def get_min_divider(clk, time):
 def time_from_divider(clk, divider):
     return (2**divider)/clk
 
+def get_clock(time, divider):
+    return  int((2**divider)/time)
+
 def print_help(name):
     print("Usage: "+name+" [option] arg1 arg2")
     print("Options: ",
           " -d: Print the minimal divider value for a given clock (arg1) and time (arg2). [Default]",
-          " -t: Print the time for a given clock (arg1) and divider (arg2).", sep='\n')
+          " -t: Print the time for a given clock (arg1) and divider (arg2).",
+          " -c: Print the clock for a given time (arg1) and divider (arg2).",
+          sep='\n')
     sys.exit()
 
 if __name__ == "__main__":
     arg   = sys.argv
     name  = arg.pop(0)
     l     = len(arg)
-    modes = {'d':False, 't':False} # d -> Print the minimal divider value [clk, time]; t -> print time for a given divider and clk [clk, div]
+    modes = {'d':False, 't':False, 'c':False} # d -> Print the minimal divider value [clk, time];
+                                              # t -> print time for a given divider and clk [clk, div]
+                                              # c -> print clock for a given time and divider [time, div]
 
     modes_count = 0
     for i in modes:
@@ -53,6 +60,10 @@ if __name__ == "__main__":
             print('Recomended divider (with {}% error): {} [{}s]'.format(min(error), div[min_pos], times[min_pos]))
             print('{} [{}s] - [{}s] - {} [{}s]'.format(div[1], times[1], arg[1], div[0], times[0]))
 
-        if(modes['t']):
+        elif(modes['t']):
             time = time_from_divider(arg[0], arg[1])
             print('Time: {}s'.format(time))
+
+        elif(modes['c']):
+            clk = get_clock(arg[0], arg[1])
+            print('Clock: {}Hz'.format(clk))
