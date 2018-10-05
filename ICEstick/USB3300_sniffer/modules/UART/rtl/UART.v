@@ -4,6 +4,7 @@
  */
 
 `default_nettype none
+`include "./modules/clk_div_gen.vh" // Clock divider module
 
 module UART #(parameter BAUD_DIVIDER = 9)
              (input  wire Rx,          // Rx input pin

@@ -1,10 +1,13 @@
 /*
  *
+ * mux module
+ * This module generates a multiplexer (mux) with a custom number of bits
+ *
  */
 
 
 module mux #(
-             parameter n_bits  = 2 // Bits of the multiplexer
+             parameter n_bits  = 2           // Bits of the multiplexer
             )
             (
              input  wire [0:2**n_bits-1]ch,  // Input channels (2^n_bits)

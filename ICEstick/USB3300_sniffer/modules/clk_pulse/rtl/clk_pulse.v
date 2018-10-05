@@ -1,14 +1,16 @@
 /*
  *
+ * clk_pulse module
+ * This module generates a pulse once every period of the slower clock. The pulse occurs at the same time that both clocks are HIGH.
+ *
  */
 
 
-module clk_pulse(
-                 input  wire clk_fast,
-                 input  wire clk_slow,
-                 output wire clk_pulse
-                );
-
+module clk_pulse (
+                  input  wire clk_fast,  // Faster clock input
+                  input  wire clk_slow,  // Slower clock input
+                  output wire clk_pulse  // Output pulse
+                 );
 
     reg clk_slow_done_r = 1'b0;
 

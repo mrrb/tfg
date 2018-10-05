@@ -1,15 +1,18 @@
 /*
  *
+ * REG_BANK module
+ * This module generates a bank of registers with custom widths of data and addresses
+ *
  */
 
-
-module REG_BANK #(parameter ADDR_BITS = 4, // Width of the addresses of the register bank
+module REG_BANK #(
+                  parameter ADDR_BITS = 4, // Width of the addresses of the register bank
                   parameter DATA_BITS = 8  // Width of the data of the register bank
                  )
                  (
-                  input  wire clk, // Master clock
-                  input  wire WD,  // "Write Data" control input. When high, the data in DATA_in will be saved in the bank.
-                  input  wire [(2**ADDR_BITS - 1):0] ADDR,     // Address where the data have to be save/read
+                  input  wire clk,                          // Master clock
+                  input  wire WD,                           // "Write Data" control input. When high, the data in DATA_in will be saved in the bank.
+                  input  wire [(2**ADDR_BITS - 1):0] ADDR,  // Address where the data have to be save/read
                   input  wire [(DATA_BITS - 1):0] DATA_in,  // Data to be save in the bank
                   output wire [(DATA_BITS - 1):0] DATA_out  // Data read from the bank
                  );

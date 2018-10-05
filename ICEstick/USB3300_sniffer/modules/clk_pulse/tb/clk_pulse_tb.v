@@ -1,3 +1,10 @@
+/*
+ *
+ * Test bench for the clk_pulse module
+ * Execute "make gtk" to view the results
+ * 
+ */
+
 module clk_pulse_tb();
 
     // Wires and registers

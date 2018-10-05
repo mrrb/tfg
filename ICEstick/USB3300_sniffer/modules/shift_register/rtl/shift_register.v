@@ -1,5 +1,6 @@
 /*
  *
+ * shift_register module
  * This modules creates a Shift Register with parallel data input capabilities.
  * 
  * To use the parallel input, the signals 'enable' and 'PARALLEL_EN' must be HIGH.
@@ -22,7 +23,7 @@ module shift_register #(
                         output wire [(bits - 1):0]DATA_out, // Data stored in the register
 
                         // Parallel input
-                        input  wire [(bits - 1):0]DATA_in,
+                        input  wire [(bits - 1):0]DATA_in,  // Data input
                         input  wire PARALLEL_EN // Parallel enable signal. When this signal is HIGH, the data in DATA_in is stored in the register.
                        );
 
@@ -37,9 +38,7 @@ module shift_register #(
     // Main controller
     always @(posedge clk) begin
         if(enable) begin
-            if(PARALLEL_EN) begin
-                DATA <= DATA_in;
-            end
+            if(PARALLEL_EN) DATA <= DATA_in;
             else begin
                 bit_out_r <= DATA[0];
                 DATA <= {bit_in, DATA[(bits - 1):1]};
