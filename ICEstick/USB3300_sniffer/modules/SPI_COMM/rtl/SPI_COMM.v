@@ -99,7 +99,7 @@ module SPI_COMM(
     assign DATA_out    = DATA_out_r;  // #OUTPUT
     assign EoB         = SPI_s_BACK;  // #OUTPUT
     assign busy        = !SPI_s_IDLE; // #OUTPUT
-    assign err         = err_r;       // #OUTPUT
+    assign err_out     = err_r;       // #OUTPUT
     assign INFO_out    = INFO_r;      // #OUTPUT
     assign CMD         = CMD_r;       // #OUTPUT
     assign read        = read_r;      // #OUTPUT
