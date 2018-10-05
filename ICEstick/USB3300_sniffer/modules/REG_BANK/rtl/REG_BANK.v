@@ -16,7 +16,7 @@ module REG_BANK #(parameter ADDR_BITS = 4, // Width of the addresses of the regi
 
 
     // Main register
-    reg [(DATA_BITS - 1):0] bank_r [(2**ADDR_BITS - 1):0];
+    reg [(DATA_BITS - 1):0] bank_r [0:(2**ADDR_BITS - 1)];
 
     // Output Data
     assign DATA_out = bank_r[ADDR];
@@ -28,5 +28,8 @@ module REG_BANK #(parameter ADDR_BITS = 4, // Width of the addresses of the regi
         end
     end
 
+    // initial begin
+    //     $readmemh("test.mem", bank_r);
+    // end
 
 endmodule
