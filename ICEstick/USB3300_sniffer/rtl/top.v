@@ -1,38 +1,4 @@
 /*
- * MIT License
- *
- * Copyright (c) 2018 Mario Rubio
- *
- MIT License
-
-Copyright (c) 2015-present, Facebook, Inc.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- 
- */
-
-/*
- * Revision History:
- *     Initial:        2018/06/15        Mario Rubio
- */
-
-/*
  * 
  * This is the main file for the USB3300 sniffer
  * 
@@ -96,19 +62,19 @@ module USB3300_parser (
      * Requested output frequency:  100.000 MHz
      * Achieved output frequency:   100.500 MHz
      */
-    wire clk_ctrl; // Master controller clock signal
+    wire clk_ctrl; // Master controller clock signal [clk ≅100MHz output]
     wire locked;   // Locked control signal
     SB_PLL40_CORE #(
 		            .FEEDBACK_PATH("SIMPLE"),
 		            .DIVR(4'b0000),		    // DIVR =  0
 		            .DIVF(7'b1000010),	    // DIVF = 66
 		            .DIVQ(3'b011),		    // DIVQ =  3
-		            .FILTER_RANGE(3'b001)	// FILTER_RANGE = 1
+		            .FILTER_RANGE(3'b001)	    // FILTER_RANGE = 1
 	               )
                uut (
-		            .LOCK(locked), // [Input]
-		            .RESETB(1'b1), // [Input]
-		            .BYPASS(1'b0), // [Input]
+		            .LOCK(locked),          // [Input]
+		            .RESETB(1'b1),          // [Input]
+		            .BYPASS(1'b0),          // [Input]
 		            .REFERENCECLK(clk_int), // [Input]
 		            .PLLOUTCORE(clk_ctrl)   // [Output]
 		           );
@@ -169,25 +135,44 @@ module USB3300_parser (
 
     /// SPI module init
     // #MODULE_INIT SPI
-    wire [2:0]SPI_status;
-    wire SPI_err;
+    wire [7:0]SPI_DATA_out;
+    wire SPI_err_out;
+    wire SPI_err_in;
     wire SPI_EoB;
-    wire SPI_out_latched;
-    wire [7:0]DATA_out;
+    wire SPI_busy;
+    wire SPI_CMD;
+    wire SPI_INFO_out;
+    wire SPI_sec_CMD;
+    wire SPI_read;
+    wire SPI_format;
+
     SPI_COMM spi(
-                 .clk(clk_ctrl),
-                 .rst(0'b0),
-                 .SCLK(SPI_SCK),
-                 .SS(SPI_SS),
-                 .MOSI(SPI_MOSI),
-                 .MISO(SPI_MISO),
-                 .DATA_in(8'b0),
-                 .data_out_latched(0'b1),
-                 .DATA_out(DATA_out),
-                 .data_in_latched(SPI_out_latched),
-                 .err(SPI_err),
-                 .EoB(SPI_EoB),
-                 .status(SPI_status)
+                 // System signals
+                 .clk(clk_ctrl),          // [Input]
+                 .rst(0'b0),              // [Input]
+
+                 // SPI interface signals
+                 .SCLK(SPI_SCK),          // [Input]
+                 .SS(SPI_SS),             // [Input]
+                 .MOSI(SPI_MOSI),         // [Input]
+                 .MISO(SPI_MISO),         // [Output]
+
+                 // Data signals
+                 .DATA_in(SPI_data_in_r),   // [Input]
+                 .DATA_out(SPI_DATA_out), // [Output]
+
+                 // Control signals
+                 .err_in(SPI_err_in),     // [Input]
+                 .err_out(SPI_err_out),   // [Output]
+                 .EoB(SPI_EoB),           // [Output]
+                 .busy(SPI_busy),         // [Output]
+
+                 // Frame info signals
+                 .CMD(SPI_CMD),           // [Output]
+                 .INFO_out(SPI_INFO_out), // [Output]
+                 .sec_CMD(SPI_sec_CMD),   // [Output]
+                 .read(SPI_read),         // [Output]
+                 .format(SPI_format)      // [Output]
                 );
     /// End of SPI module init
 
@@ -214,5 +199,248 @@ module USB3300_parser (
                .ULPI_DATA(ULPI_DATA)
               );
     /// End of ULPI module init
+
+
+    /// USB3300_parser main controller
+        /// USB3300_parser Regs and wires
+        // Buffers
+        reg [2:0]main_STA_FPGA_request_r = 3'b0;
+        reg [2:0]main_STA_FPGA_status_r  = 3'b0;
+        reg [1:0]main_STA_error_code_r   = 2'b0;
+
+        // Control registers
+        // #NONE
+
+        // Flags
+        wire [7:0]main_STA = {main_STA_FPGA_request_r, main_STA_FPGA_status_r, main_STA_error_code_r};
+        wire main_rst;
+        
+        // Assigns
+        // #NONE
+        /// End of USB3300_parser Regs and wires
+
+        /// USB3300_parser States (See module description at the beginning to get more info)
+        /// End of USB3300_parser States
+
+        /// USB3300_parser controller
+        // #FIGURE_NUMBER main_SPI_state_machine
+        // States
+        // always @(posedge clk_ctrl) begin
+        //     if(main_rst) begin
+        //     end
+        //     else begin
+        //         case()
+        //             default: begin
+        //             end
+        //         endcase
+        //     end
+        // end
+        // // Actions
+        // always @(posedge clk_ctrl) begin
+        //     if(main_rst) begin
+        //     end
+        //     else begin
+        //         case()
+        //             default: begin
+        //             end
+        //         endcase
+        //     end
+        // end
+        /// End of USB3300_parser controller
+    /// End of USB3300_parser main controller
+
+
+    /// SPI main controller
+
+        /// main_SPI Regs and wires
+        // Buffers
+        reg [7:0]SPI_data_in_r = 8'b0;
+
+        // Control registers
+        reg [2:0]SPI_state_r = 3'b0; // Register to store the current state of the SPI controller
+        reg SPI_err_in_r     = 1'b0;
+        reg [1:0]SPI_mode_next_r    = 2'b0;
+        reg [1:0]SPI_mode_current_r = 2'b0;
+        reg [1:0]SPI_mode_l_next_r  = 2'b0;
+        reg [4:0]SPI_B_count_r = 5'b0; // SPI Byte count
+        reg SPI_F_end_r = 1'b0; // SPI end of Frame
+        reg [4:0]SPI_info_len_r = 5'b0;
+        reg [2:0]SPI_info_extra_r = 3'b0;
+        reg SPI_SET_mode_2_r = 1'b0;
+        reg SPI_SET_mode_3_r = 1'b0;
+        reg SPI_pre_done = 1'b0;
+
+        // Flags
+        wire SPI_err;
+        
+        // Assigns
+        assign SPI_err = SPI_err_out || SPI_err_in;
+        /// End of main_SPI Regs and wires
+
+        /// main_SPI States (See module description at the beginning to get more info)
+        localparam SPI_IDLE      = 0;
+        localparam SPI_LOAD      = 1;
+        localparam SPI_TR        = 2;
+        localparam SPI_CHK       = 3;
+        localparam SPI_BACK      = 4;
+        localparam SPI_PRE_READ  = 5;
+        localparam SPI_PRE_WRITE = 6;
+        localparam SPI_RST       = 7;
+        /// End of main_SPI States
+
+        /// main_SPI controller
+        // #FIGURE_NUMBER main_SPI_state_machine
+        // States
+        always @(posedge clk_ctrl) begin
+            if(main_rst) begin
+                SPI_state_r <= SPI_RST;
+            end
+            else begin
+                case(SPI_state_r)
+                    SPI_IDLE: begin
+                        if(!SPI_busy) SPI_state_r <= SPI_LOAD;
+                        else          SPI_state_r <= SPI_IDLE;
+                    end
+                    SPI_LOAD: begin
+                        SPI_state_r <= SPI_TR;
+                    end
+                    SPI_TR: begin
+                        if(SPI_err)      SPI_state_r <= SPI_RST;
+                        else if(SPI_EoB) SPI_state_r <= SPI_CHK;
+                        else             SPI_state_r <= SPI_TR;
+                    end
+                    SPI_CHK: begin
+                        if(SPI_err) SPI_state_r <= SPI_RST;
+                        else        SPI_state_r <= SPI_BACK;                    
+                    end
+                    SPI_BACK: begin
+                        if(SPI_err) SPI_state_r <= SPI_RST;
+                        else if(SPI_F_end_r && SPI_sec_CMD) begin
+                            if(SPI_read) SPI_state_r <= SPI_PRE_READ;
+                            else         SPI_state_r <= SPI_PRE_WRITE;
+                        end
+                        else if(!SPI_F_end_r) SPI_state_r <= SPI_TR;
+                        else                  SPI_state_r <= SPI_RST;
+                    end
+                    SPI_PRE_READ: begin
+                        if(SPI_err)      SPI_state_r <= SPI_RST;
+                        if(SPI_pre_done) SPI_state_r <= SPI_IDLE;
+                        else             SPI_state_r <= SPI_PRE_READ;
+                    end
+                    SPI_PRE_WRITE: begin
+                        if(SPI_err)      SPI_state_r <= SPI_RST;
+                        if(SPI_pre_done) SPI_state_r <= SPI_IDLE;
+                        else             SPI_state_r <= SPI_PRE_WRITE;
+                    end
+                    SPI_RST: begin
+                        if(!SPI_busy && !SPI_err) SPI_state_r <= SPI_IDLE;
+                        else                      SPI_state_r <= SPI_RST;
+                    end
+                    default: begin
+                        SPI_state_r <= SPI_RST; 
+                    end
+                endcase
+            end
+        end
+        // Actions
+        always @(posedge clk_ctrl) begin
+            if(main_rst) begin
+            end
+            else begin
+                case(SPI_state_r)
+                    SPI_IDLE: begin
+                        SPI_data_in_r <= main_STA;
+                        SPI_F_end_r   <= 1'b0;
+                    end
+                    SPI_LOAD: begin
+                        SPI_mode_next_r    <= 2'b0;
+                        SPI_mode_current_r <= 2'b0;
+                        SPI_mode_l_next_r  <= SPI_mode_next_r;
+
+                        SPI_B_count_r <= 5'b0;
+                    end
+                    SPI_TR: begin
+
+                    end
+                    SPI_CHK: begin
+                        SPI_B_count_r <= SPI_B_count_r + 1'b1;
+
+                        if(SPI_mode_current_r == 2'b0) begin
+                            if(!SPI_read && !SPI_format) begin
+                                SPI_mode_current_r <= 2'b01;
+                                if(SPI_sec_CMD) SPI_mode_next_r <= 2'b10;
+                                else            SPI_mode_next_r <= 2'b00;
+                            end
+                            else if(!SPI_read && SPI_format) begin
+                                SPI_mode_current_r <= 2'b10;
+                                if(SPI_sec_CMD) SPI_mode_next_r <= 2'b10;
+                                else            SPI_mode_next_r <= 2'b00;
+                            end
+                            else if(SPI_read && SPI_format) begin
+                                SPI_mode_current_r <= 2'b11;
+                                if(SPI_sec_CMD) SPI_mode_next_r <= 2'b11;
+                                else            SPI_mode_next_r <= 2'b00;
+                            end
+                            else SPI_err_in <= 1'b1;
+
+                            if(SPI_mode_l_next_r != SPI_mode_current_r) SPI_err_in <= 1'b1;
+                        end
+                        else if(SPI_mode_current_r == 2'b01 && SPI_B_count_r == 5'b1) begin
+                            /*
+                             * SAVE BYTE
+                             */
+                            SPI_F_end_r   <= 1'b1;
+                        end
+                        else if(SPI_mode_current_r == 2'b10 && SPI_B_count_r == 5'b1) begin
+                            SPI_info_len_r <= SPI_INFO_out[4:0];
+                            SPI_info_extra_r <= SPI_INFO_out[7:5];
+                            SPI_SET_mode_2_r <= 1'b1;
+                        end
+                        else if(SPI_mode_current_r == 2'b10 && SPI_B_count_r <= (SPI_info_len_r+1'b1) && SPI_SET_mode_2_r) begin
+                            /*
+                             * SAVE BYTE
+                             */
+                            if(SPI_B_count_r == (SPI_info_len_r+1'b1)) SPI_F_end_r = 1'b1;
+                        end
+                        else if(SPI_mode_current_r == 2'b11 && SPI_B_count_r == 5'b1) begin
+                            SPI_data_in_r <= {SPI_info_extra_r, SPI_info_len_r};
+                            SPI_SET_mode_3_r <= 1'b1;
+                        end
+                        else if(SPI_mode_current_r == 2'b11 && SPI_B_count_r <= (SPI_info_len_r+1'b1) && SPI_SET_mode_3_r) begin
+                            /*
+                             * NEXT BYTE
+                             */
+                            if(SPI_B_count_r == (SPI_info_len_r+1'b1)) SPI_F_end_r = 1'b1;
+                        end
+                        else SPI_err_in <= 1'b1;
+                    end
+                    SPI_BACK: begin
+                        
+                    end
+                    SPI_PRE_READ: begin
+                        
+                    end
+                    SPI_PRE_WRITE: begin
+                        
+                    end
+                    SPI_RST: begin
+                        SPI_err_in <= 1'b0;
+                        SPI_mode_next_r    <= 2'b0;
+                        SPI_mode_current_r <= 2'b0;
+                        SPI_mode_l_next_r  <= 2'b0;
+                        SPI_info_len_r     <= 5'b0;
+                        SPI_info_extra_r   <= 3'b0;
+                        SPI_SET_mode_2_r   <= 1'b0;
+                        SPI_SET_mode_3_r   <= 1'b0;
+                    end
+                    default: begin
+                        
+                    end
+                endcase
+            end
+        end
+        /// End of main_SPI controller
+
+    /// End of SPI main controller
 
 endmodule
