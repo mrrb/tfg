@@ -1,5 +1,9 @@
-`include "modules/shift_register/rtl/shift_register.v"
-`include "modules/clk_pulse/rtl/clk_pulse.v"
+/*
+ *
+ * Test bench for the SPI_COMM module
+ * Execute "make gtk" to view the results
+ * 
+ */
 
 module SPI_COMM_tb ();
 
@@ -22,7 +26,7 @@ module SPI_COMM_tb ();
     wire read;
     wire format;
 
-    // Module Init
+    // Module under test Init
     SPI_COMM spi (
                   .clk(clk_fast), .rst(1'b0), // System signals
                   .SCLK(clk_slow), .SS(SS_r), .MOSI(MOSI_r), .MISO(MISO_w), // SPI interface signals
@@ -46,9 +50,6 @@ module SPI_COMM_tb ();
 
         SS_r = 0;
         DATA_in_r = 8'hAA;
-        
-        // localparam chk_A_1 = 0;
-        // localparam chk_A_1 = 0;
 
         // First byte [00000000]
             #0  MOSI_r = 1;
@@ -197,7 +198,7 @@ module SPI_COMM_tb ();
 
         DATA_in_r = 8'hA2;
 
-        // B - Second byte [10100001]
+        // B - Second byte [10100010]
             #20 MOSI_r = 0;
             #20 MOSI_r = 1;
             #20 MOSI_r = 0;
@@ -336,11 +337,147 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1;
             #20 MOSI_r = 0;
         // End of C - Third byte
-        
 
         #20 SS_r = 1;
+        DATA_in_r = 8'b0;
         #60
+
+        $display("Test 5 - Error output test");
+
+        SS_r = 0;
+        DATA_in_r = 8'hAA;
         
+        // A - First byte [00100000]
+            #0  MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1; // Sec
+            #20 MOSI_r = 0; // Read
+            #20 MOSI_r = 0; // Format
+        // End of A - First byte
+
+        // A - Second byte [01101011]
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+        // End of A - Second byte
+
+        #20 SS_r = 1;
+        #20 SS_r = 0;
+
+        // B - First byte [10000000]
+            #0  MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0; // Sec
+            #20 MOSI_r = 0; // Read
+            #20 MOSI_r = 1; // Format
+        // End of B - First byte
+
+        // B - Second byte [10100010]
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+        // End of B - Second byte
+
+        // B - Third byte [01101001]
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+        // End of B - Third byte
+
+        #20 SS_r = 1;
+        DATA_in_r = 8'b0;
+        #60
+
+        $display("Test 6 - Error input test");
+
+        SS_r = 0;
+        DATA_in_r = 8'hAA;
+        
+        // A - First byte [00100000]
+            #0  MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1; // Sec
+            #20 MOSI_r = 0; // Read
+            #20 MOSI_r = 0; // Format
+        // End of A - First byte
+
+        // A - Second byte [01101011]
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+        // End of A - Second byte
+
+        #20 SS_r = 1;
+        #20 SS_r = 0;
+
+        // B - First byte [10000000]
+            #0  MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0; // Sec
+            #20 MOSI_r = 0; // Read
+            #20 MOSI_r = 1; // Format
+        // End of B - First byte
+
+        // B - Second byte [10100001]
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0; err_in_r <= 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+        // End of B - Second byte
+
+        // B - Third byte [01101001]
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 1;
+            #20 MOSI_r = 0; 
+        // End of B - Third byte
+
+        #20 SS_r = 1;
+        DATA_in_r = 8'b0;
+        #60
+        #60 err_in_r <= 0;
+        
+
         #100 $finish;
     end
 

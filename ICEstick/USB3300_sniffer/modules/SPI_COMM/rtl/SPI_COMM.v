@@ -1,8 +1,23 @@
 /*
  *
+ * SPI_COMM module
+ * This module controls the SPI communication with a SPI Master. It handles the OSI level 2 (frame).
+ * 
  * CPOL = 0; CPHA = 1;
- *
+ * 
+ * States:
+ *  - SPI_IDLE.  The module is waiting for a new transmission to occur (waiting for a LOW signal in SS).
+ *  - SPI_LOAD.  Once the transmission start, output Byte is loaded into the shift register.
+ *  - SPI_TRANS. With the help of a counter, the 8bit IN/OUT data is read/write.
+ *  - SPI_SAVE.  The packet that has been just read processed and stored if needed.
+ *  - SPI_BACK.  If there is another byte to read the state go back to SPI_TRANS.
+ *               At the end of the frame, depending on the frame type, It migh go to SPI_RST or SPI_IDLE.
+ *  - SPI_RST.   At the end of a Full transmission or if an error occur, all the register are cleaned up.
  */
+
+`default_nettype none
+`include "./modules/clk_pulse.vh"      // Clock pulse module
+`include "./modules/shift_register.vh" // Shift register module
 
 module SPI_COMM(
                 // System signals
@@ -16,21 +31,21 @@ module SPI_COMM(
                 output wire MISO, // Master-IN  Slave-Out
 
                 // Data signals
-                input  wire [7:0]DATA_in,     // Data to send to the computer
-                output wire [7:0]DATA_out,    // Data received from the computer
+                input  wire [7:0]DATA_in,  // Data to send to the computer
+                output wire [7:0]DATA_out, // Data received from the computer
 
                 // Control signals
-                input  wire err_in,           // Error in the SPI transaction (catched by the SPI main controller)
-                output wire err_out,          // Error in the last SPI transaction (catched by SPI_COMM)
-                output wire EoB,              // End of Byte control signal
-                output wire busy,             // When there is a transfer in progress this signal will be High
+                input  wire err_in,        // Error in the SPI transaction (catched by the SPI main controller)
+                output wire err_out,       // Error in the last SPI transaction (catched by SPI_COMM)
+                output wire EoB,           // End of Byte control signal
+                output wire busy,          // When there is a transfer in progress this signal will be High
 
                 // Frame info signals
-                output wire [4:0]CMD,         // Command => data_out[4:0]
-                output wire [7:0]INFO_out,    // INFO packet in long format transmissions
-                output wire sec_CMD,          // The frame has a secondary packet
-                output wire read,             // The PC request the FPGA to send data
-                output wire format            // The frame is a secondary transmission (long format)
+                output wire [4:0]CMD,      // Command => data_out[4:0]
+                output wire [7:0]INFO_out, // INFO packet in long format transmissions
+                output wire sec_CMD,       // The frame has a secondary packet
+                output wire read,          // The PC request the FPGA to send data
+                output wire format         // The frame is a secondary transmission (long format)
                );
 
     /// Shift register pulse module init
@@ -74,7 +89,8 @@ module SPI_COMM(
     reg [2:0]SPI_state_r = 3'b0; // Register to store the current state of the SPI_COMM module
     reg [3:0]SPI_ctrl_r  = 4'b0; // Register to store the number of the next bit to be readed in each frame data packet
     reg [4:0]TR_count_r  = 5'b0; // Register that stores the remaining number of packets to read (32 bytes max.)
-    reg SET_A_r = 1'b0; // Register that controls in which format we are
+
+    reg SET_A_r = 1'b0; // Register that controls which format has the frame
     reg SET_B_r = 1'b0; // Register that controls if we are reading/writing data
 
     reg format_r  = 1'b0; // If the format of the message is "Long" this register will stored a '1', elsewise, a '0' ("short format")
@@ -89,6 +105,8 @@ module SPI_COMM(
     wire SPI_s_BACK;  // 1 if SPI_state_r == SPI_BACK,  else 0
     wire SPI_s_RST;   // 1 if SPI_state_r == SPI_RST,   else 0
 
+    wire error;       // When an error occur (either from this module or from the main controller), this signal will be HIGH
+
     // Assigns
     assign SPI_s_IDLE  = (SPI_state_r == SPI_IDLE)  ? 1'b1 : 1'b0; // #FLAG
     assign SPI_s_LOAD  = (SPI_state_r == SPI_LOAD)  ? 1'b1 : 1'b0; // #FLAG
@@ -96,16 +114,19 @@ module SPI_COMM(
     assign SPI_s_SAVE  = (SPI_state_r == SPI_SAVE)  ? 1'b1 : 1'b0; // #FLAG
     assign SPI_s_BACK  = (SPI_state_r == SPI_BACK)  ? 1'b1 : 1'b0; // #FLAG
     assign SPI_s_RST   = (SPI_state_r == SPI_RST)   ? 1'b1 : 1'b0; // #FLAG
-    assign DATA_out    = DATA_out_r;  // #OUTPUT
-    assign EoB         = SPI_s_BACK;  // #OUTPUT
-    assign busy        = !SPI_s_IDLE; // #OUTPUT
-    assign err_out     = err_r;       // #OUTPUT
-    assign INFO_out    = INFO_r;      // #OUTPUT
-    assign CMD         = CMD_r;       // #OUTPUT
-    assign read        = read_r;      // #OUTPUT
-    assign sec_CMD     = sec_CMD_r;   // #OUTPUT
-    assign format      = format_r;    // #OUTPUT
+
     assign MISO        = !SPI_s_IDLE ? MISO_out[0] : 1'b0; // #OUTPUT
+    assign DATA_out    = DATA_out_r;        // #OUTPUT
+    assign err_out     = err_r;             // #OUTPUT
+    assign EoB         = SPI_s_BACK;        // #OUTPUT
+    assign busy        = !SPI_s_IDLE;       // #OUTPUT
+    assign CMD         = CMD_r;             // #OUTPUT
+    assign INFO_out    = INFO_r;            // #OUTPUT
+    assign sec_CMD     = sec_CMD_r;         // #OUTPUT
+    assign read        = read_r;            // #OUTPUT
+    assign format      = format_r;          // #OUTPUT
+
+    assign error       = err_in || err_out; // #CONTROL
     /// End of SPI_COMM Regs and wires
 
 
@@ -133,18 +154,21 @@ module SPI_COMM(
                     else    SPI_state_r <= SPI_IDLE;
                 end
                 SPI_LOAD: begin
-                    SPI_state_r <= SPI_TRANS;
+                    if(error) SPI_state_r <= SPI_RST;
+                    else      SPI_state_r <= SPI_TRANS;
                 end
                 SPI_TRANS: begin
-                    if(SPI_ctrl_r == 4'b1000) SPI_state_r <= SPI_SAVE;
-                    else if(SS)               SPI_state_r <= SPI_RST;
-                    else                      SPI_state_r <= SPI_TRANS;
+                    if(error)                      SPI_state_r <= SPI_RST;
+                    else if(SPI_ctrl_r == 4'b1000) SPI_state_r <= SPI_SAVE;
+                    else                           SPI_state_r <= SPI_TRANS;
                 end
                 SPI_SAVE: begin
-                    SPI_state_r <= SPI_BACK;
+                    if(error) SPI_state_r <= SPI_RST;
+                    else      SPI_state_r <= SPI_BACK;
                 end
                 SPI_BACK: begin
-                    if(!(TR_count_r == 4'b0))
+                    if(error) SPI_state_r <= SPI_RST;
+                    else if(!(TR_count_r == 4'b0))
                         SPI_state_r <= SPI_LOAD;
                     else if(sec_CMD_r && SS)
                         SPI_state_r <= SPI_IDLE;
@@ -154,7 +178,7 @@ module SPI_COMM(
                         SPI_state_r <= SPI_RST;
                 end
                 SPI_RST: begin
-                    if(SS) SPI_state_r <= SPI_IDLE;
+                    if(SS && !error) SPI_state_r <= SPI_IDLE;
                     else   SPI_state_r <= SPI_RST;
                 end
                 default: begin
@@ -192,6 +216,7 @@ module SPI_COMM(
 
                     // if(shift_pulse) SPI_ctrl_r <= SPI_ctrl_r + 1'b1; // 1 bit less to read
                     if(SPI_ctrl_r == 4'b1000) TR_count_r <= TR_count_r - 1'b1;
+                    else if(SS) err_r <= 1'b1;
                 end
                 SPI_SAVE: begin
                     DATA_out_r <= MOSI_data;
@@ -231,7 +256,8 @@ module SPI_COMM(
                     read_r        <= 1'b0;
                     sec_CMD_r     <= 1'b0;
                     INFO_r        <= 8'b0; 
-                    CMD_r         <= 5'b0; 
+                    CMD_r         <= 5'b0;
+                    err_r         <= 1'b0;
                 end
                 default: begin
                     

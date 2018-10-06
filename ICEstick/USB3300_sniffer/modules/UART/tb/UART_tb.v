@@ -1,24 +1,35 @@
+/*
+ *
+ * Test bench for the UART module
+ * Execute "make gtk" to view the results
+ * 
+ */
+
 module UART_tb();
    
     // Registers and wires
+    reg  clk       = 1'b0;
     reg  [7:0]data = 8'b0;
-    reg  clk = 1'b0;
     reg  send_data = 1'b0;
-    wire Tx;
-    wire Rx;
-    wire TiP;
-    wire NrD;
-    wire [7:0]O_DATA;
 
     wire ctrl;
-    UART #(.BAUD_DIVIDER(1)) U1 (Rx, clk, data, send_data, Tx, TiP, NrD, O_DATA, ctrl);
+    wire Rx;
+    wire Tx;
+    wire [7:0]O_DATA;
+    wire TiP;
+    wire NrD;
 
-    // Clock
+    // Module under test init
+    UART #(.BAUD_DIVIDER(2)) U1 (.clk(clk), .clk_baud(ctrl),                    // System signals
+                                 .Rx(Rx), .Tx(Tx),                              // UART signals
+                                 .I_DATA(data), .O_DATA(O_DATA),                // Data signals
+                                 .send_data(send_data), .TiP(TiP), .NrD(NrD));  // Control signals
+
+    // Clock gen
     always #1 clk = ~clk;
 
-    //
+    // Simulation
     initial begin
-      
         $dumpfile("sim/UART_tb.vcd");
         $dumpvars(0, UART_tb);
 
@@ -26,6 +37,7 @@ module UART_tb();
         #2
         #2   data = 8'b01010101; send_data =1'b1;
         #2   send_data =1'b0;
+
         #100 $display("End!"); $finish;
     end
 

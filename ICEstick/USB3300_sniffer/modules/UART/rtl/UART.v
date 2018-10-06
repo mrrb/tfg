@@ -1,4 +1,19 @@
 /*
+ *
+ * UART module
+ * This module let the FPGA communicate with other devices via Serial interface.
+ *
+ * Tx states:
+ *  - Tx_IDLE.  The controller is waiting for a new serial outgoing byte (send_data == 1).
+ *  - Tx_LOAD.  The DATA to send is stored in a buffer.
+ *  - Tx_TRANS. Each bit is transmitted in the Tx pin.
+ *  - Tx_WAIT.  The controller waits until the baud clock is LOW to send the next bit.
+ * 
+ * Rx states:
+ *  NOT YET IMPLEMENTED!!
+ * 
+ */
+/*
  * Ciertas partes de este código se basan en:
  * https://github.com/Obijuan/open-fpga-verilog-tutorial/wiki/Cap%C3%ADtulo-24%3A-Unidad-de-transmisi%C3%B3n-serie-as%C3%ADncrona
  */
@@ -6,18 +21,27 @@
 `default_nettype none
 `include "./modules/clk_div_gen.vh" // Clock divider module
 
-module UART #(parameter BAUD_DIVIDER = 9)
-             (input  wire Rx,          // Rx input pin
+module UART #(
+              parameter BAUD_DIVIDER = 9
+             )
+             (
+              // System signals
               input  wire clk,         // reference clock input pin
-              input  wire [7:0]I_DATA, // 8-bits data to send
-              input  wire send_data,   // Send the current data in DATA IF there isn't any trasmission in progress
-              output wire Tx,          // Tx output pin
-              output wire TiP,         // Trasmission in Progress flag
-              output wire NrD,         // New received Data flag
-              output wire [7:0]O_DATA, // 8-bits data received
-              output wire clk_baud     // Baudrate output
-              );
+              output wire clk_baud,    // Baudrate output
 
+              // UART signals
+              input  wire Rx,          // Rx input pin
+              output wire Tx,          // Tx output pin
+
+              // Data signals
+              input  wire [7:0]I_DATA, // 8-bits data to send
+              output wire [7:0]O_DATA, // 8-bits received data
+
+              // Control signals
+              input  wire send_data,   // Send the current data in DATA IF there isn't any trasmission in progress
+              output wire TiP,         // Trasmission in Progress flag
+              output wire NrD          // New received Data flag
+             );
 
     /// Baud clock gen
     wire baud_pulse;
@@ -26,7 +50,7 @@ module UART #(parameter BAUD_DIVIDER = 9)
 
     /// Tx regs and wires
     // Outputs
-    reg Tx_r  = 1'b1; assign Tx = Tx_r;
+    reg Tx_r  = 1'b1;
     
     // Inputs
     reg [7:0]I_DATA_r = 8'b0;
@@ -35,8 +59,7 @@ module UART #(parameter BAUD_DIVIDER = 9)
         send_data_r <= send_data;
     end
     always @(posedge clk) begin
-        if(Tx_s_IDLE && send_data == 1'b1)
-            I_DATA_r <= I_DATA;
+        if(Tx_s_IDLE && send_data == 1'b1) I_DATA_r <= I_DATA;
     end
 
     // Buffers
@@ -47,21 +70,21 @@ module UART #(parameter BAUD_DIVIDER = 9)
     reg [1:0]Tx_state_r = 2'b0;
 
     // Flags
-    wire Tx_s_IDLE;
-    wire Tx_s_TRANS;
-    wire Tx_s_LOAD;
-    wire Tx_s_WAIT;
+    wire Tx_s_IDLE;  // 1 if Tx_state_r == Tx_IDLE,  else 0
+    wire Tx_s_LOAD;  // 1 if Tx_state_r == Tx_LOAD,  else 0
+    wire Tx_s_TRANS; // 1 if Tx_state_r == Tx_TRANS, else 0
+    wire Tx_s_WAIT;  // 1 if Tx_state_r == Tx_WAIT,  else 0
 
     // Assigns
-    assign Tx_s_IDLE  = (Tx_state_r == Tx_IDLE)  ? 1'b1 : 1'b0;
-    assign Tx_s_LOAD  = (Tx_state_r == Tx_LOAD)  ? 1'b1 : 1'b0;
-    assign Tx_s_TRANS = (Tx_state_r == Tx_TRANS) ? 1'b1 : 1'b0;
-    assign Tx_s_WAIT  = (Tx_state_r == Tx_WAIT)  ? 1'b1 : 1'b0;
-    assign TiP        = !Tx_s_IDLE;
-
+    assign Tx_s_IDLE  = (Tx_state_r == Tx_IDLE)  ? 1'b1 : 1'b0; // #FLAG
+    assign Tx_s_LOAD  = (Tx_state_r == Tx_LOAD)  ? 1'b1 : 1'b0; // #FLAG
+    assign Tx_s_TRANS = (Tx_state_r == Tx_TRANS) ? 1'b1 : 1'b0; // #FLAG
+    assign Tx_s_WAIT  = (Tx_state_r == Tx_WAIT)  ? 1'b1 : 1'b0; // #FLAG
+    assign TiP        = !Tx_s_IDLE; // #OUTPUT
+    assign Tx         = Tx_r;       // #OUTPUT
     /// End of Tx regs and wires
 
-    /// Tx States
+    /// Tx States (See module description at the beginning to get more info)
     localparam Tx_IDLE   = 2'b00;
     localparam Tx_LOAD   = 2'b01;
     localparam Tx_TRANS  = 2'b10;
@@ -69,37 +92,24 @@ module UART #(parameter BAUD_DIVIDER = 9)
     /// End of Tx States
 
     /// Tx controller
+    // #FIGURE_NUMBER UART_state_machine
     always @(posedge clk) begin
         case (Tx_state_r)
             Tx_IDLE:  begin
-                if(send_data_r == 1'b1) begin
-                    Tx_state_r <= Tx_LOAD;
-                end
-                else begin
-                    Tx_state_r <= Tx_IDLE;
-                end
+                if(send_data_r == 1'b1) Tx_state_r <= Tx_LOAD;
+                else                    Tx_state_r <= Tx_IDLE;
             end
             Tx_LOAD: begin
                 Tx_state_r <= Tx_TRANS;
             end
             Tx_TRANS: begin
-                if(clk_baud == 1'b1) begin
-                    Tx_state_r <= Tx_WAIT;
-                end
-                else begin
-                    Tx_state_r <= Tx_TRANS;
-                end
+                if(clk_baud == 1'b1) Tx_state_r <= Tx_WAIT;
+                else                 Tx_state_r <= Tx_TRANS;
             end 
             Tx_WAIT: begin
-                if(Tx_ctrl_r == 4'b1011) begin
-                    Tx_state_r <= Tx_IDLE;
-                end
-                else if(clk_baud == 1'b0) begin
-                    Tx_state_r <= Tx_TRANS;
-                end
-                else begin
-                    Tx_state_r <= Tx_WAIT;
-                end
+                if(Tx_ctrl_r == 4'b1011)  Tx_state_r <= Tx_IDLE;
+                else if(clk_baud == 1'b0) Tx_state_r <= Tx_TRANS;
+                else                      Tx_state_r <= Tx_WAIT;
             end 
             default: begin
                 Tx_state_r <= Tx_IDLE;
