@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Thu Oct  4 16:03:06 2018
+[*] Sat Oct  6 18:27:15 2018
 [*]
 [dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/SPI_COMM/sim/SPI_COMM_tb.vcd"
-[dumpfile_mtime] "Thu Oct  4 16:02:55 2018"
-[dumpfile_size] 36560
+[dumpfile_mtime] "Sat Oct  6 18:27:02 2018"
+[dumpfile_size] 51478
 [savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/GTKW/SPI_COMM.gtkw"
 [timestart] 0
-[size] 1920 1025
+[size] 1920 1052
 [pos] -1 -1
-*-6.000000 173 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-7.000000 4695 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] SPI_COMM_tb.
 [treeopen] SPI_COMM_tb.spi.
 [sst_width] 222
@@ -20,9 +20,20 @@
 SPI_COMM_tb.clk_fast
 SPI_COMM_tb.clk_slow
 SPI_COMM_tb.spi.clk_shift
-@22
+@c00022
 SPI_COMM_tb.DATA_in_r[7:0]
-@800022
+@28
+(0)SPI_COMM_tb.DATA_in_r[7:0]
+(1)SPI_COMM_tb.DATA_in_r[7:0]
+(2)SPI_COMM_tb.DATA_in_r[7:0]
+(3)SPI_COMM_tb.DATA_in_r[7:0]
+(4)SPI_COMM_tb.DATA_in_r[7:0]
+(5)SPI_COMM_tb.DATA_in_r[7:0]
+(6)SPI_COMM_tb.DATA_in_r[7:0]
+(7)SPI_COMM_tb.DATA_in_r[7:0]
+@1401200
+-group_end
+@c00022
 SPI_COMM_tb.DATA_out_w[7:0]
 @28
 (0)SPI_COMM_tb.DATA_out_w[7:0]
@@ -33,7 +44,7 @@ SPI_COMM_tb.DATA_out_w[7:0]
 (5)SPI_COMM_tb.DATA_out_w[7:0]
 (6)SPI_COMM_tb.DATA_out_w[7:0]
 (7)SPI_COMM_tb.DATA_out_w[7:0]
-@1001200
+@1401200
 -group_end
 @28
 SPI_COMM_tb.EoB_w
@@ -62,5 +73,9 @@ SPI_COMM_tb.spi.SPI_state_r[2:0]
 SPI_COMM_tb.spi.format
 SPI_COMM_tb.spi.read
 SPI_COMM_tb.spi.sec_CMD
+@200
+-
+@28
+SPI_COMM_tb.spi.error
 [pattern_trace] 1
 [pattern_trace] 0
