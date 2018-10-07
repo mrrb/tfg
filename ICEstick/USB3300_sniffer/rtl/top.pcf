@@ -14,10 +14,10 @@ set_io ULPI_DATA[5] 88
 set_io ULPI_DATA[6] 90
 set_io ULPI_DATA[7] 91
 
-set_io SPI_SCK  70
-set_io SPI_SS   71
-set_io SPI_MOSI 68
-set_io SPI_MISO 67
+set_io SPI_SCK  9
+set_io SPI_MOSI 8
+set_io SPI_MISO 7
+set_io SPI_SS   4
 
-set_io UART_RX 9
-set_io UART_TX 8
+set_io UART_RX 61
+set_io UART_TX 62
