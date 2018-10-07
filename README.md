@@ -15,3 +15,5 @@ ___
 * __12/04/2018__ - _Añadida prueba de 60MHz externos en la placa ICEstick_
 * __01/10/2018__ - _Multitud de cambios y añadidos [Por no haber ido actulizando esta lista de cámbios, no puedo especificar 🙁]_
 * __01/10/2018__ - _Añadido módulo SPI (SPI\_COMM) que comunique el PC con la FPGA [V1]. TB incluido._
+* __06/10/2018__ - _Añadidos archivos de cabecera para los módulos._
+* __06/10/2018__ - _Retoques y solución de pequeños fallos en los módulos._
