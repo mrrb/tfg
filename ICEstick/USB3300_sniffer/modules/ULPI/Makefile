@@ -17,11 +17,11 @@ sim_sub: $(SIM_DIR)/$(M_NAME)_$(S_MOD)_tb.out
 
 $(SIM_DIR)/$(M_NAME)_tb.out: $(TB_DIR)/$(M_NAME)_tb.v $(RTL_DIR)/$(M_NAME).v
 	mkdir -p $(SIM_DIR)/
-	cd ../.. && iverilog $(patsubst %, $(PRE_DIR)/%, $^) -o $(PRE_DIR)/$(SIM_DIR)/$(M_NAME)_tb.out
+	cd ../.. && iverilog $(patsubst %, $(PRE_DIR)/%, $^) -o $(PRE_DIR)/$(SIM_DIR)/$(M_NAME)_tb.out -I ./modules
 
 $(SIM_DIR)/$(M_NAME)_$(S_MOD)_tb.out: $(TB_DIR)/$(M_NAME)_$(S_MOD)_tb.v $(RTL_DIR)/$(M_NAME)_$(S_MOD).v
 	mkdir -p $(SIM_DIR)/
-	cd ../.. && iverilog $(patsubst %, $(PRE_DIR)/%, $^) -o $(PRE_DIR)/$(SIM_DIR)/$(M_NAME)_$(S_MOD)_tb.out
+	cd ../.. && iverilog $(patsubst %, $(PRE_DIR)/%, $^) -o $(PRE_DIR)/$(SIM_DIR)/$(M_NAME)_$(S_MOD)_tb.out -I ./modules
 
 gtk: $(SIM_DIR)/$(M_NAME)_tb.vcd
 	gtkwave $< &

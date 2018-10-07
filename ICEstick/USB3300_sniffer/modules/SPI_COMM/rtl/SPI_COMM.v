@@ -83,7 +83,7 @@ module SPI_COMM(
     // #NONE
 
     // Buffers
-    reg [7:0]DATA_in_buff_r = 8'b0;
+    reg [7:0]DATA_in_buff_r = 8'b0; // Buffer where the DATA that is going to be send is stored
 
     // Control registers
     reg [2:0]SPI_state_r = 3'b0; // Register to store the current state of the SPI_COMM module
@@ -150,23 +150,29 @@ module SPI_COMM(
         else begin
             case(SPI_state_r)
                 SPI_IDLE: begin
+                    // The controller is waiting for the SPI master to start a transmission
                     if(!SS) SPI_state_r <= SPI_LOAD;
                     else    SPI_state_r <= SPI_IDLE;
                 end
                 SPI_LOAD: begin
+                    // The Data that is going to be sent is loaded in the shift register
                     if(error) SPI_state_r <= SPI_RST;
                     else      SPI_state_r <= SPI_TRANS;
                 end
                 SPI_TRANS: begin
+                    // Each bit of the packet is sent/read
                     if(error)                      SPI_state_r <= SPI_RST;
                     else if(SPI_ctrl_r == 4'b1000) SPI_state_r <= SPI_SAVE;
                     else                           SPI_state_r <= SPI_TRANS;
                 end
                 SPI_SAVE: begin
+                    // Depending on the packet/frame type, the byte is stored/processed accordingly
                     if(error) SPI_state_r <= SPI_RST;
                     else      SPI_state_r <= SPI_BACK;
                 end
                 SPI_BACK: begin
+                    // If there aren't any more packets to send/read, the controller goes back to the default state
+                    // Otherwise, the controller goes back to the SPI_LOAD state to read another byte
                     if(error) SPI_state_r <= SPI_RST;
                     else if(!(TR_count_r == 4'b0))
                         SPI_state_r <= SPI_LOAD;
@@ -178,6 +184,7 @@ module SPI_COMM(
                         SPI_state_r <= SPI_RST;
                 end
                 SPI_RST: begin
+                    // All the control registers are purged before another transmission
                     if(SS && !error) SPI_state_r <= SPI_IDLE;
                     else   SPI_state_r <= SPI_RST;
                 end

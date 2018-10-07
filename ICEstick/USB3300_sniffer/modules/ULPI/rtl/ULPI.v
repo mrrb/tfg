@@ -1,4 +1,6 @@
 /*
+ *
+ * ULPI module
  * This module enables the communication between the FPGA and the USB3300 module using the ULPI protocol.
  * 
  * Submodules:
@@ -6,8 +8,8 @@
  *  - ULPI_REG_WRITE
  * 
  * States:
- *  1. ULPI_CTRL_IDLE. Waiting for an action to occur, meanwhile the module does nothing.
- *  2. ULPI_CTRL_REG_READ. When a petition to read data from the PHY is received (RD == 1) and the module isn't busy, a register read occurs.
+ *  1. ULPI_CTRL_IDLE.      Waiting for an action to occur, meanwhile the module does nothing.
+ *  2. ULPI_CTRL_REG_READ.  When a petition to read data from the PHY is received (RD == 1) and the module isn't busy, a register read occurs.
  *  3. ULPI_CTRL_REG_WRITE. When a petition to write data to the PHY is received (WD == 1) and the module isn't busy, a register write occurs.
  *  4. ULPI_CTRL_RECV_PCK. 
  *  5. ULPI_CTRL_TRANS_PCK
@@ -18,14 +20,16 @@
 
 `default_nettype none
 
-`include "./modules/ULPI/rtl/ULPI_REG_READ.v"
-`include "./modules/ULPI/rtl/ULPI_REG_WRITE.v"
+`include "./modules/ULPI_REG_READ.vh"  // ULPI register Read module
+`include "./modules/ULPI_REG_WRITE.vh" // ULPI register Write module
+`include "./modules/mux.vh"            // Multiplexor module
 
 module ULPI (
              // System signals
              input  wire clk_ext, // 60Mhz Clock input signal from the PHY
              input  wire clk_int, // 12Mhz Clock input signal from the FPGA itself 
              input  wire rst,     // Master reset signal
+
              // ULPI controller signals
              input  wire WD,                // Input to write DATA in a register given an Address (ADDR)
              input  wire RD,                // Input to read DATA from a register given an Address (ADDR)
@@ -35,11 +39,12 @@ module ULPI (
              input  wire [7:0]REG_DATA_IN,  // Data to write in register
              output wire [7:0]REG_DATA_OUT, // Data readed from a register
              output wire BUSY,              // Signal activated whenever the ULPI controller is not in the IDLE state
+
              // ULPI pins
-             input  wire DIR,
-             output wire STP,
-             input  wire NXT,
-             inout  wire [7:0]ULPI_DATA
+             input  wire DIR,               // ULPI DIR signal
+             output wire STP,               // ULPI STP signal
+             input  wire NXT,               // ULPI NXT signal
+             inout  wire [7:0]ULPI_DATA     // ULPI DATA
             );
 
     /// ULPI DATA input/output tristate controller
@@ -58,7 +63,7 @@ module ULPI (
                            (ULPI_CTRL_s_TRANS_PCK ? 2'b11 : 2'b00));
     
     // ULPI_DATA mux
-    // Independent FPGA ULPI signals for each bit and each submodule that required thar required it.
+    // Independent FPGA ULPI signals for each bit and each submodule that required it.
     // The ULPI data bus is 8bit wide, so we need 8 multiplexers with shared CTRL signal.
     //
     // The only submodules that need to write in the ULPI bus are ULPI_REG_WRITE, ULPI_REG_READ and ULPI_TRS_PCK.
@@ -126,11 +131,6 @@ module ULPI (
     wire DCTRL; // Flag activated when there is only 1 or less of the following signals HIGH: WD, RD, TD
 
     // Assigns
-    assign clk  = (clk_sel_r == 1'b0) ? clk_ext : clk_int; // #CTRL
-    assign WD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? WD : 1'b0; // #FLAG
-    assign RD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? RD : 1'b0; // #FLAG
-    assign TD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? TD : 1'b0; // #FLAG
-    assign DCTRL = !{^{WD,RD,TD,1'b0}};
     assign ULPI_CTRL_s_IDLE      = (ULPI_state_r == ULPI_CTRL_IDLE)      ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_CTRL_s_REG_READ  = (ULPI_state_r == ULPI_CTRL_REG_READ)  ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_CTRL_s_REG_WRITE = (ULPI_state_r == ULPI_CTRL_REG_WRITE) ? 1'b1 : 1'b0; // #FLAG
@@ -138,7 +138,14 @@ module ULPI (
     assign ULPI_CTRL_s_TRANS_PCK = (ULPI_state_r == ULPI_CTRL_TRANS_PCK) ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_CTRL_s_ENTER_LP  = (ULPI_state_r == ULPI_CTRL_ENTER_LP)  ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_CTRL_s_EXIT_LP   = (ULPI_state_r == ULPI_CTRL_EXIT_LP)   ? 1'b1 : 1'b0; // #FLAG
+    assign WD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? WD : 1'b0; // #FLAG
+    assign RD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? RD : 1'b0; // #FLAG
+    assign TD_w = (ULPI_CTRL_s_IDLE && !DIR && !DCTRL) ? TD : 1'b0; // #FLAG
+
     assign BUSY = !ULPI_CTRL_s_IDLE; // #OUTPUT
+
+    assign clk  = (clk_sel_r == 1'b0) ? clk_ext : clk_int; // #CTRL
+    assign DCTRL = !{^{WD,RD,TD,1'b0}}; // #CTRL
     /// End of ULPI Regs and wires
 
 

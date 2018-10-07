@@ -1,14 +1,16 @@
 /*
- This module has the instructions set that let read data from the PHY registers
-
- States:
-    1. READ_IDLE. This module is doing nothing until the READ_DATA input is activated.
-    2. READ_TXCMD. Once the READ signal is asserted, the LINK has the ownership of the bus and send the TXCMD 8bit data ('11'cmd+{6bit Address}).
-                   The PHY will respond activating the NXT signal indicating that TXCMD has been successfully latched.
-    3. READ_WAIT. The PHY takes control over the ULPI bus (making the DIR input HIGH).
-                  Because of that, we hace to wait 1 clk pulse for the "TURN AROUND" to finish.
-    4. READ_SAVE_DATA. After that, we just need to read the value sent over the bus and wait for the PHY to return the ownership to the LINK (DIR goes back to a low value).
-
+ *
+ * ULPI_REG_READ module
+ * This module has the instructions set that let read data from the PHY registers
+ *
+ * States:
+ *    1. READ_IDLE. This module is doing nothing until the READ_DATA input is activated.
+ *    2. READ_TXCMD. Once the READ signal is asserted, the LINK has the ownership of the bus and send the TXCMD 8bit data ('11'cmd+{6bit Address}).
+ *                   The PHY will respond activating the NXT signal indicating that TXCMD has been successfully latched.
+ *    3. READ_WAIT. The PHY takes control over the ULPI bus (making the DIR input HIGH).
+ *                  Because of that, we hace to wait 1 clk pulse for the "TURN AROUND" to finish.
+ *    4. READ_SAVE_DATA. After that, we just need to read the value sent over the bus and wait for the PHY to return the ownership to the LINK (DIR goes back to a low value).
+ *
  */
 
 `default_nettype none
@@ -17,22 +19,23 @@ module ULPI_REG_READ (
                       // System signals
                       input  wire clk, // Clock input signal
                       input  wire rst, // Master reset signal
+
                       // ULPI controller signals
                       input  wire READ_DATA, // Signal to initiate a register READ
                       input  wire [5:0]ADDR, // Input that transmit the 6 bit address where we want to READ the DATA
                       output wire [7:0]DATA, // Output 
                       output wire BUSY,      // Output signal activated whenever is a READ operationn in progress
+
                       // ULPI pins
-                      input  wire DIR,
-                      output wire STP,
-                      input  wire NXT,
-                      input  wire [7:0]ULPI_DATA_IN,
-                      output wire [7:0]ULPI_DATA_OUT
+                      input  wire DIR,               // ULPI DIR signal
+                      output wire STP,               // ULPI STP signal
+                      input  wire NXT,               // ULPI NXT signal
+                      input  wire [7:0]ULPI_DATA_IN, // ULPI DATA input
+                      output wire [7:0]ULPI_DATA_OUT // ULPI DATA output
                      );
 
     // CMD used to perform a register read 11xxxxxx
     parameter [1:0]REG_READ_CMD = 2'b11;
-
 
     /// ULPI_REG_READ Regs and wires
     // Outputs
@@ -42,7 +45,7 @@ module ULPI_REG_READ (
     // #NONE
 
     // Buffers
-    reg [7:0]ULPI_DATA_OUT_r = 8'b0;
+    reg [7:0]ULPI_DATA_OUT_r = 8'b0; // Buffer for the ULPI DATA output
 
     // Control registers
     reg [1:0]READ_state_r = 2'b0; // Register to store the current state of the ULPI_REG_READ module
@@ -58,6 +61,7 @@ module ULPI_REG_READ (
     assign READ_s_TXCMD     = (READ_state_r == READ_TXCMD)     ? 1'b1 : 1'b0; // #FLAG
     assign READ_s_WAIT      = (READ_state_r == READ_WAIT)      ? 1'b1 : 1'b0; // #FLAG
     assign READ_s_SAVE_DATA = (READ_state_r == READ_SAVE_DATA) ? 1'b1 : 1'b0; // #FLAG
+    
     assign DATA             = DATA_r;          // #OUTPUT
     assign BUSY             = !READ_s_IDLE;    // #OUTPUT
     assign ULPI_DATA_OUT    = ULPI_DATA_OUT_r; // #OUTPUT

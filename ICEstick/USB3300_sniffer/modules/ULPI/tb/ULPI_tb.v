@@ -1,35 +1,8 @@
 /*
- * MIT License
  *
- * Copyright (c) 2018 Mario Rubio
- *
- MIT License
-
-Copyright (c) 2015-present, Facebook, Inc.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- 
- */
-
-/*
- * Revision History:
- *     Initial:        2018/07/16        Mario Rubio
+ * Test bench for the ULPI module
+ * Execute "make gtk" to view the results
+ * 
  */
 
 module ULPI_tb ();
@@ -56,8 +29,13 @@ module ULPI_tb ();
     wire [7:0]ULPI_DATA;
     assign ULPI_DATA = (DIR == 1'b1) ? ULPI_DATA_r : ULPI_DATA_w;
 
-    // Module Init
-    ULPI UP_tb (clk_ext, clk_int, rst, WD, RD, TD, LP, ADDR, DATA_IN, DATA_OUT, busy, DIR, STP, NXT, ULPI_DATA);
+    // Module under test Init
+    ULPI UP_tb (
+                .clk_ext(clk_ext), .clk_int(clk_int), .rst(rst), // System signals
+                .WD(WD), .RD(RD), .TD(TD), .LP(LP), .ADDR(ADDR), // ULPI controller signals
+                .REG_DATA_IN(DATA_IN), .REG_DATA_OUT(DATA_OUT), .BUSY(busy), // ULPI controller signals
+                .DIR(DIR), .STP(STP), .NXT(NXT), .ULPI_DATA(ULPI_DATA) // ULPI pins
+               );
 
     // CLK gen
     always #1 clk_ext <= ~clk_ext;
@@ -91,7 +69,7 @@ module ULPI_tb ();
 
         #4 DIR = 0;
         
-        #100 $finish;
+        #25 $finish;
     end
 
 

@@ -1,14 +1,16 @@
 /*
- This module has the instructions set that let write data into the PHY registers
-
- States:
-    1. WRITE_IDLE. The module is doing nothing until the WRITE_DATA input is activated.
-    2. WRITE_TXCMD. Once the write signal is asserted, the LINK has the ownership of the bus and send the TXCMD 8bit data ('10'cmd+{6bit Address}).
-                    The PHY will respond activating the NXT signal indicating that TXCMD has been successfully latched.
-    3. WRITE_SEND_DATA. Link drives the DATA to be stored in the register.
-                        The PHY drives NXT high indicating that the data has been latched.
-    4. WRITE_STP. Finally, the LINK drives HIGH STP, ending the writing of the register.
-
+ * 
+ * ULPI_REG_WRITE module
+ * This module has the instructions set that let write data into the PHY registers
+ * 
+ * States:
+ *    1. WRITE_IDLE. The module is doing nothing until the WRITE_DATA input is activated.
+ *    2. WRITE_TXCMD. Once the write signal is asserted, the LINK has the ownership of the bus and send the TXCMD 8bit data ('10'cmd+{6bit Address}).
+ *                    The PHY will respond activating the NXT signal indicating that TXCMD has been successfully latched.
+ *    3. WRITE_SEND_DATA. Link drives the DATA to be stored in the register.
+ *                        The PHY drives NXT high indicating that the data has been latched.
+ *    4. WRITE_STP. Finally, the LINK drives HIGH STP, ending the writing of the register.
+ * 
  */
 
 `default_nettype none
@@ -17,18 +19,20 @@ module ULPI_REG_WRITE (
                       // System signals
                       input  wire clk, // Clock input signal
                       input  wire rst, // Master reset signal
+
                       // ULPI controller signals
                       input  wire WRITE_DATA, // Signal to initiate a register write
                       input  wire [5:0]ADDR,  // Input that transmit the 6 bit address where we want to write the DATA
                       input  wire [7:0]DATA,  // Input that transmit the 8 bit DATA to be written in the ULPI register
                       output wire BUSY,       // Output signal activated whenever is a Write operationn in progress
-                    //   output wire QUICK_EXIT, // In case the PHY take control over the BUS in the first 
+                      //output wire QUICK_EXIT, // In case the PHY take control over the BUS in the first 
+
                       // ULPI pins
-                      input  wire DIR,
-                      output wire STP,
-                      input  wire NXT,
-                      input  wire [7:0]ULPI_DATA_IN,
-                      output wire [7:0]ULPI_DATA_OUT
+                      input  wire DIR,               // ULPI DIR signal
+                      output wire STP,               // ULPI STP signal
+                      input  wire NXT,               // ULPI NXT signal
+                      input  wire [7:0]ULPI_DATA_IN, // ULPI DATA input
+                      output wire [7:0]ULPI_DATA_OUT // ULPI DATA output
                       );
 
     // CMD used to perform a register write 10xxxxxx
@@ -44,7 +48,7 @@ module ULPI_REG_WRITE (
 
     // Buffers
     reg [7:0]DATA_buf_r = 8'b0;      // Buffer for the ULPI controller DATA input
-    reg [7:0]ULPI_DATA_buf_r = 8'b0; // Buffer for the ULPI pins DATA output
+    reg [7:0]ULPI_DATA_buf_r = 8'b0; // Buffer for the ULPI DATA output
 
     // Control registers
     reg [1:0]WRITE_state_r = 2'b0;   // Register to store the current state of the ULPI_REG_WRITE module
@@ -60,6 +64,7 @@ module ULPI_REG_WRITE (
     assign WRITE_s_TXCMD     = (WRITE_state_r == WRITE_TXCMD)     ? 1'b1 : 1'b0; // #FLAG
     assign WRITE_s_SEND_DATA = (WRITE_state_r == WRITE_SEND_DATA) ? 1'b1 : 1'b0; // #FLAG
     assign WRITE_s_STP       = (WRITE_state_r == WRITE_STP)       ? 1'b1 : 1'b0; // #FLAG
+
     assign BUSY              = !WRITE_s_IDLE;   // #OUTPUT
     assign ULPI_DATA_OUT     = ULPI_DATA_buf_r; // #OUTPUT
     assign STP               = STP_r;           // #OUTPUT

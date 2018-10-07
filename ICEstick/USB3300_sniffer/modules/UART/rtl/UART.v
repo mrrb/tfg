@@ -63,11 +63,11 @@ module UART #(
     end
 
     // Buffers
-    reg [9:0]Tx_buf_r   = {10{1'b1}};
+    reg [9:0]Tx_buf_r   = {10{1'b1}}; // Buffer to store the entire frame before sending it
 
     // Control registers
-    reg [3:0]Tx_ctrl_r  = 4'b0;
-    reg [1:0]Tx_state_r = 2'b0;
+    reg [3:0]Tx_ctrl_r  = 4'b0; // Register to store the current bit that has been sent
+    reg [1:0]Tx_state_r = 2'b0; // Register to store the current state of the UART module
 
     // Flags
     wire Tx_s_IDLE;  // 1 if Tx_state_r == Tx_IDLE,  else 0
@@ -80,6 +80,7 @@ module UART #(
     assign Tx_s_LOAD  = (Tx_state_r == Tx_LOAD)  ? 1'b1 : 1'b0; // #FLAG
     assign Tx_s_TRANS = (Tx_state_r == Tx_TRANS) ? 1'b1 : 1'b0; // #FLAG
     assign Tx_s_WAIT  = (Tx_state_r == Tx_WAIT)  ? 1'b1 : 1'b0; // #FLAG
+    
     assign TiP        = !Tx_s_IDLE; // #OUTPUT
     assign Tx         = Tx_r;       // #OUTPUT
     /// End of Tx regs and wires
@@ -96,17 +97,21 @@ module UART #(
     always @(posedge clk) begin
         case (Tx_state_r)
             Tx_IDLE:  begin
+                // If there is a new request to send data, the 
                 if(send_data_r == 1'b1) Tx_state_r <= Tx_LOAD;
                 else                    Tx_state_r <= Tx_IDLE;
             end
             Tx_LOAD: begin
+                // In this state the DATA is loaded in the buffer
                 Tx_state_r <= Tx_TRANS;
             end
             Tx_TRANS: begin
+                // The controller waits for a new Baud clock cycle
                 if(clk_baud == 1'b1) Tx_state_r <= Tx_WAIT;
                 else                 Tx_state_r <= Tx_TRANS;
             end 
             Tx_WAIT: begin
+                // If the FPGA has sent all the bits, It goes back to the IDLE state, otherwise, It waits for a Low Baud clock
                 if(Tx_ctrl_r == 4'b1011)  Tx_state_r <= Tx_IDLE;
                 else if(clk_baud == 1'b0) Tx_state_r <= Tx_TRANS;
                 else                      Tx_state_r <= Tx_WAIT;
