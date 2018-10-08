@@ -5,11 +5,11 @@ ___
 
 The FT2232H USB bridge features 2 independent channels with several protocols to use. One on those channels (Channel A) is used to program the onboard SPI Flash memory chip that the FPGA uses to store the synthesized circuit, the other channel, B, is preconfigured as a UART interface.
 
-![ICEstick_FTDI_config](./img/ICEstick_FT2232H.png "ICEstick_FTDI_config")
+![ICEstick_FTDI_config](../img/ICEstick_FT2232H.png "ICEstick_FTDI_config")
 
 Because the USB sniffer is using the SPI communication to transmit the USB3300 ULPI data, the default use of the channel B is changed from UART to MPSSE, so we can connect to it properly.
 
-![FT2232H_pins](./img/FT2232H_pins.png "FT2232H_pins")
+![FT2232H_pins](../img/FT2232H_pins.png "FT2232H_pins")
 
 Changes:
 
