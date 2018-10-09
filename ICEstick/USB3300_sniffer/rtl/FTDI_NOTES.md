@@ -20,6 +20,19 @@ Changes:
 
 ___
 
+Another thing to have in mind, the FTDI chip only support SPI modes 0 and 2 (as seeing in the table below), so the FPGA has to be configured accordingly.
+
+| Mode | CPOL | CPHA |
+|:----:|:----:|:----:|
+|   0  |   0  |   0  |
+|   1  |   0  |   1  |
+|   2  |   1  |   0  |
+|   3  |   1  |   1  |
+
+In this case, both are configured to be in mode 0.
+
+___
+
 To still can use the UART interface (with external bridge) the pins are now:
 
 * Rx => 61
