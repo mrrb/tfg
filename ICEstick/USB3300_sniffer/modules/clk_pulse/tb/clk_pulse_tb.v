@@ -10,11 +10,12 @@ module clk_pulse_tb();
     // Wires and registers
     reg clk_fast = 1'b0;
     reg clk_slow = 1'b0;
+    reg EDGE = 1'b0;
 
     wire clk_pulse;
 
     // Module Init
-    clk_pulse pulse (clk_fast, clk_slow, clk_pulse);
+    clk_pulse pulse (clk_fast, clk_slow, EDGE, clk_pulse);
 
     // CLK gen
     always #3  clk_fast <= ~clk_fast;
@@ -24,8 +25,9 @@ module clk_pulse_tb();
         $dumpfile("sim/clk_pulse_tb.vcd");
         $dumpvars(0, clk_pulse_tb);
 
+        #250 EDGE = 1;
 
-        #500  $finish;
+        #250  $finish;
     end
 
 endmodule
