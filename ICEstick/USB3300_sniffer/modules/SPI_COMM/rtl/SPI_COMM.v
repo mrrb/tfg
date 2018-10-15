@@ -3,140 +3,126 @@
  * SPI_COMM module
  * This module controls the SPI communication with a SPI Master. It handles the OSI level 2 (frame).
  * 
- * CPOL = 0; CPHA = 1;
  * 
- * States:
- *  - SPI_IDLE.  The module is waiting for a new transmission to occur (waiting for a LOW signal in SS).
- *  - SPI_LOAD.  Once the transmission start, output Byte is loaded into the shift register.
- *  - SPI_TRANS. With the help of a counter, the 8bit IN/OUT data is read/write.
- *  - SPI_SAVE.  The packet that has been just read processed and stored if needed.
- *  - SPI_BACK.  If there is another byte to read the state go back to SPI_TRANS.
- *               At the end of the frame, depending on the frame type, It migh go to SPI_RST or SPI_IDLE.
- *  - SPI_RST.   At the end of a Full transmission or if an error occur, all the register are cleaned up.
  */
 
 `default_nettype none
-`include "./modules/clk_pulse.vh"      // Clock pulse module
 `include "./modules/shift_register.vh" // Shift register module
 
-module SPI_COMM(
-                // System signals
-                input  wire clk, // Master clock signal
-                input  wire rst, // Reset signal
+ module SPI_COMM(
+                 // System signals
+                 input  wire clk, // Master clock signal
+                 input  wire rst, // Reset signal
 
-                // SPI interface signals
-                input  wire SCLK, // SPI Clock signal
-                input  wire SS,   // Slave Select
-                input  wire MOSI, // Master-Out Slave-In
-                output wire MISO, // Master-IN  Slave-Out
+                 // SPI interface signals
+                 input  wire SCLK, // SPI Clock signal
+                 input  wire SS,   // Slave Select
+                 input  wire MOSI, // Master-Out Slave-In
+                 output wire MISO, // Master-IN  Slave-Out
 
-                // Data signals
-                input  wire [7:0]DATA_in,  // Data to send to the computer
-                output wire [7:0]DATA_out, // Data received from the computer
+                 // Data signals
+                 input  wire  [7:0]STA,      // Status code to send to the Master
+                 input  wire  [7:0]DATA_in,  // Data to send to the Master
+                 output wire  [7:0]CMD,      // Command received from the Master
+                 output wire [15:0]ADDR,     // Address where the DATA must be read/write
+                 output wire  [7:0]DATA_out, // Data received from the Master
+                 output wire  [7:0]RAW_out,  // Raw data from the Master
 
-                // Control signals
-                input  wire err_in,        // Error in the SPI transaction (catched by the SPI main controller)
-                output wire err_out,       // Error in the last SPI transaction (catched by SPI_COMM)
-                output wire EoB,           // End of Byte control signal
-                output wire busy,          // When there is a transfer in progress this signal will be High
+                 // Control signals
+                 input  wire err_in,  // Error in the SPI transaction (catched by the SPI main controller)
+                 output wire err_out, // Error in the last SPI transaction (catched by SPI_COMM)
+                 output wire EoB,     // End of Byte control signal
+                 output wire busy     // When there is a transfer in progress this signal will be High
+                );
 
-                // Frame info signals
-                output wire [4:0]CMD,      // Command => data_out[4:0]
-                output wire [7:0]INFO_out, // INFO packet in long format transmissions
-                output wire sec_CMD,       // The frame has a secondary packet
-                output wire read,          // The PC request the FPGA to send data
-                output wire format         // The frame is a secondary transmission (long format)
-               );
+    /// Shift register init
+    reg shift_bit_in_r = 1'b0;
+    reg force_clk_r    = 1'b0;
+    reg shift_enable_r = 1'b0;
+    reg shift_par_r    = 1'b0;
 
-    /// Shift register pulse module init
-    wire shift_pulse;
-    clk_pulse shift_clk (clk, SCLK, shift_pulse);
-    /// End of Shift register pulse module init
+    wire shift_clk_w;
+    wire shift_bit_out_w;
+    wire [7:0]shift_DATA_in_w;
+    wire [7:0]shift_DATA_out_w;
 
-    /// Shift register common signal
-    reg  force_shift_r    = 1'b0; // Register that forces a shift/load in the shifts registers
-    reg  shift_enable_r   = 1'b0; // Register that controls the status of the shift registers
-    wire clk_shift; assign clk_shift = shift_pulse || force_shift_r;
-    /// End of Shift register common signal
-
-    /// MOSI shift register init
-    wire MOSI_bit_out;
-    wire [7:0]MOSI_data;
-    shift_register shift_MOSI (.clk(clk_shift), .enable(shift_enable_r), .bit_in(MOSI), .bit_out(MOSI_bit_out), .DATA_out(MOSI_data), .DATA_in(8'b0), .PARALLEL_EN(1'b0));
-    /// End of MOSI shift register init
-
-    /// MISO shift register init
-    wire MISO_shift_par; reg MISO_shift_par_r = 1'b0; assign MISO_shift_par = MISO_shift_par_r;
-    wire [7:0]MISO_out;
-    wire MISO_bit_out;
-    shift_register shift_MISO (.clk(clk_shift), .enable(shift_enable_r), .bit_in(1'b0), .bit_out(MISO_bit_out), .DATA_out(MISO_out), .DATA_in(DATA_in), .PARALLEL_EN(MISO_shift_par));
-    /// End of MISO shift register init
+    shift_register shift_MOSI (.clk(shift_clk_w),         .enable(shift_enable_r),
+                               .bit_in(shift_bit_in_r),   .bit_out(shift_bit_out_w),
+                               .DATA_in(shift_DATA_in_w), .DATA_out(shift_DATA_out_w),
+                               .PARALLEL_EN(shift_par_r));
+    /// End of Shift register init
 
     /// SPI_COMM Regs and wires
     // Outputs
-    reg [7:0]DATA_out_r = 8'b0;
-    reg err_r           = 1'b0;
-    reg [4:0]CMD_r      = 5'b0;
-    reg [7:0]INFO_r     = 7'b0;
+    reg  [7:0]CMD_r      =  8'b0;
+    reg [15:0]ADDR_r     = 16'b0;
+    reg  [7:0]DATA_out_r =  8'b0;
+    reg  [7:0]RAW_out_r  =  8'b0;
+
+    reg  err_r = 1'b0;
+    reg  EoB_r = 1'b0;
 
     // Inputs
     // #NONE
 
     // Buffers
-    reg [7:0]DATA_in_buff_r = 8'b0; // Buffer where the DATA that is going to be send is stored
 
     // Control registers
-    reg [2:0]SPI_state_r = 3'b0; // Register to store the current state of the SPI_COMM module
-    reg [3:0]SPI_ctrl_r  = 4'b0; // Register to store the number of the next bit to be readed in each frame data packet
-    reg [4:0]TR_count_r  = 5'b0; // Register that stores the remaining number of packets to read (32 bytes max.)
+    reg [1:0]SPI_state_r = 2'b0; // Register to store the current state of the SPI_COMM module
+    reg [3:0]SPI_count_r = 4'b0; // Register to store the number of the next bit to be readed in each frame data packet
+    reg [1:0]TR_count_r  = 2'b0; // Register that stores the remaining number of packets to read
 
-    reg SET_A_r = 1'b0; // Register that controls which format has the frame
-    reg SET_B_r = 1'b0; // Register that controls if we are reading/writing data
-
-    reg format_r  = 1'b0; // If the format of the message is "Long" this register will stored a '1', elsewise, a '0' ("short format")
-    reg read_r    = 1'b0; // If there is a READ command, this register will stored a '1', elsewise, a '0' (WRITE)
-    reg sec_CMD_r = 1'b0; // If the command will have a secondary CMD, this register will stored a '1', elsewise, a '0'.
+    reg [1:0]MODE_r = 2'b0;
+    reg CONT_r      = 1'b0;
+    reg WRITE_r     = 1'b0;
 
     // Flags
     wire SPI_s_IDLE;  // 1 if SPI_state_r == SPI_IDLE,  else 0
-    wire SPI_s_LOAD;  // 1 if SPI_state_r == SPI_LOAD,  else 0
     wire SPI_s_TRANS; // 1 if SPI_state_r == SPI_TRANS, else 0
-    wire SPI_s_SAVE;  // 1 if SPI_state_r == SPI_SAVE,  else 0
-    wire SPI_s_BACK;  // 1 if SPI_state_r == SPI_BACK,  else 0
     wire SPI_s_RST;   // 1 if SPI_state_r == SPI_RST,   else 0
 
-    wire error;       // When an error occur (either from this module or from the main controller), this signal will be HIGH
+    wire error;
 
     // Assigns
     assign SPI_s_IDLE  = (SPI_state_r == SPI_IDLE)  ? 1'b1 : 1'b0; // #FLAG
-    assign SPI_s_LOAD  = (SPI_state_r == SPI_LOAD)  ? 1'b1 : 1'b0; // #FLAG
     assign SPI_s_TRANS = (SPI_state_r == SPI_TRANS) ? 1'b1 : 1'b0; // #FLAG
-    assign SPI_s_SAVE  = (SPI_state_r == SPI_SAVE)  ? 1'b1 : 1'b0; // #FLAG
-    assign SPI_s_BACK  = (SPI_state_r == SPI_BACK)  ? 1'b1 : 1'b0; // #FLAG
     assign SPI_s_RST   = (SPI_state_r == SPI_RST)   ? 1'b1 : 1'b0; // #FLAG
 
-    assign MISO        = !SPI_s_IDLE ? MISO_out[0] : 1'b0; // #OUTPUT
-    assign DATA_out    = DATA_out_r;        // #OUTPUT
-    assign err_out     = err_r;             // #OUTPUT
-    assign EoB         = SPI_s_BACK;        // #OUTPUT
-    assign busy        = !SPI_s_IDLE;       // #OUTPUT
-    assign CMD         = CMD_r;             // #OUTPUT
-    assign INFO_out    = INFO_r;            // #OUTPUT
-    assign sec_CMD     = sec_CMD_r;         // #OUTPUT
-    assign read        = read_r;            // #OUTPUT
-    assign format      = format_r;          // #OUTPUT
+    assign shift_clk_w     = !SCLK || force_clk_r;        // #SHIFT_REGISTER
+    assign shift_DATA_in_w = SPI_s_IDLE ? STA  : DATA_in; // #SHIFT_REGISTER
+    // assign shift_par_w     = SPI_s_IDLE ? 1'b1 : 1'b0;    // #SHIFT_REGISTER
 
-    assign error       = err_in || err_out; // #CONTROL
+    assign MISO     = !SPI_s_IDLE ? shift_DATA_out_w[0] : 1'b0; // #OUTPUT
+    assign CMD      = CMD_r;       // #OUTPUT
+    assign ADDR     = ADDR_r;      // #OUTPUT
+    assign DATA_out = DATA_out_r;  // #OUTPUT
+    assign RAW_out  = RAW_out_r;   // #OUTPUT
+    assign err_out  = err_r;       // #OUTPUT
+    assign EoB      = EoB_r;       // #OUTPUT
+    assign busy     = !SPI_s_IDLE; // #OUTPUT
+
+    assign error = err_in || err_out; // #CONTROL
     /// End of SPI_COMM Regs and wires
+
+
+    /// SPI frame modes
+    localparam SPI_f_MODE_0 = 2'b00;
+    localparam SPI_f_MODE_1 = 2'b01;
+    localparam SPI_f_MODE_2 = 2'b10;
+    localparam SPI_f_MODE_3 = 2'b11;
+
+    localparam SPI_f_SINGLE = 1'b0;
+    localparam SPI_f_CONT   = 1'b1;
+
+    localparam SPI_f_READ   = 1'b0;
+    localparam SPI_f_WRITE  = 1'b1;
+    /// End of SPI frame modes
 
 
     /// SPI_COMM States (See module description at the beginning to get more info)
     localparam SPI_IDLE  = 0;
-    localparam SPI_LOAD  = 1;
-    localparam SPI_TRANS = 2;
-    localparam SPI_SAVE  = 3;
-    localparam SPI_BACK  = 4;
-    localparam SPI_RST   = 5;
+    localparam SPI_TRANS = 1;
+    localparam SPI_RST   = 2;
     /// End of SPI_COMM States
 
 
@@ -150,47 +136,31 @@ module SPI_COMM(
         else begin
             case(SPI_state_r)
                 SPI_IDLE: begin
-                    // The controller is waiting for the SPI master to start a transmission
-                    if(!SS) SPI_state_r <= SPI_LOAD;
+                    if(!SS) SPI_state_r <= SPI_TRANS;
                     else    SPI_state_r <= SPI_IDLE;
                 end
-                SPI_LOAD: begin
-                    // The Data that is going to be sent is loaded in the shift register
-                    if(error) SPI_state_r <= SPI_RST;
-                    else      SPI_state_r <= SPI_TRANS;
-                end
                 SPI_TRANS: begin
-                    // Each bit of the packet is sent/read
-                    if(error)                      SPI_state_r <= SPI_RST;
-                    else if(SPI_ctrl_r == 4'b1000) SPI_state_r <= SPI_SAVE;
-                    else                           SPI_state_r <= SPI_TRANS;
-                end
-                SPI_SAVE: begin
-                    // Depending on the packet/frame type, the byte is stored/processed accordingly
-                    if(error) SPI_state_r <= SPI_RST;
-                    else      SPI_state_r <= SPI_BACK;
-                end
-                SPI_BACK: begin
-                    // If there aren't any more packets to send/read, the controller goes back to the default state
-                    // Otherwise, the controller goes back to the SPI_LOAD state to read another byte
-                    if(error) SPI_state_r <= SPI_RST;
-                    else if(!(TR_count_r == 4'b0))
-                        SPI_state_r <= SPI_LOAD;
-                    else if(sec_CMD_r && SS)
-                        SPI_state_r <= SPI_IDLE;
-                    else if(sec_CMD_r && !SS)
-                        SPI_state_r <= SPI_BACK;
+                    if(error)
+                        SPI_state_r <= SPI_RST;
+                    else if(SPI_count_r != 4'b1000)
+                        SPI_state_r <= SPI_TRANS;
+                    else if(SPI_count_r == 4'b1000) begin
+                        if(TR_count_r != 2'b0) SPI_state_r <= SPI_TRANS;
+                        else begin
+                            if(CONT_r)
+                                SPI_state_r <= SPI_TRANS;
+                            else
+                                SPI_state_r <= SPI_RST;
+                        end
+                    end
                     else
                         SPI_state_r <= SPI_RST;
                 end
                 SPI_RST: begin
-                    // All the control registers are purged before another transmission
-                    if(SS && !error) SPI_state_r <= SPI_IDLE;
-                    else   SPI_state_r <= SPI_RST;
+                    if(!error && SS) SPI_state_r <= SPI_IDLE;
+                    else SPI_state_r <= SPI_RST;
                 end
-                default: begin
-                    SPI_state_r <= SPI_RST;
-                end
+                default: SPI_state_r <= SPI_RST;
             endcase
         end
     end
@@ -198,83 +168,96 @@ module SPI_COMM(
     // Actions
     always @(posedge clk) begin
         if(rst == 1'b1) begin
-
         end
         else begin
             case(SPI_state_r)
                 SPI_IDLE: begin
-                    TR_count_r <= 5'b10;
-                    SPI_ctrl_r <= 4'b0;
-                    SET_A_r    <= 1'b0;
-                    SET_B_r    <= 1'b0;
-                    shift_enable_r   <= 1'b0;
-                    force_shift_r    <= 1'b0;
-                end
-                SPI_LOAD: begin
-                    shift_enable_r   <= 1'b1;
-                    MISO_shift_par_r <= 1'b1; // The MISO Data is loaded into the shift register
-                    DATA_in_buff_r   <= DATA_in;
-
-                    force_shift_r    <= 1'b1;
+                    if(!SS) begin
+                        shift_enable_r <= 1'b1;
+                        force_clk_r <= 1'b1;
+                        shift_par_r <= 1'b1;
+                    end
                 end
                 SPI_TRANS: begin
-                    force_shift_r    <= 1'b0;
-                    MISO_shift_par_r <= 1'b0; // Once the data is loaded, the parallel input pin is set to '0' again
+                    force_clk_r <= 1'b0;
+                    shift_par_r <= 1'b0;
+                    if(SPI_count_r == 4'b1000) begin
+                        EoB_r <= 1'b1;
+                        if(MODE_r == SPI_f_MODE_0) begin
+                            CMD_r   <= shift_DATA_out_w;
+                            MODE_r  <= shift_DATA_out_w[1:0];
+                            CONT_r  <= shift_DATA_out_w[2];
+                            WRITE_r <= shift_DATA_out_w[3];
 
-                    // if(shift_pulse) SPI_ctrl_r <= SPI_ctrl_r + 1'b1; // 1 bit less to read
-                    if(SPI_ctrl_r == 4'b1000) TR_count_r <= TR_count_r - 1'b1;
-                    else if(SS) err_r <= 1'b1;
-                end
-                SPI_SAVE: begin
-                    DATA_out_r <= MOSI_data;
-
-                    if(SET_A_r && SET_B_r) begin
-                        if(read_r) begin
-
+                            TR_count_r <= TR_count_r - 1'b1 + shift_DATA_out_w[1:0];
                         end
-                        else begin
-
+                        else if(MODE_r == SPI_f_MODE_1) begin
+                            if(CONT_r) TR_count_r <= 2'b01;
+                            else       TR_count_r <= TR_count_r - 1'b1;
+                        end
+                        else if(MODE_r == SPI_f_MODE_2) begin
+                            if(TR_count_r == 2'b10) begin
+                                ADDR_r[15:8] = shift_DATA_out_w;
+                                TR_count_r <= TR_count_r - 1'b1;
+                            end
+                            else if(TR_count_r == 2'b01) begin
+                                ADDR_r[7:0] = shift_DATA_out_w;
+                                if(CONT_r) TR_count_r <= 2'b10;
+                                else       TR_count_r <= TR_count_r - 1'b1;
+                            end
+                        end
+                        else if(MODE_r == SPI_f_MODE_3) begin
+                            if(TR_count_r == 2'b11) begin
+                                ADDR_r[15:8] = shift_DATA_out_w;
+                                TR_count_r <= TR_count_r - 1'b1;
+                            end
+                            else if(TR_count_r == 2'b10) begin
+                                ADDR_r[7:0] = shift_DATA_out_w;
+                                TR_count_r <= TR_count_r - 1'b1;
+                            end
+                            else if(TR_count_r == 2'b01) begin
+                                ADDR_r[7:0] = shift_DATA_out_w;
+                                if(CONT_r) TR_count_r <= 2'b11;
+                                else       TR_count_r <= TR_count_r - 1'b1;
+                            end
                         end
                     end
-                    else if(TR_count_r == 8'b1 && !SET_A_r) begin
-                        format_r  <= MOSI_data[7];
-                        read_r    <= MOSI_data[6];
-                        sec_CMD_r <= MOSI_data[5];
-                        CMD_r     <= MOSI_data[4:0];
-                        SET_A_r   <= 1'b1;
+                    else begin
+                        EoB_r <= 1'b0;
                     end
-                    else if(TR_count_r == 8'b0 && MOSI_data[7] && !SET_B_r) begin
-                        if(MOSI_data[6]) begin
-                            TR_count_r <= TR_count_r + DATA_in_buff_r[4:0];
-                        end
-                        else begin
-                            INFO_r     <= MOSI_data;
-                            TR_count_r <= TR_count_r + MOSI_data[4:0];
-                        end
-                        SET_B_r <= 1'b1;
-                    end
-                end
-                SPI_BACK: begin
-                    SPI_ctrl_r    <= 4'b0;
                 end
                 SPI_RST: begin
-                    TR_count_r    <= 5'b10;
-                    force_shift_r <= 1'b0;
-                    read_r        <= 1'b0;
-                    sec_CMD_r     <= 1'b0;
-                    INFO_r        <= 8'b0; 
-                    CMD_r         <= 5'b0;
-                    err_r         <= 1'b0;
+                    shift_enable_r <= 1'b0;
+                    SPI_count_r    <= 4'b0;
+                    force_clk_r <= 1'b0;
+                    shift_par_r <= 1'b0;
+
+                    MODE_r  <= 2'b0;
+                    CONT_r  <= 1'b0;
+                    WRITE_r <= 1'b0;
+
+                    EoB_r <= 1'b0;
+
+                    SPI_count_r <= 4'b0;
+                    TR_count_r  <= 2'b0;
                 end
                 default: begin
-                    
                 end
             endcase
         end
     end
 
-    // Every time a bit is readed, the counter is incremented by one
-    always @(negedge shift_pulse) SPI_ctrl_r <= SPI_ctrl_r + 1'b1;
+    // SCLK posedge loop
+    always @(posedge SCLK) begin
+        if(!SS) shift_bit_in_r <= MOSI;
+        if(!SS) SPI_count_r <= SPI_count_r + 1'b1;
+    end
+    // End of SCLK posedge loop
+
+    // SCLK negedge loop
+    always @(negedge SCLK) begin
+    end
+    // End of SCLK negedge loop
     /// End of SPI_COMM controller
 
 endmodule

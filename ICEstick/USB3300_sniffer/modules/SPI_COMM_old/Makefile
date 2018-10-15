@@ -20,13 +20,6 @@ gtk: $(SIM_DIR)/$(M_NAME)_tb.vcd
 $(SIM_DIR)/$(M_NAME)_tb.vcd: $(SIM_DIR)/$(M_NAME)_tb.out
 	$<
 
-test: $(TB_DIR)/test.v
-	iverilog $^ -o $(SIM_DIR)/test.out
-	$(SIM_DIR)/test.out
-
-test-gtk: test
-	gtkwave $(SIM_DIR)/test.vcd &
-
 clean:
 	rm -fdr ./$(SIM_DIR) *.vcf
 
