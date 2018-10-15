@@ -4,7 +4,7 @@ OUT_NAME  := test
 SRC_DIR   := ./src
 BUILD_DIR := ./build
 
-CC		  := gcc
+CC		  := clang
 CFLAGS	  := -std=c11 -Wall -Wextra
 CFLAGS    += `pkg-config --cflags libftdi1`
 LFLAGS	  := `pkg-config --libs libftdi1`
