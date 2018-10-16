@@ -8,6 +8,7 @@
 
 `default_nettype none
 `include "./modules/shift_register.vh" // Shift register module
+`include "./modules/clk_pulse.vh"      // Clock pulse module
 
  module SPI_COMM(
                  // System signals
@@ -35,21 +36,26 @@
                  output wire busy     // When there is a transfer in progress this signal will be High
                 );
 
+    /// Clk pulse gen init
+    clk_pulse par_pulse (.clk_fast(shift_clk_w),  .clk_slow(!SS),
+                         .clk_pulse(shift_par_w), .firts_edge(1'b0));
+    /// End of Clk pulse gen init
+
     /// Shift register init
     reg shift_bit_in_r = 1'b0;
     reg force_clk_r    = 1'b0;
-    reg shift_enable_r = 1'b0;
-    reg shift_par_r    = 1'b0;
 
+    wire shift_par_w;
     wire shift_clk_w;
+    wire shift_enable_w;
     wire shift_bit_out_w;
     wire [7:0]shift_DATA_in_w;
     wire [7:0]shift_DATA_out_w;
 
-    shift_register shift_MOSI (.clk(shift_clk_w),         .enable(shift_enable_r),
+    shift_register shift_MOSI (.clk(!shift_clk_w),        .enable(shift_enable_w),
                                .bit_in(shift_bit_in_r),   .bit_out(shift_bit_out_w),
-                               .DATA_in(shift_DATA_in_w), .DATA_out(shift_DATA_out_w),
-                               .PARALLEL_EN(shift_par_r));
+                               .DATA_in(shift_DATA_in_w), .rst(rst),
+                               .PARALLEL_EN(shift_par_w), .DATA_out(shift_DATA_out_w));
     /// End of Shift register init
 
     /// SPI_COMM Regs and wires
@@ -88,9 +94,12 @@
     assign SPI_s_TRANS = (SPI_state_r == SPI_TRANS) ? 1'b1 : 1'b0; // #FLAG
     assign SPI_s_RST   = (SPI_state_r == SPI_RST)   ? 1'b1 : 1'b0; // #FLAG
 
-    assign shift_clk_w     = !SCLK || force_clk_r;        // #SHIFT_REGISTER
+    assign shift_clk_w     = SCLK || SS;        // #SHIFT_REGISTER
+    // assign shift_clk_w = SS ? clk : SCLK;
     assign shift_DATA_in_w = SPI_s_IDLE ? STA  : DATA_in; // #SHIFT_REGISTER
     // assign shift_par_w     = SPI_s_IDLE ? 1'b1 : 1'b0;    // #SHIFT_REGISTER
+    assign shift_enable_w = !SPI_s_IDLE || !SS;
+    // assign shift_par_w = !SS;
 
     assign MISO     = !SPI_s_IDLE ? shift_DATA_out_w[0] : 1'b0; // #OUTPUT
     assign CMD      = CMD_r;       // #OUTPUT
@@ -130,7 +139,7 @@
     // #FIGURE_NUMBER SPI_state_machine
     // Transactions
     always @(posedge clk) begin
-        if(rst == 1'b1) begin
+        if(!rst == 1'b1) begin
             SPI_state_r <= SPI_RST;
         end
         else begin
@@ -167,22 +176,20 @@
 
     // Actions
     always @(posedge clk) begin
-        if(rst == 1'b1) begin
+        if(!rst == 1'b1) begin
         end
         else begin
             case(SPI_state_r)
                 SPI_IDLE: begin
                     if(!SS) begin
-                        shift_enable_r <= 1'b1;
                         force_clk_r <= 1'b1;
-                        shift_par_r <= 1'b1;
                     end
                 end
                 SPI_TRANS: begin
                     force_clk_r <= 1'b0;
-                    shift_par_r <= 1'b0;
                     if(SPI_count_r == 4'b1000) begin
                         EoB_r <= 1'b1;
+                        RAW_out_r <= shift_DATA_out_w;
                         if(MODE_r == SPI_f_MODE_0) begin
                             CMD_r   <= shift_DATA_out_w;
                             MODE_r  <= shift_DATA_out_w[1:0];
@@ -227,11 +234,10 @@
                     end
                 end
                 SPI_RST: begin
-                    shift_enable_r <= 1'b0;
                     SPI_count_r    <= 4'b0;
                     force_clk_r <= 1'b0;
-                    shift_par_r <= 1'b0;
 
+                    CMD_r   <= 8'b0;
                     MODE_r  <= 2'b0;
                     CONT_r  <= 1'b0;
                     WRITE_r <= 1'b0;

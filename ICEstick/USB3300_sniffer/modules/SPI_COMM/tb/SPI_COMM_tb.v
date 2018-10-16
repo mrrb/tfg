@@ -28,7 +28,7 @@ module SPI_COMM_tb ();
 
     // Module under test Init
     SPI_COMM spi (
-                  .clk(clk_fast), .rst(1'b0), // System signals
+                  .clk(clk_fast), .rst(1'b1), // System signals
                   .SCLK(clk_slow), .SS(SS_r), .MOSI(MOSI_r), .MISO(MISO_w), // SPI interface signals
                   .STA(STA_r), .DATA_in(DATA_in_r), .CMD(CMD_w), .ADDR(ADDR_w), .DATA_out(DATA_out_w), .RAW_out(RAW_w), // Data signals
                   .err_in(err_in_r), .err_out(err_w), .EoB(EoB_w), .busy(busy) // Control signals
@@ -48,7 +48,7 @@ module SPI_COMM_tb ();
         $display("Test 1 - Mode 1");
 
         SS_r = 0;
-        STA_r = 8'hAA;
+        STA_r = 8'b10100101;
 
         // First byte [10110000]
             #0  MOSI_r = 0; // Mode
@@ -61,9 +61,10 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1; 
         // End of First byte
 
-        #20 SS_r = 1;
+        #20 SS_r = 1; $display(" Byte 1\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10110000, RAW_w, (RAW_w == 8'b10110000) ? "Ok!" : "Fail!");
         STA_r = 8'b0;
-        #60      
+        #60
+        $display();
 
         $display("Test 2 - Mode 2 READ");
 
@@ -81,8 +82,10 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1; 
         // End of First byte
 
+        #20 $display(" Byte 1\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10110001, RAW_w, (RAW_w == 8'b10110001) ? "Ok!" : "Fail!");
+        
         // Second byte [10100101]
-            #20 MOSI_r = 1;
+            #0  MOSI_r = 1;
             #20 MOSI_r = 0;
             #20 MOSI_r = 1;
             #20 MOSI_r = 0;
@@ -92,10 +95,11 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1; 
         // End of Second byte
 
-        #20 SS_r = 1;
+        #20 SS_r = 1; $display(" Byte 2\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10100101, RAW_w, (RAW_w == 8'b10100101) ? "Ok!" : "Fail!");
         STA_r = 8'b0;
         DATA_in_r = 8'b0;
-        #60        
+        #60
+        $display();  
 
         $display("Test 3 - Mode 2 WRITE");
 
@@ -114,6 +118,8 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1; 
         // End of First byte
 
+        #20 $display(" Byte 1\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10111001, RAW_w, (RAW_w == 8'b10111001) ? "Ok!" : "Fail!");
+
         // Second byte [10100101]
             #20 MOSI_r = 1;
             #20 MOSI_r = 0;
@@ -125,10 +131,11 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1; 
         // End of Second byte
 
-        #20 SS_r = 1;
+        #20 SS_r = 1; $display(" Byte 2\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10100101, RAW_w, (RAW_w == 8'b10100101) ? "Ok!" : "Fail!");
         STA_r = 8'b0;
         DATA_in_r = 8'b0;
         #60
+        $display();
 
         $display("Test 4 - Mode 3 READ");
 
@@ -147,6 +154,8 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1; 
         // End of First byte
 
+        #20 $display(" Byte 1\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10110010, RAW_w, (RAW_w == 8'b10110010) ? "Ok!" : "Fail!");
+
         // Second byte [10100101]
             #20 MOSI_r = 1;
             #20 MOSI_r = 0;
@@ -157,6 +166,8 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 0;
             #20 MOSI_r = 1; 
         // End of Second byte
+
+        #20 $display(" Byte 2\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10100101, RAW_w, (RAW_w == 8'b10100101) ? "Ok!" : "Fail!");
 
         // Third byte [01011010]
             #20 MOSI_r = 0;
@@ -169,10 +180,11 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 0; 
         // End of Third byte
 
-        #20 SS_r = 1;
+        #20 SS_r = 1; $display(" Byte 3\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b01011010, RAW_w, (RAW_w == 8'b01011010) ? "Ok!" : "Fail!");
         STA_r = 8'b0;
         DATA_in_r = 8'b0;
         #60
+        $display();
 
         $display("Test 5 - Mode 3 WRITE");
 
@@ -191,6 +203,8 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1; 
         // End of First byte
 
+        #20 $display(" Byte 1\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10110010, RAW_w, (RAW_w == 8'b10110010) ? "Ok!" : "Fail!");
+
         // Second byte [10100101]
             #20 MOSI_r = 1;
             #20 MOSI_r = 0;
@@ -201,6 +215,8 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 0;
             #20 MOSI_r = 1; 
         // End of Second byte
+
+        #20 $display(" Byte 2\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10100101, RAW_w, (RAW_w == 8'b10100101) ? "Ok!" : "Fail!");
 
         // Third byte [01011010]
             #20 MOSI_r = 0;
@@ -213,10 +229,11 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 0; 
         // End of Third byte
 
-        #20 SS_r = 1;
+        #20 SS_r = 1; $display(" Byte 3\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b01011010, RAW_w, (RAW_w == 8'b01011010) ? "Ok!" : "Fail!");
         STA_r = 8'b0;
         DATA_in_r = 8'b0;
         #60
+        $display();
 
         $display("Test 6 - Mode 4 READ");
 
@@ -235,6 +252,8 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1; 
         // End of First byte
 
+        #20 $display(" Byte 1\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10110011, RAW_w, (RAW_w == 8'b10110011) ? "Ok!" : "Fail!");
+
         // Second byte [10100101]
             #20 MOSI_r = 1;
             #20 MOSI_r = 0;
@@ -245,6 +264,8 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 0;
             #20 MOSI_r = 1; 
         // End of Second byte
+
+        #20 $display(" Byte 2\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10100101, RAW_w, (RAW_w == 8'b10100101) ? "Ok!" : "Fail!");
 
         // Third byte [01011010]
             #20 MOSI_r = 0;
@@ -257,6 +278,8 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 0; 
         // End of Third byte
 
+        #20 $display(" Byte 3\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b01011010, RAW_w, (RAW_w == 8'b01011010) ? "Ok!" : "Fail!");
+
         // Fourth byte [10100101]
             #20 MOSI_r = 1;
             #20 MOSI_r = 0;
@@ -268,10 +291,11 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1;
         // End of Fourth byte
 
-        #20 SS_r = 1;
+        #20 SS_r = 1; $display(" Byte 4\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10100101, RAW_w, (RAW_w == 8'b10100101) ? "Ok!" : "Fail!");
         STA_r = 8'b0;
         DATA_in_r = 8'b0;
         #60
+        $display();
 
         $display("Test 7 - Mode 4 WRITE");
 
@@ -290,6 +314,8 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1; 
         // End of First byte
 
+        #20 $display(" Byte 1\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10110011, RAW_w, (RAW_w == 8'b10110011) ? "Ok!" : "Fail!");
+
         // Second byte [10100101]
             #20 MOSI_r = 1;
             #20 MOSI_r = 0;
@@ -300,6 +326,10 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 0;
             #20 MOSI_r = 1; 
         // End of Second byte
+
+        // if(RAW_w == 8'b10100101) $display("Ok!");
+        // else $result("Fail!");
+        #20 $display(" Byte 2\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10100101, RAW_w, (RAW_w == 8'b10100101) ? "Ok!" : "Fail!");
 
         // Third byte [01011010]
             #20 MOSI_r = 0;
@@ -312,6 +342,8 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 0; 
         // End of Third byte
 
+        #20 $display(" Byte 3\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b01011010, RAW_w, (RAW_w == 8'b01011010) ? "Ok!" : "Fail!");
+
         // Fourth byte [10100101]
             #20 MOSI_r = 1;
             #20 MOSI_r = 0;
@@ -323,10 +355,11 @@ module SPI_COMM_tb ();
             #20 MOSI_r = 1;
         // End of Fourth byte
 
-        #20 SS_r = 1;
+        #20 SS_r = 1; $display(" Byte 4\n  Simulated input: %b.\n       Raw Output: %b. Result: %s", 8'b10100101, RAW_w, (RAW_w == 8'b10100101) ? "Ok!" : "Fail!");
         STA_r = 8'b0;
         DATA_in_r = 8'b0;
         #60
+        $display();
 
         #100 $finish;
     end
