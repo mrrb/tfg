@@ -22,6 +22,9 @@ module shift_register #(
                         output wire bit_out, // Overflow bit
                         output wire [(bits - 1):0]DATA_out, // Data stored in the register
 
+                        // Control signals
+                        input  wire rst, // Signal to clear all the data in the shift register
+
                         // Parallel input
                         input  wire [(bits - 1):0]DATA_in,  // Data input
                         input  wire PARALLEL_EN // Parallel enable signal. When this signal is HIGH, the data in DATA_in is stored in the register.
@@ -37,7 +40,8 @@ module shift_register #(
 
     // Main controller
     always @(posedge clk) begin
-        if(enable) begin
+        if(!rst) DATA <= {bits{1'b0}};
+        else if(enable) begin
             if(PARALLEL_EN) DATA <= DATA_in;
             else begin
                 bit_out_r <= DATA[0];
