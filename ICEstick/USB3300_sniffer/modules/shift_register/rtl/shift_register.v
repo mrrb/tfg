@@ -40,14 +40,19 @@ module shift_register #(
 
     // Main controller
     always @(posedge clk) begin
-        if(!rst) DATA <= {bits{1'b0}};
+        if(!rst) begin
+        end
         else if(enable) begin
-            if(PARALLEL_EN) DATA <= DATA_in;
-            else begin
+            if(!PARALLEL_EN) begin
                 bit_out_r <= DATA[0];
                 DATA <= {bit_in, DATA[(bits - 1):1]};
             end
         end
+    end
+
+    always @(*) begin
+        if(!rst) DATA <= {bits{1'b0}};
+        else if(PARALLEL_EN && enable) DATA <= DATA_in;
     end
 
 endmodule

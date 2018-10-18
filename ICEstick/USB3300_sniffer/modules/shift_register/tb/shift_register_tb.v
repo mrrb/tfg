@@ -48,7 +48,7 @@ module shift_register_tb ();
         #20
         #2 enable = 0; DATA_in = 8'b10011100;
 
-        #2 enable = 1; par_en = 1;
+        #1 enable = 1; par_en = 1;
         #2 enable = 0; par_en = 0;
 
         #4 rst = 0;
