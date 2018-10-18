@@ -9,6 +9,7 @@
 `default_nettype none
 `include "./modules/shift_register.vh" // Shift register module
 `include "./modules/clk_pulse.vh"      // Clock pulse module
+`include "./modules/clk_div_gen.vh"
 
  module SPI_COMM(
                  // System signals
@@ -37,13 +38,13 @@
                 );
 
     /// Clk pulse gen init
-    clk_pulse par_pulse (.clk_fast(shift_clk_w),  .clk_slow(!SS),
-                         .clk_pulse(shift_par_w), .firts_edge(1'b0));
+    // clk_pulse par_pulse (.clk_fast(!shift_clk_w),  .clk_slow(!SS),
+    //                      .clk_pulse(shift_par_w), .firts_edge(1'b0));
     /// End of Clk pulse gen init
+    assign shift_par_w = !SET_B_r;
 
     /// Shift register init
     reg shift_bit_in_r = 1'b0;
-    reg force_clk_r    = 1'b0;
 
     wire shift_par_w;
     wire shift_clk_w;
@@ -54,7 +55,7 @@
 
     shift_register shift_MOSI (.clk(!shift_clk_w),        .enable(shift_enable_w),
                                .bit_in(shift_bit_in_r),   .bit_out(shift_bit_out_w),
-                               .DATA_in(shift_DATA_in_w), .rst(rst),
+                               .DATA_in(shift_DATA_in_w), .rst(rst || SPI_s_RST),
                                .PARALLEL_EN(shift_par_w), .DATA_out(shift_DATA_out_w));
     /// End of Shift register init
 
@@ -81,6 +82,8 @@
     reg [1:0]MODE_r = 2'b0;
     reg CONT_r      = 1'b0;
     reg WRITE_r     = 1'b0;
+    reg SET_A_r     = 1'b0;
+    reg SET_B_r     = 1'b0;
 
     // Flags
     wire SPI_s_IDLE;  // 1 if SPI_state_r == SPI_IDLE,  else 0
@@ -94,9 +97,10 @@
     assign SPI_s_TRANS = (SPI_state_r == SPI_TRANS) ? 1'b1 : 1'b0; // #FLAG
     assign SPI_s_RST   = (SPI_state_r == SPI_RST)   ? 1'b1 : 1'b0; // #FLAG
 
-    assign shift_clk_w     = SCLK || SS;        // #SHIFT_REGISTER
+    // assign shift_clk_w     = SCLK || SS;        // #SHIFT_REGISTER
+    assign shift_clk_w     = SCLK;        // #SHIFT_REGISTER
     // assign shift_clk_w = SS ? clk : SCLK;
-    assign shift_DATA_in_w = SPI_s_IDLE ? STA  : DATA_in; // #SHIFT_REGISTER
+    assign shift_DATA_in_w = SET_A_r ? DATA_in : STA; // #SHIFT_REGISTER
     // assign shift_par_w     = SPI_s_IDLE ? 1'b1 : 1'b0;    // #SHIFT_REGISTER
     assign shift_enable_w = !SPI_s_IDLE || !SS;
     // assign shift_par_w = !SS;
@@ -182,68 +186,29 @@
             case(SPI_state_r)
                 SPI_IDLE: begin
                     if(!SS) begin
-                        force_clk_r <= 1'b1;
+                        CMD_r      <=  8'b0;
+                        MODE_r     <=  2'b0;
+                        CONT_r     <=  1'b0;
+                        WRITE_r    <=  1'b0;
+                        RAW_out_r  <=  8'b0;
+                        ADDR_r     <= 16'b0;
+                        DATA_out_r <=  8'b0;
                     end
                 end
                 SPI_TRANS: begin
-                    force_clk_r <= 1'b0;
                     if(SPI_count_r == 4'b1000) begin
-                        EoB_r <= 1'b1;
-                        RAW_out_r <= shift_DATA_out_w;
-                        if(MODE_r == SPI_f_MODE_0) begin
-                            CMD_r   <= shift_DATA_out_w;
-                            MODE_r  <= shift_DATA_out_w[1:0];
-                            CONT_r  <= shift_DATA_out_w[2];
-                            WRITE_r <= shift_DATA_out_w[3];
-
-                            TR_count_r <= TR_count_r - 1'b1 + shift_DATA_out_w[1:0];
-                        end
-                        else if(MODE_r == SPI_f_MODE_1) begin
-                            if(CONT_r) TR_count_r <= 2'b01;
-                            else       TR_count_r <= TR_count_r - 1'b1;
-                        end
-                        else if(MODE_r == SPI_f_MODE_2) begin
-                            if(TR_count_r == 2'b10) begin
-                                ADDR_r[15:8] = shift_DATA_out_w;
-                                TR_count_r <= TR_count_r - 1'b1;
-                            end
-                            else if(TR_count_r == 2'b01) begin
-                                ADDR_r[7:0] = shift_DATA_out_w;
-                                if(CONT_r) TR_count_r <= 2'b10;
-                                else       TR_count_r <= TR_count_r - 1'b1;
-                            end
-                        end
-                        else if(MODE_r == SPI_f_MODE_3) begin
-                            if(TR_count_r == 2'b11) begin
-                                ADDR_r[15:8] = shift_DATA_out_w;
-                                TR_count_r <= TR_count_r - 1'b1;
-                            end
-                            else if(TR_count_r == 2'b10) begin
-                                ADDR_r[7:0] = shift_DATA_out_w;
-                                TR_count_r <= TR_count_r - 1'b1;
-                            end
-                            else if(TR_count_r == 2'b01) begin
-                                ADDR_r[7:0] = shift_DATA_out_w;
-                                if(CONT_r) TR_count_r <= 2'b11;
-                                else       TR_count_r <= TR_count_r - 1'b1;
-                            end
-                        end
                     end
-                    else begin
-                        EoB_r <= 1'b0;
+                    else if(SS) begin
+                        err_r <= 1'b1;
                     end
                 end
                 SPI_RST: begin
-                    SPI_count_r    <= 4'b0;
-                    force_clk_r <= 1'b0;
-
-                    CMD_r   <= 8'b0;
-                    MODE_r  <= 2'b0;
-                    CONT_r  <= 1'b0;
-                    WRITE_r <= 1'b0;
-
                     EoB_r <= 1'b0;
 
+                    err_r <= 1'b0;
+
+                    SET_A_r <= 1'b0;
+                    SET_B_r <= 1'b0;
                     SPI_count_r <= 4'b0;
                     TR_count_r  <= 2'b0;
                 end
@@ -256,14 +221,70 @@
     // SCLK posedge loop
     always @(posedge SCLK) begin
         if(!SS) shift_bit_in_r <= MOSI;
-        if(!SS) SPI_count_r <= SPI_count_r + 1'b1;
+        if(SPI_state_r != SPI_RST) begin
+            SET_B_r <= 1'b1;
+            EoB_r <= 1'b0;
+        end
     end
     // End of SCLK posedge loop
 
     // SCLK negedge loop
     always @(negedge SCLK) begin
+        if(SPI_count_r == 4'b0111) begin
+            SPI_count_r <= 4'b0;
+            SET_B_r <= 1'b0;
+            EoB_r <= 1'b1;
+            RAW_out_r <= {shift_bit_in_r, shift_DATA_out_w[7:1]};
+            if(MODE_r == SPI_f_MODE_0) begin
+                CMD_r   <= {shift_bit_in_r, shift_DATA_out_w[7:1]};
+                MODE_r  <= shift_DATA_out_w[2:1];
+                CONT_r  <= shift_DATA_out_w[3];
+                WRITE_r <= shift_DATA_out_w[4];
+                
+                SET_A_r <= 1'b1;
+                TR_count_r <= TR_count_r + shift_DATA_out_w[2:1];
+            end
+            else if(MODE_r == SPI_f_MODE_1) begin
+                DATA_out_r <= {shift_bit_in_r, shift_DATA_out_w[7:1]};
+                if(CONT_r) TR_count_r <= 2'b01;
+                else       TR_count_r <= TR_count_r - 1'b1;
+            end
+            else if(MODE_r == SPI_f_MODE_2) begin
+                if(TR_count_r == 2'b10) begin
+                    ADDR_r[15:8] <= {shift_bit_in_r, shift_DATA_out_w[7:1]};
+                    TR_count_r <= TR_count_r - 1'b1;
+                end
+                else if(TR_count_r == 2'b01) begin
+                    ADDR_r[7:0] <= {shift_bit_in_r, shift_DATA_out_w[7:1]};
+                    if(CONT_r) TR_count_r <= 2'b10;
+                    else       TR_count_r <= TR_count_r - 1'b1;
+                end
+            end
+            else if(MODE_r == SPI_f_MODE_3) begin
+                if(TR_count_r == 2'b11) begin
+                    ADDR_r[15:8] <= {shift_bit_in_r, shift_DATA_out_w[7:1]};
+                    TR_count_r <= TR_count_r - 1'b1;
+                end
+                else if(TR_count_r == 2'b10) begin
+                    ADDR_r[7:0] <= {shift_bit_in_r, shift_DATA_out_w[7:1]};
+                    TR_count_r <= TR_count_r - 1'b1;
+                end
+                else if(TR_count_r == 2'b01) begin
+                    DATA_out_r <= {shift_bit_in_r, shift_DATA_out_w[7:1]};
+                    if(CONT_r) TR_count_r <= 2'b11;
+                    else       TR_count_r <= TR_count_r - 1'b1;
+                end
+            end
+        end
+        else if(!SS) SPI_count_r <= SPI_count_r + 1'b1;
     end
     // End of SCLK negedge loop
+
+    //
+    // always @(*) begin
+    //     if(SET_B_r)
+    // end
+    //
     /// End of SPI_COMM controller
 
 endmodule
