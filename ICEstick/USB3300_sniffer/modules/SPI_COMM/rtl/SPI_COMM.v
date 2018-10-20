@@ -84,11 +84,16 @@
     reg WRITE_r     = 1'b0;
     reg SET_A_r     = 1'b0;
     reg SET_B_r     = 1'b0;
+    reg SET_C_r     = 1'b0;
 
     // Flags
     wire SPI_s_IDLE;  // 1 if SPI_state_r == SPI_IDLE,  else 0
     wire SPI_s_TRANS; // 1 if SPI_state_r == SPI_TRANS, else 0
     wire SPI_s_RST;   // 1 if SPI_state_r == SPI_RST,   else 0
+
+    wire [1:0]MODE_w;
+    wire CONT_w;
+    wire WRITE_w;
 
     wire error;
 
@@ -97,13 +102,13 @@
     assign SPI_s_TRANS = (SPI_state_r == SPI_TRANS) ? 1'b1 : 1'b0; // #FLAG
     assign SPI_s_RST   = (SPI_state_r == SPI_RST)   ? 1'b1 : 1'b0; // #FLAG
 
-    // assign shift_clk_w     = SCLK || SS;        // #SHIFT_REGISTER
-    assign shift_clk_w     = SCLK;        // #SHIFT_REGISTER
-    // assign shift_clk_w = SS ? clk : SCLK;
+    assign MODE_w  = SET_A_r ? CMD_r[1:0] : shift_DATA_out_w[2:1]; // #FLAG
+    assign CONT_w  = SET_A_r ? CMD_r[2]   : shift_DATA_out_w[3];   // #FLAG
+    assign WRITE_w = SET_A_r ? CMD_r[3]   : shift_DATA_out_w[4];   // #FLAG
+
+    assign shift_clk_w     = SCLK;                    // #SHIFT_REGISTER
     assign shift_DATA_in_w = SET_A_r ? DATA_in : STA; // #SHIFT_REGISTER
-    // assign shift_par_w     = SPI_s_IDLE ? 1'b1 : 1'b0;    // #SHIFT_REGISTER
-    assign shift_enable_w = !SPI_s_IDLE || !SS;
-    // assign shift_par_w = !SS;
+    assign shift_enable_w = !SPI_s_IDLE || !SS;       // #SHIFT_REGISTER
 
     assign MISO     = !SPI_s_IDLE ? shift_DATA_out_w[0] : 1'b0; // #OUTPUT
     assign CMD      = CMD_r;       // #OUTPUT
@@ -155,9 +160,9 @@
                 SPI_TRANS: begin
                     if(error)
                         SPI_state_r <= SPI_RST;
-                    else if(SPI_count_r != 4'b1000)
+                    else if(!SET_C_r)
                         SPI_state_r <= SPI_TRANS;
-                    else if(SPI_count_r == 4'b1000) begin
+                    else if(SET_C_r) begin
                         if(TR_count_r != 2'b0) SPI_state_r <= SPI_TRANS;
                         else begin
                             if(CONT_r)
@@ -196,9 +201,13 @@
                     end
                 end
                 SPI_TRANS: begin
-                    if(SPI_count_r == 4'b1000) begin
+                    if(SS) begin
+                        err_r <= 1'b1;
                     end
-                    else if(SS) begin
+                    else if(SET_C_r && CONT_w) begin
+                        SET_C_r <= 1'b0;
+                    end
+                    else if(SET_C_r && !CONT_w && TR_count_r == 2'b00) begin
                         err_r <= 1'b1;
                     end
                 end
@@ -209,6 +218,7 @@
 
                     SET_A_r <= 1'b0;
                     SET_B_r <= 1'b0;
+                    SET_C_r <= 1'b0;
                     SPI_count_r <= 4'b0;
                     TR_count_r  <= 2'b0;
                 end
@@ -233,6 +243,7 @@
         if(SPI_count_r == 4'b0111) begin
             SPI_count_r <= 4'b0;
             SET_B_r <= 1'b0;
+            SET_C_r <= 1'b1;
             EoB_r <= 1'b1;
             RAW_out_r <= {shift_bit_in_r, shift_DATA_out_w[7:1]};
             if(MODE_r == SPI_f_MODE_0) begin
