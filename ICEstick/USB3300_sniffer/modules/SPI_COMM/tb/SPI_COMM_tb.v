@@ -73,9 +73,9 @@ module SPI_COMM_tb ();
 
         #20 SS_r <= 1;
         #60 $display(" Byte 1");
-            $display("  [%b %b %b %b]", CMD_w, ADDR_w, DATA_out_w, RAW_w);
             $display("  MOSI [%b => %b]. Result: %s", 8'b10110000, RAW_w, (RAW_w == 8'b10110000) ? "Pass!" : "Fail!");
             $display("  MISO [%b => %b]. Result: %s", STA_r, MISO_raw_r, (MISO_raw_r == STA_r) ? "Pass!" : "Fail!");
+            $display(" [%b %b %b]", CMD_w, ADDR_w, DATA_out_w);
             STA_r <= 8'b0;
 
         $display();
@@ -97,7 +97,6 @@ module SPI_COMM_tb ();
         // End of First byte
 
         #20 $display(" Byte 1");
-            $display("  [%b %b %b %b]", CMD_w, ADDR_w, DATA_out_w, RAW_w);
             $display("  MOSI [%b => %b]. Result: %s", 8'b10110001, RAW_w, (RAW_w == 8'b10110001) ? "Pass!" : "Fail!");
             $display("  MISO [%b => %b]. Result: %s", STA_r, MISO_raw_r, (MISO_raw_r == STA_r) ? "Pass!" : "Fail!");
         
@@ -114,9 +113,9 @@ module SPI_COMM_tb ();
 
         #20 SS_r <= 1;
         #60 $display(" Byte 2");
-            $display("  [%b %b %b %b]", CMD_w, ADDR_w, DATA_out_w, RAW_w);
             $display("  MOSI [%b => %b]. Result: %s", 8'b10100101, RAW_w, (RAW_w == 8'b10100101) ? "Pass!" : "Fail!");
             $display("  MISO [%b => %b]. Result: %s", DATA_in_r, MISO_raw_r, (MISO_raw_r == DATA_in_r) ? "Pass!" : "Fail!");
+            $display(" [%b %b %b]", CMD_w, ADDR_w, DATA_out_w);
             STA_r <= 8'b0; DATA_in_r <= 8'b0;
 
         $display();  
@@ -139,7 +138,6 @@ module SPI_COMM_tb ();
         // End of First byte
 
         #20 $display(" Byte 1");
-            $display("  [%b %b %b %b]", CMD_w, ADDR_w, DATA_out_w, RAW_w);
             $display("  MOSI [%b => %b]. Result: %s", 8'b10111001, RAW_w, (RAW_w == 8'b10111001) ? "Pass!" : "Fail!");
             $display("  MISO [%b => %b]. Result: %s", STA_r, MISO_raw_r, (MISO_raw_r == STA_r) ? "Pass!" : "Fail!");
 
@@ -156,9 +154,9 @@ module SPI_COMM_tb ();
 
         #20 SS_r <= 1;
         #60 $display(" Byte 2");
-            $display("  [%b %b %b %b]", CMD_w, ADDR_w, DATA_out_w, RAW_w);
             $display("  MOSI [%b => %b]. Result: %s", 8'b10100101, RAW_w, (RAW_w == 8'b10100101) ? "Pass!" : "Fail!");
             $display("  MISO [%b => %b]. Result: %s", DATA_in_r, MISO_raw_r, (MISO_raw_r == DATA_in_r) ? "Pass!" : "Fail!");
+            $display(" [%b %b %b]", CMD_w, ADDR_w, DATA_out_w);
             STA_r <= 8'b0; DATA_in_r <= 8'b0;
 
         $display();
@@ -181,7 +179,6 @@ module SPI_COMM_tb ();
         // End of First byte
 
         #20 $display(" Byte 1");
-            $display("  [%b %b %b %b]", CMD_w, ADDR_w, DATA_out_w, RAW_w);
             $display("  MOSI [%b => %b]. Result: %s", 8'b10110010, RAW_w, (RAW_w == 8'b10110010) ? "Pass!" : "Fail!");
             $display("  MISO [%b => %b]. Result: %s", STA_r, MISO_raw_r, (MISO_raw_r == STA_r) ? "Pass!" : "Fail!");
 
@@ -198,7 +195,6 @@ module SPI_COMM_tb ();
         // End of Second byte
 
         #20 $display(" Byte 2");
-            $display("  [%b %b %b %b]", CMD_w, ADDR_w, DATA_out_w, RAW_w);
             $display("  MOSI [%b => %b]. Result: %s", 8'b10100101, RAW_w, (RAW_w == 8'b10100101) ? "Pass!" : "Fail!");
             $display("  MISO [Don't Care].");
 
@@ -215,9 +211,9 @@ module SPI_COMM_tb ();
 
         #20 SS_r <= 1;
         #60 $display(" Byte 3");
-            $display("  [%b %b %b %b]", CMD_w, ADDR_w, DATA_out_w, RAW_w);
             $display("  MOSI [%b => %b]. Result: %s", 8'b01011010, RAW_w, (RAW_w == 8'b01011010) ? "Pass!" : "Fail!");
             $display("  MISO [Don't Care].");
+            $display(" [%b %b %b]", CMD_w, ADDR_w, DATA_out_w);
             STA_r <= 8'b0; DATA_in_r <= 8'b0;
 
         $display();
