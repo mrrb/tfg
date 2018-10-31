@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
     ftdi_usb_reset(ftdi); // Default state in case there was something going on
     ftdi_set_interface(ftdi, INTERFACE_B); // INTERFACE_ANY or INTERFACE_A or INTERFACE_B
     ftdi_set_bitmode(ftdi, 0, 0); // All bits -> reset
-    ftdi_set_bitmode(ftdi, 0, BITMODE_MPSSE); // All bits -> MPSSE
+    ftdi_set_bitmode(ftdi, 0, BITMODE_RESET); // All bits -> MPSSE
 
 
 

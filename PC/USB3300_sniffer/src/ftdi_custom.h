@@ -6,8 +6,8 @@
     typedef struct ftdi_context ftdi_context_t;
     typedef struct ftdi_device_list ftdi_device_list_t;
 
-    enum mpsse_cmds {
+    // enum mpsse_cmds {
         
-    };
+    // };
 
 #endif // _FTDI_CUSTOM_H_
