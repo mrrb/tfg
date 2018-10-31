@@ -1,0 +1,11 @@
+https://www.allaboutcircuits.com/textbook/digital/chpt-12/parallel-in-parallel-out-universal-shift-register/
+
+https://raw.githubusercontent.com/FPGAwars/FPGA-peripherals/master/uart-tx/baudgen_tx.v
+
+https://www.nandland.com/articles/metastability-in-an-fpga.html
+
+https://www.nandland.com/articles/crossing-clock-domains-in-an-fpga.html
+
+https://www.nandland.com/articles/setup-and-hold-time-in-an-fpga.html
+
+https://embeddedthoughts.com/2016/07/13/fifo-buffer-using-block-ram-on-a-xilinx-spartan-3-fpga/
