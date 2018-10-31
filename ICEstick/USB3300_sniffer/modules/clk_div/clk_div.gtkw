@@ -1,0 +1,27 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Sun Oct 28 16:11:45 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/clk_div/sim/clk_div_tb.vcd"
+[dumpfile_mtime] "Sun Oct 28 16:11:27 2018"
+[dumpfile_size] 6463
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/clk_div/clk_div.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -1 -1
+*-11.149963 852 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 222
+[signals_width] 147
+[sst_expanded] 1
+[sst_vpaned_height] 302
+@29
+clk_div_tb.clk
+@28
+clk_div_tb.clk_out
+clk_div_tb.clk_pulse
+@200
+-
+@28
+clk_div_tb.enable
+[pattern_trace] 1
+[pattern_trace] 0
