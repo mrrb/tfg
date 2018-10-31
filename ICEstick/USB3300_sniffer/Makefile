@@ -33,3 +33,5 @@ prog: sint
 
 clean:
 	rm -fdr ./$(SIM_DIR) *.vcd ./$(BUILD_DIR)
+
+.PHONY: all sim gtk clean
