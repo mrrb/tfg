@@ -1,9 +1,10 @@
-M_NAME  := shift_register
-
-TB_DIR  := ./tb
-RTL_DIR := ./rtl
-SIM_DIR := ./sim
-PRE_DIR := ./modules/$(M_NAME)/
+M_NAME    := shift_register
+M_FOLDER  := shift_register
+  
+TB_DIR    := ./tb
+RTL_DIR   := ./rtl
+SIM_DIR   := ./sim
+PRE_DIR   := ./modules/$(M_FOLDER)/
 
 all: sim gtk
 
@@ -15,11 +16,13 @@ $(SIM_DIR)/$(M_NAME)_tb.out: $(TB_DIR)/$(M_NAME)_tb.v $(RTL_DIR)/$(M_NAME).v
 	cd ../.. && iverilog $(patsubst %, $(PRE_DIR)/%, $^) -o $(PRE_DIR)/$(SIM_DIR)/$(M_NAME)_tb.out -I ./modules
 
 gtk: $(SIM_DIR)/$(M_NAME)_tb.vcd
-	gtkwave $< &
+	gtkwave $< $(M_NAME).gtkw &
 
 $(SIM_DIR)/$(M_NAME)_tb.vcd: $(SIM_DIR)/$(M_NAME)_tb.out
 	$<
 
 clean:
-	rm -fdr ./$(SIM_DIR) *.vcf
+	rm -fdr $(SIM_DIR)
+
+.PHONY: all sim gtk clean
 

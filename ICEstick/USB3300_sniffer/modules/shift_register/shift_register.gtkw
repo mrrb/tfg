@@ -1,0 +1,35 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Sat Oct 27 20:27:48 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/shift_register/sim/shift_register_tb.vcd"
+[dumpfile_mtime] "Sat Oct 27 20:27:05 2018"
+[dumpfile_size] 3596
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/shift_register/shift_register.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -1 -1
+*-11.000000 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 222
+[signals_width] 164
+[sst_expanded] 1
+[sst_vpaned_height] 302
+@28
+shift_register_tb.clk
+shift_register_tb.rst
+@200
+-
+@28
+shift_register_tb.bit_in
+shift_register_tb.bit_out
+@200
+-
+@22
+shift_register_tb.DATA_IN[7:0]
+shift_register_tb.DATA_OUT[7:0]
+@200
+-
+@29
+shift_register_tb.mode[1:0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -5,55 +5,73 @@
  * 
  */
 
+`default_nettype none
+`timescale 100ns/10ns
+
 module shift_register_tb ();
 
-
-    // Regs and wires
-    reg clk = 1'b0;
+    /// Regs and wires
+    reg rst = 1'b1;
     reg bit_in = 1'b0;
-    reg enable = 1'b0;
-    reg par_en = 1'b0;
-    reg [7:0]DATA_in = 8'b0;
-    reg rst = 1'b0;
+    reg [7:0]DATA_IN = 8'b0;
+    reg [1:0]mode = 2'b00;
 
     wire bit_out;
-    wire [7:0]DATA;
+    wire [7:0]DATA_OUT;
+    /// End of Regs and wires
 
-    // Module under test init
-    shift_register sr (clk, enable, bit_in, bit_out, DATA, rst, DATA_in, par_en);
+    /// Module under test init
+    shift_register #(.BITS(8))
+                sr  (
+                     .clk(clk), .rst(rst),               // System signals
+                     .bit_in(bit_in), .bit_out(bit_out), // Serial data
+                     .DATA_IN(DATA_IN), .DATA(DATA_OUT), // Parallel data
+                     .mode(mode)                         // Control signals
+                    );
+    /// End of Module under test init
 
-    // CLK gen
-    always #1 clk <= ~clk;
+    /// Clock gen
+    reg clk = 1'b0;
+    always #0.5 clk = ~clk;
+    /// End of Clock gen
 
-    // Simulation
+    /// Simulation
     initial begin
-        $dumpfile("sim/shift_register_tb.vcd");
-        $dumpvars(0, shift_register_tb);
-        rst = 1;
-        #1 enable = 1;
-        #2 bit_in = 1;
-        #2 bit_in = 0;
-        #2 bit_in = 0;
-        #2 bit_in = 1;
-        #2 bit_in = 1;
-        #2 bit_in = 0;
-        #2 bit_in = 1;
-        #2 bit_in = 1;
+        $dumpfile("./sim/shift_register_tb.vcd");
+        $dumpvars();
 
-        #2 enable = 0;
+        #1 DATA_IN = 8'hFA; mode = 2'b11;
+        #1 mode = 2'b01;
+        #12
 
-        #2 enable = 1;
-        #20
-        #2 bit_in = 0;
-        #20
-        #2 enable = 0; DATA_in = 8'b10011100;
+        #1 DATA_IN = 8'hFA; mode = 2'b11;
+        #1 mode = 2'b00;
+        #12
 
-        #1 enable = 1; par_en = 1;
-        #2 enable = 0; par_en = 0;
+        #1 DATA_IN = 8'hFA; mode = 2'b11; rst = 1'b0;
+        #1 mode = 2'b00;
+        #12
 
-        #4 rst = 0;
-        
-        #6 $finish;
+        #1 DATA_IN = 8'hFA; mode = 2'b11; rst = 1'b1;
+        #1 mode = 2'b00;
+        #12
+
+        #1 DATA_IN = 8'hFA; mode = 2'b11;
+        #1 mode = 2'b10;
+        #12
+
+        bit_in = 1'b1;
+
+        #1 DATA_IN = 8'hFA; mode = 2'b11;
+        #1 mode = 2'b01;
+        #12
+
+        #1 DATA_IN = 8'hFA; mode = 2'b11;
+        #1 mode = 2'b10;
+        #12
+
+        #1 $finish;
     end
+    /// End of Simulation
 
 endmodule
