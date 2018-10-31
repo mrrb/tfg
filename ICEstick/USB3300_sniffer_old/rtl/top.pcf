@@ -1,0 +1,23 @@
+set_io clk_int 21
+set_io clk_ext 44
+
+set_io ULPI_DIR 114
+set_io ULPI_NXT 113
+set_io ULPI_STP 112
+set_io ULPI_RST 45
+set_io ULPI_DATA[0] 78
+set_io ULPI_DATA[1] 79
+set_io ULPI_DATA[2] 80
+set_io ULPI_DATA[3] 81
+set_io ULPI_DATA[4] 87
+set_io ULPI_DATA[5] 88
+set_io ULPI_DATA[6] 90
+set_io ULPI_DATA[7] 91
+
+set_io SPI_SCK  9
+set_io SPI_MOSI 8
+set_io SPI_MISO 7
+set_io SPI_SS   4
+
+set_io UART_RX 61
+set_io UART_TX 62

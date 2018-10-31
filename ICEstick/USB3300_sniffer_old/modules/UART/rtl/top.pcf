@@ -1,0 +1,7 @@
+set_io clk 21
+set_io Tx  8
+set_io Rx  9
+
+set_io test[0] 95
+set_io test[1] 78
+set_io test[2] 79

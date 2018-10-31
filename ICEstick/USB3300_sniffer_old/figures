@@ -1,0 +1,6 @@
+##FIGURE_NUMBER
+WRITE_state_machine > ./modules/ULPI/rtl/ULPI_REG_WRITE.v
+READ_state_machine  > ./modules/ULPI/rtl/ULPI_REG_READ.v
+ULPI_state_machine  > ./modules/ULPI/rtl/ULPI.v
+SPI_state_machine   > ./modules/SPI_COMM/rtl/SPI_COMM.v
+UART_state_machine  > ./modules/UART/rtl/UART.v
