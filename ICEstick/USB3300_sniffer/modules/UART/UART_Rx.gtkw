@@ -1,0 +1,56 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Sun Oct 28 23:23:08 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/UART/sim/UART_Rx_tb.vcd"
+[dumpfile_mtime] "Sun Oct 28 22:57:43 2018"
+[dumpfile_size] 91962
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/UART/UART_Rx.gtkw"
+[timestart] 204670
+[size] 1920 1052
+[pos] -1 -1
+*-14.000000 273560 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] UART_Rx_tb.
+[treeopen] UART_Rx_tb.UART_Rx_mut.
+[sst_width] 222
+[signals_width] 202
+[sst_expanded] 1
+[sst_vpaned_height] 302
+@28
+UART_Rx_tb.rst
+UART_Rx_tb.clk
+UART_Rx_tb.clk_Rx
+@200
+-
+@28
+UART_Rx_tb.Rx
+@200
+-
+@c00022
+UART_Rx_tb.DATA_out[7:0]
+@28
+(0)UART_Rx_tb.DATA_out[7:0]
+(1)UART_Rx_tb.DATA_out[7:0]
+(2)UART_Rx_tb.DATA_out[7:0]
+(3)UART_Rx_tb.DATA_out[7:0]
+(4)UART_Rx_tb.DATA_out[7:0]
+(5)UART_Rx_tb.DATA_out[7:0]
+(6)UART_Rx_tb.DATA_out[7:0]
+(7)UART_Rx_tb.DATA_out[7:0]
+@1401200
+-group_end
+@200
+-
+@28
+UART_Rx_tb.NrD
+@200
+-
+@24
+UART_Rx_tb.UART_Rx_mut.Rx_state_r[1:0]
+UART_Rx_tb.UART_Rx_mut.Rx_counter_r[3:0]
+@200
+-
+@22
+UART_Rx_tb.UART_Rx_mut.DATA_out[9:0]
+[pattern_trace] 1
+[pattern_trace] 0
