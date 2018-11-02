@@ -1,0 +1,55 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Fri Nov  2 22:48:17 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/FIFO_REG/sim/FIFO_REG_tb.vcd"
+[dumpfile_mtime] "Fri Nov  2 22:48:06 2018"
+[dumpfile_size] 1855
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/FIFO_REG/FIFO_REG.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -1 -1
+*-8.000000 1350 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] FIFO_REG_tb.
+[sst_width] 222
+[signals_width] 185
+[sst_expanded] 1
+[sst_vpaned_height] 302
+@28
+FIFO_REG_tb.rst
+FIFO_REG_tb.clk
+@200
+-
+@28
+FIFO_REG_tb.wr_dv
+@200
+-
+@22
+FIFO_REG_tb.DATA_in[3:0]
+@200
+-
+@28
+FIFO_REG_tb.wr_full
+FIFO_REG_tb.wr_almost_full
+@200
+-
+@28
+FIFO_REG_tb.rd_en
+@200
+-
+@22
+FIFO_REG_tb.DATA_out[3:0]
+@200
+-
+@28
+FIFO_REG_tb.rd_empty
+FIFO_REG_tb.rd_almost_empty
+@200
+-
+@22
+FIFO_REG_tb.FIFO_REG_mut.FIFO_size[3:0]
+@28
+FIFO_REG_tb.FIFO_REG_mut.wr_addr[2:0]
+FIFO_REG_tb.FIFO_REG_mut.rd_addr[2:0]
+[pattern_trace] 1
+[pattern_trace] 0
