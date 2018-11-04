@@ -71,7 +71,7 @@ module FIFO_REG #(
     localparam ADDR_SIZE = $clog2(DATA_DEPTH);
 
     /// Main reg init
-    reg [(DATA_WIDTH-1):0]FIFO_r[(DATA_DEPTH-1):0];
+    reg [(DATA_WIDTH-1):0]FIFO_r[0:(DATA_DEPTH-1)];
     /// End of Main reg init
 
     /// Regs and wires
@@ -79,7 +79,7 @@ module FIFO_REG #(
     reg [(ADDR_SIZE-1):0]rd_addr = 0; // Address where the DATA is going to be read
     reg [ADDR_SIZE:0]FIFO_size   = 0; // Current slots stored in the FIFO
 
-    reg [(DATA_WIDTH-1):0]rd_DATA_r = 0;
+    reg [(DATA_WIDTH-1):0]rd_DATA_r = 0; // Output buffer
     /// End of Regs and wires
 
     /// Assigns
