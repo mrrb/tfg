@@ -1,0 +1,80 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Sun Nov  4 18:11:47 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules_simulation/SB_RAM40_4K/sim/SB_RAM40_4K_tb.vcd"
+[dumpfile_mtime] "Sun Nov  4 18:11:14 2018"
+[dumpfile_size] 1401
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules_simulation/SB_RAM40_4K/SB_RAM40_4K.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -1 -1
+*-7.951128 251 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] SB_RAM40_4K_tb.
+[sst_width] 222
+[signals_width] 165
+[sst_expanded] 1
+[sst_vpaned_height] 274
+@28
+SB_RAM40_4K_tb.clk
+@200
+-
+@22
+SB_RAM40_4K_tb.wr_DATA[7:0]
+@c00024
+SB_RAM40_4K_tb.wr_addr[8:0]
+@28
+(0)SB_RAM40_4K_tb.wr_addr[8:0]
+(1)SB_RAM40_4K_tb.wr_addr[8:0]
+(2)SB_RAM40_4K_tb.wr_addr[8:0]
+(3)SB_RAM40_4K_tb.wr_addr[8:0]
+(4)SB_RAM40_4K_tb.wr_addr[8:0]
+(5)SB_RAM40_4K_tb.wr_addr[8:0]
+(6)SB_RAM40_4K_tb.wr_addr[8:0]
+(7)SB_RAM40_4K_tb.wr_addr[8:0]
+(8)SB_RAM40_4K_tb.wr_addr[8:0]
+@1401200
+-group_end
+@200
+-
+@c00022
+SB_RAM40_4K_tb.rd_DATA[7:0]
+@28
+(0)SB_RAM40_4K_tb.rd_DATA[7:0]
+(1)SB_RAM40_4K_tb.rd_DATA[7:0]
+(2)SB_RAM40_4K_tb.rd_DATA[7:0]
+(3)SB_RAM40_4K_tb.rd_DATA[7:0]
+(4)SB_RAM40_4K_tb.rd_DATA[7:0]
+(5)SB_RAM40_4K_tb.rd_DATA[7:0]
+(6)SB_RAM40_4K_tb.rd_DATA[7:0]
+(7)SB_RAM40_4K_tb.rd_DATA[7:0]
+@1401200
+-group_end
+@c00024
+SB_RAM40_4K_tb.rd_addr[8:0]
+@28
+(0)SB_RAM40_4K_tb.rd_addr[8:0]
+(1)SB_RAM40_4K_tb.rd_addr[8:0]
+(2)SB_RAM40_4K_tb.rd_addr[8:0]
+(3)SB_RAM40_4K_tb.rd_addr[8:0]
+(4)SB_RAM40_4K_tb.rd_addr[8:0]
+(5)SB_RAM40_4K_tb.rd_addr[8:0]
+(6)SB_RAM40_4K_tb.rd_addr[8:0]
+(7)SB_RAM40_4K_tb.rd_addr[8:0]
+(8)SB_RAM40_4K_tb.rd_addr[8:0]
+@1401200
+-group_end
+@200
+-
+@28
+SB_RAM40_4K_tb.WE
+SB_RAM40_4K_tb.RE
+@200
+-
+@22
+SB_RAM40_4K_tb.BRAM_mut.WADDR[8:0]
+SB_RAM40_4K_tb.BRAM_mut.RADDR[8:0]
+@200
+-
+[pattern_trace] 1
+[pattern_trace] 0
