@@ -1,0 +1,58 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Sun Nov  4 19:57:26 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/FIFO_BRAM/sim/FIFO_BRAM_tb.vcd"
+[dumpfile_mtime] "Sun Nov  4 19:57:08 2018"
+[dumpfile_size] 2890
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/FIFO_BRAM/FIFO_BRAM.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -1 -1
+*-8.000000 1268 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] FIFO_BRAM_tb.
+[treeopen] FIFO_BRAM_tb.FIFO_BRAM_mut.
+[sst_width] 222
+[signals_width] 193
+[sst_expanded] 1
+[sst_vpaned_height] 302
+@28
+FIFO_BRAM_tb.rst
+FIFO_BRAM_tb.clk
+@200
+-
+@28
+FIFO_BRAM_tb.wr_dv
+@c00022
+FIFO_BRAM_tb.DATA_in[7:0]
+@28
+(0)FIFO_BRAM_tb.DATA_in[7:0]
+(1)FIFO_BRAM_tb.DATA_in[7:0]
+(2)FIFO_BRAM_tb.DATA_in[7:0]
+(3)FIFO_BRAM_tb.DATA_in[7:0]
+(4)FIFO_BRAM_tb.DATA_in[7:0]
+(5)FIFO_BRAM_tb.DATA_in[7:0]
+(6)FIFO_BRAM_tb.DATA_in[7:0]
+(7)FIFO_BRAM_tb.DATA_in[7:0]
+@1401200
+-group_end
+@200
+-
+@28
+FIFO_BRAM_tb.wr_full
+FIFO_BRAM_tb.wr_almost_full
+@200
+-
+@28
+FIFO_BRAM_tb.rd_en
+@22
+FIFO_BRAM_tb.DATA_out[7:0]
+@200
+-
+@28
+FIFO_BRAM_tb.rd_empty
+FIFO_BRAM_tb.rd_almost_empty
+@200
+-
+[pattern_trace] 1
+[pattern_trace] 0
