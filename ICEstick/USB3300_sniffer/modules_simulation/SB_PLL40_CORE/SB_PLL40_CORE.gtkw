@@ -1,0 +1,25 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Tue Nov  6 23:18:28 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules_simulation/SB_PLL40_CORE/sim/SB_PLL40_CORE_tb.vcd"
+[dumpfile_mtime] "Tue Nov  6 23:17:27 2018"
+[dumpfile_size] 125560
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules_simulation/SB_PLL40_CORE/SB_PLL40_CORE.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] 1919 -28
+*-9.000000 340 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 222
+[signals_width] 147
+[sst_expanded] 1
+[sst_vpaned_height] 302
+@28
+SB_PLL40_CORE_tb.RESETB
+SB_PLL40_CORE_tb.BYPASS
+SB_PLL40_CORE_tb.clk
+SB_PLL40_CORE_tb.clk_pll
+@29
+SB_PLL40_CORE_tb.lock
+[pattern_trace] 1
+[pattern_trace] 0
