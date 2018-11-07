@@ -1,5 +1,5 @@
-M_NAME    := FIFO_BRAM
-M_FOLDER  := FIFO_BRAM
+M_NAME    := FIFO_BRAM_SYNC
+M_FOLDER  := FIFO_BRAM_SYNC
   
 TB_DIR    := ./tb
 RTL_DIR   := ./rtl

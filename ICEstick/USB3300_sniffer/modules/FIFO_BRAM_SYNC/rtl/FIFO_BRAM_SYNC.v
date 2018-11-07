@@ -1,7 +1,7 @@
 /*
  *
- * FIFO_BRAM module
- * This module 
+ * FIFO_BRAM_SYNC module
+ * This module genereates a SYNCHRONOUS FIFO memory based on a BRAM.
  *
  * Parameters:
  *  - DATA_WIDTH.
@@ -10,10 +10,9 @@
  *
  * Inputs:
  *  - rst. Reset signal, active LOW
- *  - clk_wr. Write reference clock.
+ *  - clk. Reference clock.
  *  - wr_dv. Write Data Valid, if HIGH and posedge of clk_wr, a write process occurs.
  *  - wr_DATA. Data that is going to be stored in the FIFO memory.
- *  - clk_rd. Read reference clock.
  *  - rd_en. Read enable, if HIGH and posedge of clk_rd, a read process occurs.
  *
  * Outputs:
@@ -33,37 +32,36 @@
 `define FIFO_BRAM_2  2
 
 
-module FIFO_BRAM #(
-                   parameter DATA_WIDTH = `FIFO_BRAM_8,
-                   parameter ALMOST_FULL_VAL  = $ceil((2**DATA_WIDTH)*0.9),
-                   parameter ALMOST_EMPTY_VAL = $ceil((2**DATA_WIDTH)*0.1)
-                  )
-                  (
-                   // System signals
-                   input  wire rst, // Master reset signal, active LOW
+module FIFO_BRAM_SYNC #(
+                        parameter DATA_WIDTH = `FIFO_BRAM_8,
+                        parameter ALMOST_FULL_VAL  = $ceil((2**DATA_WIDTH)*0.9),
+                        parameter ALMOST_EMPTY_VAL = $ceil((2**DATA_WIDTH)*0.1)
+                       )
+                       (
+                        // System signals
+                        input  wire rst, // Master reset signal, active LOW
+                        input  wire clk, // Reference clock
 
-                   // Write control signals            
-                   input  wire clk_wr, // Write reference clock
-                   input  wire wr_dv,  // Write Data Valid
+                        // Write control signals
+                        input  wire wr_dv,  // Write Data Valid
 
-                   // Write data signals            
-                   input  wire [(DATA_WIDTH-1):0]wr_DATA, // Input DATA
-                   
-                   // Write flags
-                   output wire wr_full,        // The FIFO memory is full
-                   output wire wr_almost_full, // The FIFO memory is almost full
+                        // Write data signals
+                        input  wire [(DATA_WIDTH-1):0]wr_DATA, // Input DATA
+                        
+                        // Write flags
+                        output wire wr_full,        // The FIFO memory is full
+                        output wire wr_almost_full, // The FIFO memory is almost full
 
-                   // Read control signals            
-                   input  wire clk_rd, // Read reference clock
-                   input  wire rd_en,  // Read enable
+                        // Read control signals            
+                        input  wire rd_en,  // Read enable
 
-                   // Read data signals            
-                   output wire [(DATA_WIDTH-1):0]rd_DATA, // Output DATA
-                   
-                   // Read flags
-                   output wire rd_empty,       // The FIFO memory is empty
-                   output wire rd_almost_empty // The FIFO memory is almost empty
-                  );
+                        // Read data signals            
+                        output wire [(DATA_WIDTH-1):0]rd_DATA, // Output DATA
+                        
+                        // Read flags
+                        output wire rd_empty,       // The FIFO memory is empty
+                        output wire rd_almost_empty // The FIFO memory is almost empty
+                       );
 
     localparam BRAM_MODE = 4-$clog2(DATA_WIDTH);
     localparam BRAM_SIZE = 256*(2**BRAM_MODE);
@@ -80,22 +78,23 @@ module FIFO_BRAM #(
                   .WDATA(wr_DATA), // [Input]
                   .WADDR(wr_addr), // [Input]
                   .WE(BRAM_WE),    // [Input]
-                  .WCLK(clk_wr),   // [Input]
+                  .WCLK(clk),   // [Input]
                   .WCLKE(BRAM_WE), // [Input]
 
                   // READ signals
                   .RDATA(rd_DATA), // [Output]
                   .RADDR(rd_addr), // [Input]
                   .RE(BRAM_RE),    // [Input]
-                  .RCLK(clk_rd),   // [Input]
+                  .RCLK(clk),   // [Input]
                   .RCLKE(BRAM_RE)  // [Input]
                  );
     /// End of BRAM init
 
     /// Regs and wires
-    reg [(ADDR_SIZE-1):0]wr_addr = 0; // Address where the DATA is going to be add
-    reg [(ADDR_SIZE-1):0]rd_addr = 0; // Address where the DATA is going to be read
-    reg [ADDR_SIZE:0]FIFO_size   = 0; // Current slots stored in the FIFO
+    reg [(ADDR_SIZE-1):0]wr_addr  = 0; // Address where the DATA is going to be add
+    reg [(ADDR_SIZE-1):0]rd_addr  = 0; // Address where the DATA is going to be read
+
+    reg [ADDR_SIZE:0]FIFO_size    = 0; // Current slots stored in the FIFO
     /// End of Regs and wires
 
     /// Assigns
@@ -108,20 +107,16 @@ module FIFO_BRAM #(
 
     /// Controller
     // FIFO_size counter controller
-    always @(posedge clk_wr or posedge clk_rd or negedge rst) begin
+    always @(posedge clk or negedge rst) begin
         if(!rst) FIFO_size <= 0;
         else if(wr_dv && !wr_full)  FIFO_size <= FIFO_size + 1'b1;
         else if(rd_en && !rd_empty) FIFO_size <= FIFO_size - 1'b1;
     end
 
     // Address controller
-    always @(posedge clk_wr or negedge rst) begin
+    always @(posedge clk or negedge rst) begin
         if(!rst) wr_addr <= 0;
         else if(wr_dv && !wr_full) wr_addr <= wr_addr + 1'b1;
-    end
-
-    always @(posedge clk_rd or negedge rst) begin
-        if(!rst) rd_addr <= 0;
         else if(rd_en && !rd_empty) rd_addr <= rd_addr + 1'b1;
     end
  

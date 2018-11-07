@@ -1,6 +1,6 @@
 /*
  *
- * Test bench for the FIFO_BRAM module
+ * Test bench for the FIFO_BRAM_SYNC module
  * Execute "make gtk" to view the results
  * 
  */
@@ -10,7 +10,7 @@
 
 `include "SB_RAM40_4K.vh"
 
-module FIFO_BRAM_tb ();
+module FIFO_BRAM_SYNC_tb ();
 
     /// Regs and wires
     wire wr_full;
@@ -26,20 +26,19 @@ module FIFO_BRAM_tb ();
     /// End of Regs and wires
 
     /// Module under test init
-    FIFO_BRAM     #(.ALMOST_FULL_VAL(8), .ALMOST_EMPTY_VAL(2))
-    FIFO_BRAM_mut  (
-                    .rst(rst),
-                    .clk_wr(clk),
-                    .wr_dv(wr_dv),
-                    .wr_DATA(DATA_in),
-                    .wr_full(wr_full),
-                    .wr_almost_full(wr_almost_full),
-                    .clk_rd(clk),
-                    .rd_en(rd_en),
-                    .rd_DATA(DATA_out),
-                    .rd_empty(rd_empty),
-                    .rd_almost_empty(rd_almost_empty)
-                   );
+    FIFO_BRAM_SYNC     #(.ALMOST_FULL_VAL(8), .ALMOST_EMPTY_VAL(2))
+    FIFO_BRAM_SYNC_mut  (
+                         .rst(rst),
+                         .clk(clk),
+                         .wr_dv(wr_dv),
+                         .wr_DATA(DATA_in),
+                         .wr_full(wr_full),
+                         .wr_almost_full(wr_almost_full),
+                         .rd_en(rd_en),
+                         .rd_DATA(DATA_out),
+                         .rd_empty(rd_empty),
+                         .rd_almost_empty(rd_almost_empty)
+                        );
     /// End of Module under test init
 
     /// Clock gen
@@ -49,7 +48,7 @@ module FIFO_BRAM_tb ();
 
     /// Simulation
     initial begin
-        $dumpfile("./sim/FIFO_BRAM_tb.vcd");
+        $dumpfile("./sim/FIFO_BRAM_SYNC_tb.vcd");
         $dumpvars();
 
         rst = 1;

@@ -1,0 +1,43 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Tue Nov  6 22:40:17 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/FIFO_BRAM_SYNC/sim/FIFO_BRAM_SYNC_tb.vcd"
+[dumpfile_mtime] "Tue Nov  6 22:39:12 2018"
+[dumpfile_size] 2871
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/FIFO_BRAM_SYNC/FIFO_BRAM_SYNC.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -1 -1
+*-8.000000 1268 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 222
+[signals_width] 214
+[sst_expanded] 1
+[sst_vpaned_height] 312
+@28
+FIFO_BRAM_SYNC_tb.rst
+FIFO_BRAM_SYNC_tb.clk
+@200
+-
+@28
+FIFO_BRAM_SYNC_tb.wr_dv
+@22
+FIFO_BRAM_SYNC_tb.DATA_in[7:0]
+@200
+-
+@28
+FIFO_BRAM_SYNC_tb.wr_full
+FIFO_BRAM_SYNC_tb.wr_almost_full
+@200
+-
+@28
+FIFO_BRAM_SYNC_tb.rd_en
+@22
+FIFO_BRAM_SYNC_tb.DATA_out[7:0]
+@200
+-
+@28
+FIFO_BRAM_SYNC_tb.rd_empty
+FIFO_BRAM_SYNC_tb.rd_almost_empty
+[pattern_trace] 1
+[pattern_trace] 0
