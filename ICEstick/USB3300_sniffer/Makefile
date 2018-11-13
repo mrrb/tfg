@@ -1,37 +1,64 @@
-FNAME := top
-
+M_NAME    := top
+Y_NAME	  := USB3300_sniffer
+  
 TB_DIR    := ./tb
 RTL_DIR   := ./rtl
 SIM_DIR   := ./sim
+PRE_DIR   := ./
 BUILD_DIR := ./build
 
 all: sim sint
 
-sim: $(SIM_DIR)/$(FNAME)_tb.out
+sim: $(SIM_DIR)/$(M_NAME)_tb.out
 	$^
 
-$(SIM_DIR)/$(FNAME)_tb.out: $(TB_DIR)/$(FNAME)_tb.v $(RTL_DIR)/$(FNAME).v
+$(SIM_DIR)/$(M_NAME)_tb.out: $(TB_DIR)/$(M_NAME)_tb.v $(RTL_DIR)/$(M_NAME).v
 	mkdir -p $(SIM_DIR)/
-	iverilog $^ -o $(SIM_DIR)/$(FNAME)_tb.out
+	iverilog $(patsubst %, %, $^) -o $(SIM_DIR)/$(M_NAME)_tb.out -I ./modules_simulation -I ./modules
 
-gtk: $(SIM_DIR)/$(FNAME)_tb.vcd
-	gtkwave $< &
+gtk: $(SIM_DIR)/$(M_NAME)_tb.vcd
+	gtkwave $< $(M_NAME).gtkw &
 
-$(SIM_DIR)/$(FNAME)_tb.vcd: $(SIM_DIR)/$(FNAME)_tb.out
+$(SIM_DIR)/$(M_NAME)_tb.vcd: $(SIM_DIR)/$(M_NAME)_tb.out
 	$<
 
-sint: $(BUILD_DIR)/$(FNAME).bin
+sint: $(BUILD_DIR)/$(M_NAME).bin
 
-$(BUILD_DIR)/$(FNAME).bin: $(RTL_DIR)/$(FNAME).v $(RTL_DIR)/$(FNAME).pcf
+$(BUILD_DIR)/$(M_NAME).bin: $(RTL_DIR)/$(M_NAME).v $(RTL_DIR)/$(M_NAME).pcf
 	mkdir -p $(BUILD_DIR)/
-	yosys -p "synth_ice40 -blif $(BUILD_DIR)/$(FNAME).blif" $<
-	arachne-pnr -d 1k -p $(RTL_DIR)/$(FNAME).pcf $(BUILD_DIR)/$(FNAME).blif -o $(BUILD_DIR)/$(FNAME).txt
-	icepack $(BUILD_DIR)/$(FNAME).txt $(BUILD_DIR)/$(FNAME).bin
+	# -retime -abc2
+	yosys -p "synth_ice40 -top $(Y_NAME) -blif $(BUILD_DIR)/$(M_NAME).blif -json $(BUILD_DIR)/$(M_NAME).json; \
+			  write_verilog $(BUILD_DIR)/$(M_NAME)_yosys.v; \
+			  write_table $(BUILD_DIR)/$(M_NAME)_table.csv;" \
+		  $< -d -l $(BUILD_DIR)/yosys.log
+	# --freq 100.5
+	nextpnr-ice40 --hx1k --save $(BUILD_DIR)/$(M_NAME).proj \
+				  --json $(BUILD_DIR)/$(M_NAME).json \
+				  --pcf  $(RTL_DIR)/$(M_NAME).pcf \
+				  --asc  $(BUILD_DIR)/$(M_NAME).asc
+	# arachne-pnr -d 1k -P tq144 -p $(RTL_DIR)/$(M_NAME).pcf $(BUILD_DIR)/$(M_NAME).blif -o $(BUILD_DIR)/$(M_NAME).asc
+	icepack $(BUILD_DIR)/$(M_NAME).asc $(BUILD_DIR)/$(M_NAME).bin
+
+plot: $(RTL_DIR)/$(M_NAME).v
+	mkdir -p $(BUILD_DIR)/
+	yosys -q -p "show -stretch -prefix $(BUILD_DIR)/diagram -colors 1133557799 -format dot;" $^
+
+gui: sint
+	nextpnr-ice40 --hx1k \
+				  --json $(BUILD_DIR)/$(M_NAME).json \
+				  --pcf $(RTL_DIR)/$(M_NAME).pcf \
+				  --asc $(BUILD_DIR)/$(M_NAME).asc \
+				  --gui
 
 prog: sint
-	iceprog $(BUILD_DIR)/$(FNAME).bin
+	iceprog $(BUILD_DIR)/$(M_NAME).bin
+
+timing: sint
+	icetime -t -d hx1k -p $(RTL_DIR)/top.pcf -P tq144 -c 100.5 \
+			-o $(BUILD_DIR)/timing_report \
+			$(BUILD_DIR)/$(M_NAME).asc
 
 clean:
-	rm -fdr ./$(SIM_DIR) *.vcd ./$(BUILD_DIR)
+	rm -fdr ./$(SIM_DIR) ./$(BUILD_DIR)
 
-.PHONY: all sim gtk clean
+.PHONY: all sim gtk clean sint prog timing plot gui
