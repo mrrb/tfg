@@ -81,9 +81,9 @@
     wire [7:0]Tx_DATA, Tx_DATA_in;  // OUT/IN DATA
     wire rd_empty, rd_almost_empty; // Read flags
 
-    assign Tx_DATA_in = I_DATA;
     assign wr_dv      = send_data;
     assign rd_en      = !rd_empty && !TiP;
+    assign Tx_DATA_in = I_DATA;
     FIFO_BRAM_SYNC Tx_buffer (
                               // System signals
                               .rst(rst),
@@ -112,7 +112,7 @@
     /// End of 512bytes buffer
 
     /// Shift register init
-    // Module master control clock
+    // Shift register control clock
     wire clk_shift;
     assign clk_shift = (Tx_s_LOAD) ? clk : clk_Tx;
 
@@ -148,7 +148,7 @@
 
     // Control registers
     reg [1:0]Tx_state_r   = 2'b0; // Register that stores the current Tx state
-    reg [3:0]Tx_counter_r = 4'b0; // Register that count how many bits has been already sent
+    reg [3:0]Tx_counter_r = 4'b0; // Register that counts how many bits has been already sent
 
     // Flags
     wire Tx_s_IDLE;  // HIGH if Tx_state_r == Tx_IDLE,  else LOW
@@ -169,7 +169,7 @@
     localparam Tx_IDLE  = 2'b00;
     localparam Tx_LOAD  = 2'b01;
     localparam Tx_TRANS = 2'b10;
-    /// End of Tx
+    /// End of Tx States
 
     /// Tx controller
     // States
@@ -194,7 +194,7 @@
     end
 
     // Bit counter
-    // Each time a UART_Tx bit is transmit, this register will increment
+    // Each time a UART_Tx bit is transmit, this register will increment by one
     always @(posedge clk) begin
         if(Tx_s_LOAD) Tx_counter_r <= 4'b0;
         else if(clk_shift && Tx_s_TRANS) Tx_counter_r <= Tx_counter_r + 1'b1;

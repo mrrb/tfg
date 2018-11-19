@@ -10,7 +10,8 @@
 
 `define ASYNC_RESET
 
-`include "./modules_simulation/SB_RAM40_4K.vh"
+// `include "SB_RAM40_4K.vh"
+`include "cells_sim.v"
 
 module UART_tb ();
 

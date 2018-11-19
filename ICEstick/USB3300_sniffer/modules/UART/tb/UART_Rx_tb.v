@@ -10,7 +10,8 @@
 
 `define ASYNC_RESET
 
-`include "./modules_simulation/SB_RAM40_4K.vh"
+// `include "SB_RAM40_4K.vh"
+`include "cells_sim.v"
 
 module UART_Rx_tb ();
 
@@ -23,6 +24,7 @@ module UART_Rx_tb ();
 
     reg Rx  = 1'b1;
     reg rst = 1'b1;
+    reg NxT = 1'b0;
     /// End of Regs and wires
 
     /// Module under test init
@@ -33,6 +35,7 @@ module UART_Rx_tb ();
                   .clk_Rx(clk_Rx),
                   .Rx(Rx),
                   .O_DATA(DATA_out),
+                  .NxT(NxT),
                   .NrD(NrD),
                   .Rx_FULL(Rx_FULL),
                   .Rx_EMPTY(Rx_EMPTY)
@@ -45,6 +48,7 @@ module UART_Rx_tb ();
     /// End of Clock gen
 
     /// Simulation
+    integer i = 0;
     initial begin
         $dumpfile("./sim/UART_Rx_tb.vcd");
         $dumpvars();
@@ -77,6 +81,21 @@ module UART_Rx_tb ();
         #104 Rx = 1; // Bit 0
         #104 Rx = 1; // Bit 1
         #104 Rx = 1; // Bit 2
+        #104 Rx = 1; // Bit 3
+        #104 Rx = 0; // Bit 4
+        #104 Rx = 1; // Bit 5
+        #104 Rx = 0; // Bit 6
+        #104 Rx = 1; // Bit 7
+        #104 Rx = 1; // STOP
+        #104
+
+        #1  NxT = 1;
+        #11 NxT = 0;
+
+        #104 Rx = 0; // START
+        #104 Rx = 1; // Bit 0
+        #104 Rx = 1; // Bit 1
+        #104 Rx = 1; // Bit 2
         rst = 0;
         #104 Rx = 1; // Bit 3
         #104 Rx = 1; // Bit 4
@@ -87,7 +106,25 @@ module UART_Rx_tb ();
         #104 Rx = 1; // STOP
         #104
 
-        #1 $finish;
+        // Full FIFO size Test
+        // for(i=0; i<512; i=i+1) begin
+        //     #104 Rx = 0; // START
+        //     #104 Rx = i[0]; // Bit 0
+        //     #104 Rx = i[1]; // Bit 1
+        //     #104 Rx = i[2]; // Bit 2
+        //     #104 Rx = i[3]; // Bit 3
+        //     #104 Rx = i[4]; // Bit 4
+        //     #104 Rx = i[5]; // Bit 5
+        //     #104 Rx = i[6]; // Bit 6
+        //     #104 Rx = i[7]; // Bit 7
+        //     #104 Rx = 1; // STOP
+        //     #104;
+        // end
+
+        // #2   NxT = 1;
+        // #512 NxT = 0;
+
+        #10 $finish;
     end
     /// End of Simulation
 

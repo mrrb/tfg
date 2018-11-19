@@ -10,7 +10,8 @@
 
 `define ASYNC_RESET
 
-`include "./modules_simulation/SB_RAM40_4K.vh"
+// `include "SB_RAM40_4K.vh"
+`include "cells_sim.v"
 
 module UART_Tx_tb ();
 
@@ -45,6 +46,7 @@ module UART_Tx_tb ();
     /// End of Clock gen
 
     /// Simulation
+    integer i = 0;
     initial begin
         $dumpfile("./sim/UART_Tx_tb.vcd");
         $dumpvars();
@@ -69,7 +71,14 @@ module UART_Tx_tb ();
         #550
         rst = 1;
 
-        #1 $finish;
+        // Full FIFO size Test
+        // for(i=0; i<513; i=i+1) begin
+        //     #1 send_data = 1; DATA_in = i;
+        //     #1 send_data = 0;
+        // end
+        // #564300
+
+        #10 $finish;
     end
     /// End of Simulation
 
