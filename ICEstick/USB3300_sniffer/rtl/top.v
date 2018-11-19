@@ -131,7 +131,8 @@
     // assign IO_bank1 = UART_DATA_out;
 
     assign UART_DATA_in = UART_DATA_out;
-    assign UART_send    = UART_NrD;
+    assign UART_send    = !UART_Rx_EMPTY;
+    assign UART_NxT     = !UART_Rx_EMPTY;
 ///
 
 
@@ -177,29 +178,36 @@
     wire [7:0]UART_DATA_in;
     wire [7:0]UART_DATA_out;
     wire UART_send;
-    wire UART_TiP, UART_NrD;
-    wire UART_Rx_clk, UART_Tx_clk;
+    wire UART_TiP, UART_NrD;         // 
+    wire UART_NxT;
+    wire UART_Tx_FULL;                // Tx buffer status signals
+    wire UART_Rx_FULL, UART_Rx_EMPTY; // Rx buffer status signals
+    wire UART_Rx_clk, UART_Tx_clk;    // UART Rx/Tx clocks
 
     UART #(.BAUDS(`B115200))
     UART  (
            // System signals
-           .rst(rst),              // [Input]
-           .clk(clk_ice),          // [Input]
+           .rst(rst),               // [Input]
+           .clk(clk_ice),           // [Input]
 
            // UART signals
-           .Rx(UART_Rx),           // [Input]
-           .Tx(UART_Tx),           // [Output]
-           .clk_Rx(UART_Rx_clk),   // [Output]
-           .clk_Tx(UART_Tx_clk),   // [Output]
+           .Rx(UART_Rx),            // [Input]
+           .Tx(UART_Tx),            // [Output]
+           .clk_Rx(UART_Rx_clk),    // [Output]
+           .clk_Tx(UART_Tx_clk),    // [Output]
 
            // Data signals
-           .I_DATA(UART_DATA_in),  // [Input]
-           .O_DATA(UART_DATA_out), // [Output]
+           .I_DATA(UART_DATA_in),   // [Input]
+           .O_DATA(UART_DATA_out),  // [Output]
 
            // Control signals
-           .send_data(UART_send),  // [Input]
-           .TiP(UART_TiP),         // [Output]
-           .NrD(UART_NrD)          // [Output]
+           .send_data(UART_send),   // [Input]
+           .NxT(UART_NxT),          // [Input]
+           .TiP(UART_TiP),          // [Output]
+           .NrD(UART_NrD),          // [Output]
+           .Tx_FULL(UART_Tx_FULL),  // [Output]
+           .Rx_FULL(UART_Rx_FULL),  // [Output]
+           .Rx_EMPTY(UART_Rx_EMPTY) // [Output]
           );
     /// End of UART init
 ///
