@@ -8,7 +8,10 @@
 `default_nettype none
 `timescale 100ns/10ns
 
-`include "SB_RAM40_4K.vh"
+`define ASYNC_RESET
+
+// `include "SB_RAM40_4K.vh"
+`include "cells_sim.v"
 
 module FIFO_BRAM_SYNC_tb ();
 
@@ -26,7 +29,7 @@ module FIFO_BRAM_SYNC_tb ();
     /// End of Regs and wires
 
     /// Module under test init
-    FIFO_BRAM_SYNC     #(.ALMOST_FULL_VAL(8), .ALMOST_EMPTY_VAL(2))
+    FIFO_BRAM_SYNC     #(.FWFT_MODE(1))
     FIFO_BRAM_SYNC_mut  (
                          .rst(rst),
                          .clk(clk),
@@ -47,28 +50,38 @@ module FIFO_BRAM_SYNC_tb ();
     /// End of Clock gen
 
     /// Simulation
+    integer i = 0;
     initial begin
         $dumpfile("./sim/FIFO_BRAM_SYNC_tb.vcd");
         $dumpvars();
 
         rst = 1;
 
-        #2 DATA_in = 8'h18; wr_dv = 1;
-        #1 DATA_in = 8'h29;
-        #1 DATA_in = 8'h3A;
-        #1 DATA_in = 8'h4B;
-        #1 DATA_in = 8'h5C;
-        #1 DATA_in = 8'h6D;
-        #1 DATA_in = 8'h7E;
-        #1 DATA_in = 8'hBF;
+        #2
+        for(i=0; i<512; i=i+1) begin
+            #1 DATA_in = i; wr_dv = 1;
+        end
         #1 wr_dv = 0;
 
         #2 rd_en = 1;
-        #8 rd_en = 0;
+        #512 rd_en = 0;
 
-        #1.5 DATA_in = 8'h58; wr_dv = 1;
-        #0.5 wr_dv = 0;
-        #0.5 rd_en = 1;
+        #4 DATA_in = 0; wr_dv = 1;
+        for(i=1; i<25; i=i+1) begin
+            #1 DATA_in = i; wr_dv = 1; rd_en = 1;
+        end
+        #2 wr_dv = 0; rd_en = 0;
+
+        #2
+        for(i=0; i<25; i=i+1) begin
+            #1 DATA_in = i; wr_dv = 1;
+        end
+        #1 wr_dv = 0;
+
+        #2 rd_en = 1;
+        #1 rst = 0;
+        #1 rst = 1;
+        #35 rd_en = 0;
 
         #1 $finish;
     end
