@@ -1,0 +1,25 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Wed Nov  7 17:05:44 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/sim/top_tb.vcd"
+[dumpfile_mtime] "Wed Nov  7 16:38:19 2018"
+[dumpfile_size] 194944
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/top.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -1 -1
+*-8.951129 148 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top_tb.
+[sst_width] 222
+[signals_width] 154
+[sst_expanded] 1
+[sst_vpaned_height] 303
+@28
+top_tb.USB3300_sniffer.clk_ctrl
+top_tb.USB3300_sniffer.clk_ice
+top_tb.USB3300_sniffer.clk_test
+@200
+-
+[pattern_trace] 1
+[pattern_trace] 0
