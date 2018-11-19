@@ -17,3 +17,7 @@ ___
 * __01/10/2018__ - _Añadido módulo SPI (SPI\_COMM) que comunique el PC con la FPGA [V1]. TB incluido._
 * __06/10/2018__ - _Añadidos archivos de cabecera para los módulos._
 * __06/10/2018__ - _Retoques y solución de pequeños fallos en los módulos._
+* __19/11/2018__ - _UART con buffer en Rx & Tx._
+* __19/11/2018__ - _FIFO\_BRAM\_SYNC & FIFO\_REG._
+* __19/11/2018__ - _Sync & Async reset config._
+* __19/11/2018__ - _Ya no se utiliza arachne-pnr, ahora es nextpnr-ice40._
