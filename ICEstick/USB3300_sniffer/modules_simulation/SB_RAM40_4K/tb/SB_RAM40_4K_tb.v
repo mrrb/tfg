@@ -4,13 +4,13 @@
 module SB_RAM40_4K_tb ();
 
     /// Regs and wires
-    wire [7:0]rd_DATA;
+    wire [15:0]rd_DATA;
 
     reg WE = 0;
     reg RE = 0;
-    reg [7:0]wr_DATA = 0;
-    reg [8:0]wr_addr = 0;
-    reg [8:0]rd_addr = 0;
+    reg [15:0]wr_DATA = 0;
+    reg [10:0]wr_addr = 0;
+    reg [10:0]rd_addr = 0;
     /// End of Regs and wires
 
     /// Module under test init
