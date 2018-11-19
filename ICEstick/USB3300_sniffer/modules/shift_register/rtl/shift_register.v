@@ -25,6 +25,11 @@
 
 `default_nettype none
 
+`ifdef ASYNC_RESET
+    `define SHIFT_REGISTER_ASYNC_RESET or negedge rst
+`else
+    `define SHIFT_REGISTER_ASYNC_RESET
+`endif
 
 module shift_register #(
                         parameter BITS = 8 // Size of the shift register
@@ -65,7 +70,7 @@ module shift_register #(
     /// End of Modes
 
     /// Controller
-    always @(posedge clk) begin
+    always @(posedge clk `SHIFT_REGISTER_ASYNC_RESET) begin
         if(!rst) begin
             DATA_r <= {BITS{1'b0}};
             bit_out_r <= 1'b0;
@@ -73,6 +78,7 @@ module shift_register #(
         else begin
             case(mode)
                 SR_MODE_WAIT: begin
+                    DATA_r <= 0;
                 end
                 SR_MODE_SHIFT_LEFT: begin
                     DATA_r <= {DATA_r[BITS-2:0], bit_in};
@@ -86,6 +92,7 @@ module shift_register #(
                     DATA_r <= DATA_IN;
                 end
                 default: begin
+                    DATA_r <= 0;
                 end
             endcase
         end

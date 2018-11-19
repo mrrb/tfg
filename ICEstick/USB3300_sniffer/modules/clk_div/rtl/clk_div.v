@@ -18,6 +18,12 @@
 
 `default_nettype none
 
+`ifdef ASYNC_RESET
+    `define CLK_DIV_ASYNC_RESET
+`else
+    `define CLK_DIV_ASYNC_RESET
+`endif
+
 module clk_div #(
                  parameter DIVIDER = 5  // Optimal counter value 
                 )

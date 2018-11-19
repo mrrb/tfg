@@ -18,6 +18,12 @@
 
 `default_nettype none
 
+`ifdef ASYNC_RESET
+    `define CLK_BAUD_PULSE_ASYNC_RESET
+`else
+    `define CLK_BAUD_PULSE_ASYNC_RESET
+`endif
+
 `include "./rtl/bauds.vh"
 
 module clk_baud_pulse #(

@@ -1,7 +1,7 @@
 /*
  *
  * FIFO_REG module
- * This module 
+ * This module generates a SYNCHRONOUS FIFO memory based on registers.
  *
  *  1 2 3 4 5
  *  _ _ _ _ _ 
@@ -35,6 +35,11 @@
 
 `default_nettype none
 
+`ifdef ASYNC_RESET
+    `define FIFO_REG_ASYNC_RESET or negedge rst
+`else
+    `define FIFO_REG_ASYNC_RESET
+`endif
 
 module FIFO_REG #(
                   parameter DATA_WIDTH = 4,
@@ -94,14 +99,14 @@ module FIFO_REG #(
 
     /// Controller
     // FIFO_size counter controller
-    always @(posedge clk or negedge rst) begin
+    always @(posedge clk `FIFO_REG_ASYNC_RESET) begin
         if(!rst) FIFO_size <= 0;
         else if(wr_dv && !wr_full)  FIFO_size <= FIFO_size + 1'b1;
         else if(rd_en && !rd_empty) FIFO_size <= FIFO_size - 1'b1;
     end
 
     // Address controller
-    always @(posedge clk or negedge rst) begin
+    always @(posedge clk `FIFO_REG_ASYNC_RESET) begin
         if(!rst) begin
             wr_addr <= 0;
             rd_addr <= 0;
@@ -111,7 +116,7 @@ module FIFO_REG #(
     end
 
     // FIFO controller
-    always @(posedge clk or negedge rst) begin
+    always @(posedge clk `FIFO_REG_ASYNC_RESET) begin
         if(!rst) FIFO_r[0] <= 0;
         else if(wr_dv && !wr_full)  FIFO_r[wr_addr] <= wr_DATA;
         else if(rd_en && !rd_empty) rd_DATA_r <= FIFO_r[rd_addr];
