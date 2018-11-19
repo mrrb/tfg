@@ -13,7 +13,7 @@ sim: $(SIM_DIR)/$(M_NAME)_tb.out
 
 $(SIM_DIR)/$(M_NAME)_tb.out: $(TB_DIR)/$(M_NAME)_tb.v $(RTL_DIR)/$(M_NAME).v
 	mkdir -p $(SIM_DIR)/
-	cd ../.. && iverilog $(patsubst %, $(PRE_DIR)/%, $^) -o $(PRE_DIR)/$(SIM_DIR)/$(M_NAME)_tb.out -I ./modules
+	cd ../.. && iverilog $(patsubst %, $(PRE_DIR)/%, $^) -o $(PRE_DIR)/$(SIM_DIR)/$(M_NAME)_tb.out -I ./modules -I ./modules_simulation
 
 gtk: $(SIM_DIR)/$(M_NAME)_tb.vcd
 	gtkwave $< $(M_NAME).gtkw &

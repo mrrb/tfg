@@ -8,12 +8,18 @@
 `default_nettype none
 `timescale 100ns/10ns
 
+`define ASYNC_RESET
+
+`include "./modules_simulation/SB_RAM40_4K.vh"
+
 module UART_Rx_tb ();
 
     /// Regs and wires
     wire clk_Rx;
     wire [7:0]DATA_out;
     wire NrD;
+    wire Rx_FULL;
+    wire Rx_EMPTY;
 
     reg Rx  = 1'b1;
     reg rst = 1'b1;
@@ -27,7 +33,9 @@ module UART_Rx_tb ();
                   .clk_Rx(clk_Rx),
                   .Rx(Rx),
                   .O_DATA(DATA_out),
-                  .NrD(NrD)
+                  .NrD(NrD),
+                  .Rx_FULL(Rx_FULL),
+                  .Rx_EMPTY(Rx_EMPTY)
                  );
     /// End of Module under test init
 

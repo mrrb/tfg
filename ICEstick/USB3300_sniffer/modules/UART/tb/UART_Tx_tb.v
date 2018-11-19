@@ -8,12 +8,17 @@
 `default_nettype none
 `timescale 100ns/10ns
 
+`define ASYNC_RESET
+
+`include "./modules_simulation/SB_RAM40_4K.vh"
+
 module UART_Tx_tb ();
 
     /// Regs and wires
     wire clk_Tx;
     wire Tx;
     wire TiP;
+    wire FULL;
 
     reg rst = 1'b1;
     reg [7:0]DATA_in = 8'b0;
@@ -29,7 +34,8 @@ module UART_Tx_tb ();
                   .Tx(Tx),
                   .I_DATA(DATA_in),
                   .send_data(send_data),
-                  .TiP(TiP)
+                  .TiP(TiP),
+                  .Tx_FULL(FULL)
                  );
     /// End of Module under test init
 
@@ -50,6 +56,11 @@ module UART_Tx_tb ();
         #1 send_data = 1; DATA_in = 8'hAA;
         #1 send_data = 0;
         #1100
+
+        #1 send_data = 1; DATA_in = 8'hF3;
+        #1 DATA_in = 8'h0D;
+        #1 send_data = 0;
+        #2200
 
         #1 send_data = 1; DATA_in = 8'hAA;
         #1 send_data = 0;

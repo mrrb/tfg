@@ -21,6 +21,12 @@
 
 `default_nettype none
 
+`ifdef ASYNC_RESET
+    `define UART_RX_ASYNC_RESET or negedge rst
+`else
+    `define UART_RX_ASYNC_RESET
+`endif
+
 `include "./rtl/bauds.vh"
 
 `include "./modules/clk_baud_pulse.vh"
@@ -42,7 +48,9 @@
                   output wire [7:0]O_DATA, // 8-bits data received
 
                   // Control signals
-                  output wire NrD          // New received Data flag
+                  output wire NrD,         // New received Data flag
+                  output wire Rx_FULL,     // Internal buffer FULL flag
+                  output wire Rx_EMPTY     // Internal buffer EMPTY flag
                  );
 
     /// Reception clock generation
@@ -64,13 +72,15 @@
     wire clk_shift;
     assign clk_shift = (Rx_s_RECV) ? clk_Rx : 1'b0;
 
+    reg Rx_A_r, Rx_B_r;
     wire bit_in;
-    assign bit_in = Rx;
+    assign bit_in = Rx_B_r;
     
     wire [1:0]shift_mode;
     assign shift_mode = (Rx_s_RECV) ? 2'b10 : 2'b00;
 
-    reg [9:0]DATA_in = 10'b0;
+    wire [9:0]DATA_in;
+    assign DATA_in = 10'b0;
 
     wire bit_out;
     wire [9:0]DATA_out;
@@ -117,7 +127,7 @@
 
     /// Rx controller
     // States
-    always @(posedge clk) begin
+    always @(posedge clk `UART_RX_ASYNC_RESET) begin
         if(!rst) Rx_state_r <= Rx_IDLE;
         else begin
             case(Rx_state_r)
@@ -140,9 +150,22 @@
         end
     end
 
-    always @(posedge clk) begin
+    // Metastability solver
+    always @(posedge clk `UART_RX_ASYNC_RESET) begin
+        if(!rst) begin
+            Rx_A_r <= 1'b0;
+            Rx_B_r <= 1'b0;
+        end
+        else if(!Rx_s_IDLE) begin
+            Rx_A_r <= Rx;
+            Rx_B_r <= Rx_A_r;
+        end
+    end
+
+    // Output Data
+    always @(posedge clk `UART_RX_ASYNC_RESET) begin
         if(!rst) O_DATA_r <= 8'b0;
-        else if(Rx_s_SAVE) O_DATA_r <= DATA_out[8:1];
+        else if(Rx_s_RECV && Rx_counter_r == 4'd10) O_DATA_r <= DATA_out[8:1];
     end
 
     // Bit counter
