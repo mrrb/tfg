@@ -1,0 +1,62 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Wed Nov 21 21:30:43 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/sim/ULPI_REG_WRITE_tb.vcd"
+[dumpfile_mtime] "Wed Nov 21 21:30:34 2018"
+[dumpfile_size] 2303
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/ULPI_REG_WRITE.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -1 -1
+*-6.000000 194 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 222
+[signals_width] 234
+[sst_expanded] 1
+[sst_vpaned_height] 302
+@28
+ULPI_REG_WRITE_tb.rst
+ULPI_REG_WRITE_tb.clk12
+ULPI_REG_WRITE_tb.clk60
+@200
+-
+@28
+ULPI_REG_WRITE_tb.PrW
+ULPI_REG_WRITE_tb.status[1:0]
+@200
+-
+@c00022
+ULPI_REG_WRITE_tb.ADDR[5:0]
+@28
+(0)ULPI_REG_WRITE_tb.ADDR[5:0]
+(1)ULPI_REG_WRITE_tb.ADDR[5:0]
+(2)ULPI_REG_WRITE_tb.ADDR[5:0]
+(3)ULPI_REG_WRITE_tb.ADDR[5:0]
+(4)ULPI_REG_WRITE_tb.ADDR[5:0]
+(5)ULPI_REG_WRITE_tb.ADDR[5:0]
+@1401200
+-group_end
+@22
+ULPI_REG_WRITE_tb.REG_VAL[7:0]
+@200
+-
+@28
+ULPI_REG_WRITE_tb.DIR
+ULPI_REG_WRITE_tb.NXT
+@c00022
+ULPI_REG_WRITE_tb.DATA[7:0]
+@28
+(0)ULPI_REG_WRITE_tb.DATA[7:0]
+(1)ULPI_REG_WRITE_tb.DATA[7:0]
+(2)ULPI_REG_WRITE_tb.DATA[7:0]
+(3)ULPI_REG_WRITE_tb.DATA[7:0]
+(4)ULPI_REG_WRITE_tb.DATA[7:0]
+(5)ULPI_REG_WRITE_tb.DATA[7:0]
+(6)ULPI_REG_WRITE_tb.DATA[7:0]
+(7)ULPI_REG_WRITE_tb.DATA[7:0]
+@1401200
+-group_end
+@28
+ULPI_REG_WRITE_tb.STP
+[pattern_trace] 1
+[pattern_trace] 0
