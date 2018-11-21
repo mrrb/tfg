@@ -7,7 +7,7 @@
  *  - BAUDS. Optimal counter value to generate the baud rate clock.
  *
  * Inputs:
- *  - rst. Synchronous reset signal [Active LOW].
+ *  - rst. Synchronous/Asynchronous reset signal [Active LOW].
  *  - clk. Reference clock.
  *  - Rx. Serial Data input.
  *  - Nxt. Next byte. It pull a byte (if available) from the internal FIFO.

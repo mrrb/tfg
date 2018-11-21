@@ -7,7 +7,7 @@
  *  - BAUDS. Optimal counter value to generate the baud rate clock. Definitions in rtl/bauds.vh.
  *
  * Inputs:
- *  - rst. Synchronous reset signal [Active LOW].
+ *  - rst. Synchronous/Asynchronous reset signal [Active LOW].
  *  - clk. Reference clock.
  *  - I_DATA. 8-bit Data that It's going to be sent.
  *  - send_data. Input signal that starts a serial transfer with the DATA in I_DATA.
