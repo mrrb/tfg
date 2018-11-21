@@ -45,6 +45,7 @@
     /// Reset signal
     wire rst;
     assign rst = 1'b1;
+    // assign ULPI_RST = !rst;
     /// End of Reset signal
 ///
 
@@ -110,7 +111,7 @@
 /// Test timer
     // Timer
     wire clk_test, clk_test_pulse;
-    clk_div #(.DIVIDER(21))
+    clk_div #(.DIVIDER(23))
     clk_div  (
               .clk_in(clk_ice), .clk_out(clk_test), .clk_pulse(clk_test_pulse), // Clock signals
               .enable(1'b1) // Control signals
@@ -126,7 +127,7 @@
     assign IO_bank1[1] = UART_Rx;
     assign IO_bank1[2] = UART_Tx_clk;
     assign IO_bank1[3] = UART_Rx_clk;
-    // assign IO_bank1[4] = clk_ctrl;
+    assign IO_bank1[4] = clk_ctrl;
 
     // assign IO_bank1 = UART_DATA_out;
 
@@ -135,6 +136,15 @@
     assign UART_NxT     = !UART_Rx_EMPTY;
 ///
 
+
+/// Test init
+    /// Test init
+    reg ctrl = 0;
+    always @(posedge clk_ice) begin
+        ctrl <= !ctrl;
+    end
+    /// End of Test init
+///
 
 /// PLL
     /// PLL init
@@ -216,27 +226,35 @@
 /// ULPI
     /// ULPI init
     // #MODULE_INIT ULPI
-    // DATA inout selector
-    wire [7:0]DATA_w; // Wire used to send data to the USB3300 ic
-    assign ULPI_DATA = (ULPI_DIR) ? 8'bz : DATA_w;
-    // End of DATA inout selector
+    wire ULPI_PrW; assign ULPI_PrW = 1'b1;
+    wire [5:0]ULPI_ADDR;
+    wire [7:0]ULPI_REG_VAL_W, ULPI_REG_VAL_R;
     ULPI ULPI (
-          // System signals
-          .rst(rst),          // [Input]
-          .clk_ice(clk_ice),  // [Input]
-          .clk_pll(clk_ctrl), // [Input]
+               // System signals
+               .rst(rst),
+               .clk_ice(clk_ice),
+               .clk_ULPI(clk_ULPI),
 
-          // Control signals 
+               // Control signals
+               .PrW(ULPI_PrW),
 
-          // ULPI signals
-          .DIR(ULPI_DIR),     // [Input]
-          .NXT(ULPI_NXT),     // [Input]
-          .DATA_I(ULPI_DATA), // [Input]
-          .DATA_O(DATA_w),    // [Output]
-          .STP(ULPI_STP),     // [Output]
-          .U_RST(ULPI_RST)    // [Output]
-         );
+               //Register signals
+               .ADDR(ULPI_ADDR),
+               .REG_VAL_W(ULPI_REG_VAL_W),
+               .REG_VAL_R(ULPI_REG_VAL_R),
+
+               // ULPI signals
+               .DIR(ULPI_DIR),
+               .NXT(ULPI_NXT),
+               .DATA(ULPI_DATA),
+               .STP(ULPI_STP),
+               .U_RST(ULPI_RST)
+              );
     /// End of ULPI init
 ///
+
+    /// Controllers
+
+    /// End of Controllers
 
 endmodule
