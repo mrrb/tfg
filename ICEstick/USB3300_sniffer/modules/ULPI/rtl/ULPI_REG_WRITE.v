@@ -8,7 +8,7 @@
  *  - rst. Synchronous/Asynchronous reset signal [Active LOW].
  *  - clk_ULPI. PHY external clock at 60MHz.
  *  - PrW. Perform register Write [Active HIGH].
- *  - ADDR. PHY address where the value will be stored.
+ *  - ADDR. PHY address where the value will be store.
  *  - REG_VAL. Value that is going to be stored in the PHY register.
  *  - DIR. ULPI DIR (DIRection) signal.
  *  - NXT. ULPI NXT (NeXT) signal.
@@ -75,7 +75,7 @@ module ULPI_REG_WRITE (
 
     // Control registers and wires
     reg [1:0]ULPI_RW_state_r = 2'b0; // Register that stores the current ULPI_RW state
-    reg [7:0]DATA_O_buff = 0;        // Buffer that stores the 8-bit DATA sent over the bus
+    reg [7:0]DATA_O_buff     = 0;    // Buffer that stores the 8-bit DATA sent over the bus
 
     wire [7:0]TXCMD;
 
