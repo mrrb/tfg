@@ -1,0 +1,56 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Thu Nov 22 19:57:01 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/sim/ULPI_REG_READ_tb.vcd"
+[dumpfile_mtime] "Thu Nov 22 19:56:54 2018"
+[dumpfile_size] 2337
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/ULPI_REG_READ.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -1 -1
+*-5.432468 161 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] ULPI_REG_READ_tb.
+[sst_width] 222
+[signals_width] 208
+[sst_expanded] 1
+[sst_vpaned_height] 302
+@28
+ULPI_REG_READ_tb.rst
+ULPI_REG_READ_tb.clk60
+@200
+-
+@28
+ULPI_REG_READ_tb.PrR
+ULPI_REG_READ_tb.busy
+@200
+-
+@22
+ULPI_REG_READ_tb.ADDR[5:0]
+ULPI_REG_READ_tb.REG_VAL[7:0]
+@200
+-
+@28
+ULPI_REG_READ_tb.DIR
+ULPI_REG_READ_tb.NXT
+@c00022
+ULPI_REG_READ_tb.DATA[7:0]
+@28
+(0)ULPI_REG_READ_tb.DATA[7:0]
+(1)ULPI_REG_READ_tb.DATA[7:0]
+(2)ULPI_REG_READ_tb.DATA[7:0]
+(3)ULPI_REG_READ_tb.DATA[7:0]
+(4)ULPI_REG_READ_tb.DATA[7:0]
+(5)ULPI_REG_READ_tb.DATA[7:0]
+(6)ULPI_REG_READ_tb.DATA[7:0]
+(7)ULPI_REG_READ_tb.DATA[7:0]
+@1401200
+-group_end
+@28
+ULPI_REG_READ_tb.STP
+@200
+-
+@24
+ULPI_REG_READ_tb.ULPI_REG_READ_mut.ULPI_RR_state_r[2:0]
+[pattern_trace] 1
+[pattern_trace] 0
