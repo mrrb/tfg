@@ -76,6 +76,7 @@ module ULPI_REG_WRITE (
     // Control registers and wires
     reg [1:0]ULPI_RW_state_r = 2'b0; // Register that stores the current ULPI_RW state
     reg [7:0]DATA_O_buff     = 0;    // Buffer that stores the 8-bit DATA sent over the bus
+    reg [7:0]STP_buff        = 0;    // Buffer for STP signal
 
     wire [7:0]TXCMD;
 
@@ -91,7 +92,7 @@ module ULPI_REG_WRITE (
     assign ULPI_RW_s_DATA  = (ULPI_RW_state_r == ULPI_RW_DATA)  ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_RW_s_STOP  = (ULPI_RW_state_r == ULPI_RW_STOP)  ? 1'b1 : 1'b0; // #FLAG
 
-    assign STP = ULPI_RW_s_STOP;   // #OUTPUT
+    assign STP = STP_buff;         // #OUTPUT
     assign busy = !ULPI_RW_s_IDLE; // #OUTPUT
     assign DATA_O = DATA_O_buff;   // #OUTPUT
 
@@ -120,8 +121,9 @@ module ULPI_REG_WRITE (
                     else    ULPI_RW_state_r <= ULPI_RW_TXCMD;
                 end
                 ULPI_RW_DATA: begin
-                    if(NXT) ULPI_RW_state_r <= ULPI_RW_STOP;
-                    else    ULPI_RW_state_r <= ULPI_RW_DATA;
+                    // if(NXT) ULPI_RW_state_r <= ULPI_RW_STOP;
+                    // else    ULPI_RW_state_r <= ULPI_RW_DATA;
+                    ULPI_RW_state_r <= ULPI_RW_STOP;
                 end
                 ULPI_RW_STOP: begin
                     ULPI_RW_state_r <= ULPI_RW_IDLE;
@@ -138,6 +140,13 @@ module ULPI_REG_WRITE (
         else if(ULPI_RW_s_TXCMD) DATA_O_buff <= TXCMD;
         else if(ULPI_RW_s_DATA)  DATA_O_buff <= REG_VAL;
         else if(ULPI_RW_s_STOP)  DATA_O_buff <= 0;
+    end
+
+    // STP controller
+    always @(negedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
+        if(!rst)                 STP_buff <= 1'b0;
+        else if(ULPI_RW_s_STOP)  STP_buff <= 1'b1;
+        else                     STP_buff <= 1'b0;
     end
     /// End of ULPI_RW controller
 
