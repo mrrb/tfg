@@ -21,8 +21,8 @@
  *
  * States:
  *  - ULPI_RW_IDLE.  The module is waiting to do a register write (This occurs when PrW is asserted for at least 1 PHY clock pulse). 
- *  - ULPI_RW_TXCMD. The LINK sends the TXCMD over the ULPI DATA bus until the PHY asserts STP.
- *  - ULPI_RW_DATA.  The link sends the DATA over the ULPI DATA bus until the PHY asserts STP.
+ *  - ULPI_RW_TXCMD. The LINK sends the TXCMD over the ULPI DATA bus until the PHY asserts NXT.
+ *  - ULPI_RW_DATA.  The link sends the DATA over the ULPI DATA bus.
  *  - ULPI_RW_STOP.  The STP signal is activated, indicating the end of the transition.
  */
 
