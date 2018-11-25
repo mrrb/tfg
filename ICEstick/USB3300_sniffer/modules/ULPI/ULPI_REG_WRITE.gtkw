@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Sat Nov 24 15:51:32 2018
+[*] Sun Nov 25 01:11:11 2018
 [*]
 [dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/sim/ULPI_REG_WRITE_tb.vcd"
-[dumpfile_mtime] "Sat Nov 24 15:51:09 2018"
-[dumpfile_size] 2755
+[dumpfile_mtime] "Sun Nov 25 01:11:01 2018"
+[dumpfile_size] 2675
 [savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/ULPI_REG_WRITE.gtkw"
 [timestart] 0
 [size] 1920 1052
 [pos] -1 -1
-*-6.000000 160 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.000000 150 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] ULPI_REG_WRITE_tb.
 [sst_width] 222
 [signals_width] 234
 [sst_expanded] 1
-[sst_vpaned_height] 312
+[sst_vpaned_height] 344
 @28
 ULPI_REG_WRITE_tb.rst
 ULPI_REG_WRITE_tb.clk12
@@ -41,6 +41,8 @@ ULPI_REG_WRITE_tb.ADDR[5:0]
 ULPI_REG_WRITE_tb.REG_VAL[7:0]
 @200
 -
+@29
+ULPI_REG_WRITE_tb.clk60
 @28
 ULPI_REG_WRITE_tb.DIR
 ULPI_REG_WRITE_tb.NXT
@@ -57,11 +59,13 @@ ULPI_REG_WRITE_tb.DATA[7:0]
 (7)ULPI_REG_WRITE_tb.DATA[7:0]
 @1401200
 -group_end
-@29
+@28
 ULPI_REG_WRITE_tb.STP
 @200
 -
 @24
 ULPI_REG_WRITE_tb.ULPI_REG_WRITE_mut.ULPI_RW_state_r[1:0]
+@28
+ULPI_REG_WRITE_tb.ULPI_REG_WRITE_mut.NXT_r
 [pattern_trace] 1
 [pattern_trace] 0

@@ -62,13 +62,24 @@ module ULPI_REG_READ (
 
     /// ULPI_RR Regs and wires
     // Inputs
+    // [2, output change on NEGEDGE]
+    reg [5:0]ADDR_r = 0;
+    always @(posedge clk_ULPI `ULPI_RR_ASYNC_RESET) begin
+        if(!rst) ADDR_r <= 0;
+        else if(PrR) ADDR_r <= ADDR;
+    end
+
+    reg NXT_r = 0;
+    always @(negedge clk_ULPI `ULPI_RR_ASYNC_RESET) begin
+        if(!rst) NXT_r <= 0;
+        else if(!ULPI_RR_s_IDLE) NXT_r <= NXT;
+        else NXT_r <= 0;
+    end
 
     // Control registers and wires
     reg [2:0]ULPI_RR_state_r = 3'b0; // Register that stores the current ULPI_RR state
     reg [7:0]DATA_O_buff     = 0;    // Buffer that stores the 8-bit DATA sent over the bus
     reg [7:0]REG_VAL_buff    = 0;    // Buffer that stores the 8-bit value read from the PHY
-
-    wire [7:0]TXCMD;
 
     // Flags
     wire ULPI_RR_s_IDLE;  // HIGH if ULPI_RR_state_r == ULPI_RR_IDLE,  else LOW
@@ -88,8 +99,6 @@ module ULPI_REG_READ (
     assign busy    = !ULPI_RR_s_IDLE; // #OUTPUT
     assign DATA_O  = DATA_O_buff;     // #OUTPUT
     assign REG_VAL = REG_VAL_buff;    // #OUTPUT
-
-    assign TXCMD = {CMD_HEADER, ADDR}; // #CONTROL
     /// End of ULPI_RR Regs and wires
 
     /// ULPI_RR States (See module description at the beginning of this file to get more info)
@@ -111,29 +120,64 @@ module ULPI_REG_READ (
                     else    ULPI_RR_state_r <= ULPI_RR_IDLE;
                 end
                 ULPI_RR_TXCMD: begin
-                    if(NXT) ULPI_RR_state_r <= ULPI_RR_WAIT1;
+                    if(NXT_r) ULPI_RR_state_r <= ULPI_RR_WAIT1;
                     else    ULPI_RR_state_r <= ULPI_RR_TXCMD;
                 end
-                ULPI_RR_WAIT1: ULPI_RR_state_r <= ULPI_RR_READ;
-                ULPI_RR_READ:  ULPI_RR_state_r <= ULPI_RR_WAIT2;
-                ULPI_RR_WAIT2: ULPI_RR_state_r <= ULPI_RR_IDLE;
+                ULPI_RR_WAIT1: begin
+                    ULPI_RR_state_r <= ULPI_RR_READ;
+                end
+                ULPI_RR_READ: begin
+                    ULPI_RR_state_r <= ULPI_RR_WAIT2;
+                end
+                ULPI_RR_WAIT2: begin
+                    ULPI_RR_state_r <= ULPI_RR_IDLE;
+                end
                 default: ULPI_RR_state_r <= ULPI_RR_IDLE;
             endcase
         end
     end
 
-    // Register value output controller
-    always @(posedge clk_ULPI `ULPI_RR_ASYNC_RESET) begin
-        if(!rst)                REG_VAL_buff <= 0;
+    // Outputs [1, output change on POSEDGE]
+    // always @(posedge clk_ULPI `ULPI_RR_ASYNC_RESET) begin
+    //     if(!rst) DATA_O_buff <= 0;
+    //     else begin
+    //         case(ULPI_RR_state_r)
+    //             ULPI_RR_IDLE: begin
+    //                 if(PrR) DATA_O_buff <= {CMD_HEADER, ADDR};
+    //                 else    DATA_O_buff <= 0;
+    //             end
+    //             ULPI_RR_TXCMD: begin
+    //                 DATA_O_buff <= DATA_O_buff;
+    //             end
+    //             ULPI_RR_WAIT1: begin
+    //                 DATA_O_buff <= 0;
+    //             end
+    //             ULPI_RR_READ: begin
+    //                 DATA_O_buff <= 0;
+    //             end
+    //             ULPI_RR_WAIT2: begin
+    //                 DATA_O_buff <= 0;
+    //             end
+    //             default: DATA_O_buff <= 0;
+    //         endcase
+    //     end
+    // end
+
+    // Outputs [2, output change on NEGEDGE]
+    always @(negedge clk_ULPI `ULPI_RR_ASYNC_RESET) begin
+        if(!rst)                 DATA_O_buff <= 0;
+        else if(ULPI_RR_s_TXCMD) DATA_O_buff <= {CMD_HEADER, ADDR_r};
+        else if(ULPI_RR_s_WAIT1) DATA_O_buff <= DATA_O_buff;
+        else                     DATA_O_buff <= 0;
+    end
+
+    // // Register value
+    always @(negedge clk_ULPI `ULPI_RR_ASYNC_RESET) begin
+        if(!rst) REG_VAL_buff <= 0;
         else if(ULPI_RR_s_READ) REG_VAL_buff <= DATA_I;
     end
 
-    // DATA Output controller
-    always @(negedge clk_ULPI `ULPI_RR_ASYNC_RESET) begin
-        if(!rst)                 DATA_O_buff <= 0;
-        else if(ULPI_RR_s_TXCMD) DATA_O_buff <= TXCMD;
-        else                     DATA_O_buff <= 0;
-    end
+
     /// End of ULPI_RR controller
 
 endmodule

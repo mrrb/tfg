@@ -59,18 +59,18 @@ module ULPI_REG_WRITE_tb ();
         // Test 0 (AN 19.17)
         #0.2 PrW = 1;
         #0.2 PrW = 0;
-        #0.15 NXT = 1;
-        #0.3 NXT = 0;
+        #0.1 NXT = 1;
+        #0.4 NXT = 0;
 
         #0.4
 
         ADDR = 6'h2F;
-        REG_VAL = 8'hB9;
+        REG_VAL = 8'hBA;
 
         // Test 1
         #0.2 PrW = 1;
         #0.2 PrW = 0;
-        #0.15 NXT = 1;
+        #0.1 NXT = 1;
         #0.4 NXT = 0;
         
         #0.4
@@ -78,7 +78,7 @@ module ULPI_REG_WRITE_tb ();
         // Test 2
         #0.2 PrW = 1;
         #0.2 PrW = 0;
-        #0.15 NXT = 1;
+        #0.1 NXT = 1;
         rst = 0;
         #0.1 rst = 1;
         #0.3 NXT = 0;
@@ -91,8 +91,8 @@ module ULPI_REG_WRITE_tb ();
         // Test 3
         #0.2 PrW = 1;
         #0.2 PrW = 0;
-        #0.15 NXT = 1;
-        #0.3 NXT = 0;
+        #0.1 NXT = 1;
+        #0.4 NXT = 0;
         
         #1 $finish;
     end

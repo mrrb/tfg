@@ -61,6 +61,7 @@ module ULPI_REG_WRITE (
 
     /// ULPI_RW Regs and wires
     // Inputs
+    // [2, output change on NEGEDGE]
     reg [5:0]ADDR_r = 0;
     always @(posedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
         if(!rst) ADDR_r <= 0;
@@ -73,12 +74,17 @@ module ULPI_REG_WRITE (
         else if(PrW) REG_VAL_r <= REG_VAL;
     end
 
+    reg NXT_r = 0;
+    always @(negedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
+        if(!rst) NXT_r <= 0;
+        else if(!ULPI_RW_s_IDLE) NXT_r <= NXT;
+        else NXT_r <= 0;
+    end
+
     // Control registers and wires
     reg [1:0]ULPI_RW_state_r = 2'b0; // Register that stores the current ULPI_RW state
     reg [7:0]DATA_O_buff     = 0;    // Buffer that stores the 8-bit DATA sent over the bus
-    reg [7:0]STP_buff        = 0;    // Buffer for STP signal
-
-    wire [7:0]TXCMD;
+    reg STP_buff             = 0;    // Buffer fot the STP output control signal
 
     // Flags
     wire ULPI_RW_s_IDLE;  // HIGH if ULPI_RW_state_r == ULPI_RW_IDLE,  else LOW
@@ -92,11 +98,9 @@ module ULPI_REG_WRITE (
     assign ULPI_RW_s_DATA  = (ULPI_RW_state_r == ULPI_RW_DATA)  ? 1'b1 : 1'b0; // #FLAG
     assign ULPI_RW_s_STOP  = (ULPI_RW_state_r == ULPI_RW_STOP)  ? 1'b1 : 1'b0; // #FLAG
 
-    assign STP = STP_buff;         // #OUTPUT
-    assign busy = !ULPI_RW_s_IDLE; // #OUTPUT
-    assign DATA_O = DATA_O_buff;   // #OUTPUT
-
-    assign TXCMD = {CMD_HEADER, ADDR_r}; // #CONTROL
+    assign DATA_O = DATA_O_buff;     // #OUTPUT
+    assign busy   = !ULPI_RW_s_IDLE; // #OUTPUT
+    assign STP    = STP_buff;        // #OUTPUT
     /// End of ULPI_RW Regs and wires
 
     /// ULPI_RW States (See module description at the beginning of this file to get more info)
@@ -117,13 +121,12 @@ module ULPI_REG_WRITE (
                     else    ULPI_RW_state_r <= ULPI_RW_IDLE;
                 end
                 ULPI_RW_TXCMD: begin
-                    if(NXT) ULPI_RW_state_r <= ULPI_RW_DATA;
-                    else    ULPI_RW_state_r <= ULPI_RW_TXCMD;
+                    if(NXT_r) ULPI_RW_state_r <= ULPI_RW_DATA;
+                    else      ULPI_RW_state_r <= ULPI_RW_TXCMD;
                 end
                 ULPI_RW_DATA: begin
-                    // if(NXT) ULPI_RW_state_r <= ULPI_RW_STOP;
-                    // else    ULPI_RW_state_r <= ULPI_RW_DATA;
-                    ULPI_RW_state_r <= ULPI_RW_STOP;
+                    if(NXT_r) ULPI_RW_state_r <= ULPI_RW_STOP;
+                    else      ULPI_RW_state_r <= ULPI_RW_DATA;
                 end
                 ULPI_RW_STOP: begin
                     ULPI_RW_state_r <= ULPI_RW_IDLE;
@@ -133,20 +136,65 @@ module ULPI_REG_WRITE (
         end
     end
 
-    // Output controller
+    // Outputs [1, output change on POSEDGE]
+    // always @(posedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
+    //     if(!rst) DATA_O_buff <= 0;
+    //     else begin
+    //         case(ULPI_RW_state_r)
+    //             ULPI_RW_IDLE: begin
+    //                 if(PrW) DATA_O_buff <= {CMD_HEADER, ADDR};
+    //                 else    DATA_O_buff <= 0;
+    //             end
+    //             ULPI_RW_TXCMD: begin
+    //                 if(NXT_r) DATA_O_buff <= REG_VAL_r;
+    //                 else      DATA_O_buff <= DATA_O_buff;
+    //             end
+    //             ULPI_RW_DATA: begin
+    //                 if(NXT_r) DATA_O_buff <= 0;
+    //                 else      DATA_O_buff <= DATA_O_buff;
+    //             end
+    //             ULPI_RW_STOP: begin
+    //                 DATA_O_buff <= 0;
+    //             end
+    //             default: DATA_O_buff <= 0;
+    //         endcase
+    //     end
+    // end
+
+    // always @(posedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
+    //     if(!rst) STP_buff <= 1'b0;
+    //     else begin
+    //         case(ULPI_RW_state_r)
+    //             ULPI_RW_IDLE: begin
+    //                 STP_buff <= 1'b0;
+    //             end
+    //             ULPI_RW_TXCMD: begin
+    //                 STP_buff <= 1'b0;
+    //             end
+    //             ULPI_RW_DATA: begin
+    //                 if(NXT_r) STP_buff <= 1'b1;
+    //                 else      STP_buff <= 1'b0;
+    //             end
+    //             ULPI_RW_STOP: begin
+    //                 STP_buff <= 1'b0;
+    //             end
+    //             default: STP_buff <= 1'b0;
+    //         endcase
+    //     end
+    // end
+
+    // Outputs [2, output change on NEGEDGE]
     always @(negedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
         if(!rst)                 DATA_O_buff <= 0;
-        else if(ULPI_RW_s_IDLE)  DATA_O_buff <= 0;
-        else if(ULPI_RW_s_TXCMD) DATA_O_buff <= TXCMD;
-        else if(ULPI_RW_s_DATA)  DATA_O_buff <= REG_VAL;
-        else if(ULPI_RW_s_STOP)  DATA_O_buff <= 0;
+        else if(ULPI_RW_s_TXCMD) DATA_O_buff <= {CMD_HEADER, ADDR_r};
+        else if(ULPI_RW_s_DATA)  DATA_O_buff <= REG_VAL_r;
+        else                     DATA_O_buff <= 0;
     end
 
-    // STP controller
     always @(negedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
-        if(!rst)                 STP_buff <= 1'b0;
-        else if(ULPI_RW_s_STOP)  STP_buff <= 1'b1;
-        else                     STP_buff <= 1'b0;
+        if(!rst)                STP_buff <= 1'b0;
+        else if(ULPI_RW_s_STOP) STP_buff <= 1'b1;
+        else                    STP_buff <= 1'b0;
     end
     /// End of ULPI_RW controller
 

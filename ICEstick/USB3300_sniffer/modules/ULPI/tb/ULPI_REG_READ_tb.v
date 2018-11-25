@@ -53,30 +53,40 @@ module ULPI_REG_READ_tb ();
 
         #0.4 rst = 1;
         
+        // Test 0 (AN 19.17)
+        PrR = 1; ADDR = 6'h16;
+        #0.2 PrR = 0;
+        #0.1 NXT = 1;
+        #0.2 NXT = 0; DIR = 1;
+        #0.2 DATA_I = 8'hBA;
+        #0.2 DIR = 0;
+
+        #0.4
+        
         // Test 1
         PrR = 1; ADDR = 6'h1F;
         #0.2 PrR = 0;
-        #0.4 NXT = 1;
+        #0.1 NXT = 1;
         #0.2 NXT = 0; DIR = 1;
         #0.2 DATA_I = 8'hAC;
         #0.2 DIR = 0;
 
-        #0.2
+        #0.4
 
         // Test 2
         PrR = 1; ADDR = 6'h1F;
         #0.2 PrR = 0;
-        #0.4 NXT = 1;
+        #0.1 NXT = 1;
         #0.2 NXT = 0; DIR = 1; rst = 0;
         #0.2 DATA_I = 8'hAC; rst = 1;
         #0.2 DIR = 0;
 
-        #0.2
+        #0.4
 
         // Test 3
         PrR = 1; ADDR = 6'h1B;
         #0.2 PrR = 0;
-        #0.4 NXT = 1;
+        #0.1 NXT = 1;
         #0.2 NXT = 0; DIR = 1;
         #0.2 DATA_I = 8'hAC;
         #0.2 DIR = 0;
