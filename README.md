@@ -21,3 +21,6 @@ ___
 * __19/11/2018__ - _FIFO\_BRAM\_SYNC & FIFO\_REG._
 * __19/11/2018__ - _Sync & Async reset config._
 * __19/11/2018__ - _Ya no se utiliza arachne-pnr, ahora es nextpnr-ice40._
+* __22/11/2018__ - _Añadido módulo ULPI de escritura de registros._
+* __24/11/2018__ - _Añadido módulo ULPI de lectura de registros._
+* __25/11/2018__ - _Añadido módulo ULPI de control._
