@@ -111,9 +111,16 @@
 /// Test timer
     // Timer
     wire clk_test, clk_test_pulse;
-    clk_div #(.DIVIDER(23))
+    clk_div #(.DIVIDER(24))
     clk_div  (
               .clk_in(clk_ice), .clk_out(clk_test), .clk_pulse(clk_test_pulse), // Clock signals
+              .enable(1'b1) // Control signals
+             );
+
+    wire clk_test2, clk_test_pulse2;
+    clk_div #(.DIVIDER(24))
+    clk_div2  (
+              .clk_in(clk_ULPI), .clk_out(clk_test2), .clk_pulse(clk_test_pulse2), // Clock signals
               .enable(1'b1) // Control signals
              );
 ///
@@ -121,13 +128,13 @@
 
 /// Test assigns
     assign IO_LEDs[0] = clk_test;
-    assign IO_LEDs[1] = rst;
+    assign IO_LEDs[1] = clk_test2;
 
-    assign IO_bank1[0] = UART_Tx;
-    assign IO_bank1[1] = UART_Rx;
-    assign IO_bank1[2] = UART_Tx_clk;
-    assign IO_bank1[3] = UART_Rx_clk;
-    assign IO_bank1[4] = clk_ctrl;
+    // assign IO_bank1[0] = UART_Tx;
+    // assign IO_bank1[1] = UART_Rx;
+    // assign IO_bank1[2] = UART_Tx_clk;
+    // assign IO_bank1[3] = UART_Rx_clk;
+    // assign IO_bank1[4] = clk_ctrl;
 
     // assign IO_bank1 = UART_DATA_out;
 
@@ -226,9 +233,14 @@
 /// ULPI
     /// ULPI init
     // #MODULE_INIT ULPI
-    wire ULPI_PrW; assign ULPI_PrW = 1'b1;
+    wire ULPI_PrW, ULPI_PrR, ULPI_NrD;
+    assign ULPI_PrW = 1'b0;
+    assign ULPI_PrW = 1'b1;
+    wire [2:0]ULPI_status;
     wire [5:0]ULPI_ADDR;
+    assign ULPI_ADDR = 6'h16;
     wire [7:0]ULPI_REG_VAL_W, ULPI_REG_VAL_R;
+    assign ULPI_REG_VAL_W = 8'hA5;
     ULPI ULPI (
                // System signals
                .rst(rst),
@@ -236,19 +248,22 @@
                .clk_ULPI(clk_ULPI),
 
                // Control signals
-               .PrW(ULPI_PrW),
+               .PrW(ULPI_PrW), // [Input]
+               .PrR(ULPI_PrR), // [Input]
+               .NrD(ULPI_NrD), // [Output]
+               .status(ULPI_status), // [Output]
 
                //Register signals
-               .ADDR(ULPI_ADDR),
-               .REG_VAL_W(ULPI_REG_VAL_W),
-               .REG_VAL_R(ULPI_REG_VAL_R),
+               .ADDR(ULPI_ADDR), // [Input]
+               .REG_VAL_W(ULPI_REG_VAL_W), // [Input]
+               .REG_VAL_R(ULPI_REG_VAL_R), // [Output]
 
                // ULPI signals
-               .DIR(ULPI_DIR),
-               .NXT(ULPI_NXT),
-               .DATA(ULPI_DATA),
-               .STP(ULPI_STP),
-               .U_RST(ULPI_RST)
+               .DIR(ULPI_DIR), // [Input]
+               .NXT(ULPI_NXT), // [Input]
+               .DATA(ULPI_DATA), // [Inout]
+               .STP(ULPI_STP), // [Output]
+               .U_RST(ULPI_RST) // [Output]
               );
     /// End of ULPI init
 ///
