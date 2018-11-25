@@ -1,7 +1,7 @@
 /*
  *
  * ULPI_REG_READ module
- * This module let the FPGA read a register inside a ULPI capable PHY device (usb3300 in this case)
+ * This module lets the FPGA read a register inside a ULPI capable PHY device (usb3300 in this case)
  *
  *
  * Inputs:
