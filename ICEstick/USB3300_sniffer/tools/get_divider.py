@@ -4,8 +4,9 @@
 import sys
 import math as m
 
-def get_optimal_val(clk, time):
-    return m.ceil(clk*time)
+def get_optimal_val(clk, time, clean=1):
+    if(clean == 0): return clk*time
+    else: return m.ceil(clk*time)
 
 def get_min_divider(clk, time):
     # T = clk /(2^n)
@@ -24,7 +25,8 @@ def print_help(name):
           " -b: Print the minimal divider value for a given clock (arg1) and Serial baudrate (arg2).",
           " -d: Print the minimal divider value for a given clock (arg1) and time (arg2).",
           " -t: Print the time (and serial baudrate) for a given clock (arg1) and divider (arg2).",
-          " -c: Print the clock for a given time (arg1) and divider (arg2).",
+          " -a: Print, for a given clock (arg1), all the possible periods that can be generated between 0 and arg2.", 
+          " -c: Print the clock for a given time (arg1) and divider (arg2).", 
           sep='\n')
     sys.exit()
 
@@ -32,11 +34,12 @@ if __name__ == "__main__":
     arg   = sys.argv
     name  = arg.pop(0)
     l     = len(arg)
-    modes = {'o':False, 'b':False, 'd':False, 't':False, 'c':False} # o -> Print the optimal counter value [clk, baudrate];
-                                                                    # b -> Print the minimal divider value [clk, baudrate];
-                                                                    # d -> Print the minimal divider value [clk, time];
-                                                                    # t -> print time for a given divider and clk [clk, div]
-                                                                    # c -> print clock for a given time and divider [time, div]
+    modes = {'o':False, 'b':False, 'd':False, 't':False, # o -> Print the optimal counter value [clk, baudrate];
+             'a':False, 'c':False}                       # b -> Print the minimal divider value [clk, baudrate];
+                                                         # d -> Print the minimal divider value [clk, time];
+                                                         # t -> print time for a given divider and clk [clk, div]
+                                                         # a -> print all possible [clk, divs]
+                                                         # c -> print clock for a given time and divider [time, div]
 
     modes_count = 0
     for i in modes:
@@ -82,3 +85,7 @@ if __name__ == "__main__":
         elif(modes['c']):
             clk = get_clock(arg[0], arg[1])
             print('Clock: {}Hz'.format(clk))
+
+        elif(modes['a']):
+            for d in range(int(arg[1])+1):
+                print('Divider: {} => {}s'.format(d, time_from_divider(arg[0], d)))
