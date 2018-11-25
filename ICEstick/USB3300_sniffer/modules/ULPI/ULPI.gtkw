@@ -1,0 +1,65 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Sun Nov 25 01:55:33 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/sim/ULPI_tb.vcd"
+[dumpfile_mtime] "Sun Nov 25 01:55:03 2018"
+[dumpfile_size] 4563
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/ULPI.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -1 -1
+*-5.951128 150 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] ULPI_tb.
+[treeopen] ULPI_tb.ULPI_mut.
+[sst_width] 222
+[signals_width] 203
+[sst_expanded] 1
+[sst_vpaned_height] 312
+@28
+ULPI_tb.ULPI_mut.rst
+ULPI_tb.ULPI_mut.clk_ice
+ULPI_tb.ULPI_mut.clk_ULPI
+@200
+-
+@28
+ULPI_tb.ULPI_mut.PrW
+ULPI_tb.ULPI_mut.PrR
+ULPI_tb.ULPI_mut.NrD
+ULPI_tb.ULPI_mut.status[2:0]
+@200
+-
+@c00022
+ULPI_tb.ULPI_mut.ADDR[5:0]
+@28
+(0)ULPI_tb.ULPI_mut.ADDR[5:0]
+(1)ULPI_tb.ULPI_mut.ADDR[5:0]
+(2)ULPI_tb.ULPI_mut.ADDR[5:0]
+(3)ULPI_tb.ULPI_mut.ADDR[5:0]
+(4)ULPI_tb.ULPI_mut.ADDR[5:0]
+(5)ULPI_tb.ULPI_mut.ADDR[5:0]
+@1401200
+-group_end
+@22
+ULPI_tb.ULPI_mut.REG_VAL_W[7:0]
+ULPI_tb.ULPI_mut.REG_VAL_R[7:0]
+@200
+-
+@29
+ULPI_tb.ULPI_mut.clk_ULPI
+@28
+ULPI_tb.ULPI_mut.DIR
+@22
+ULPI_tb.DATA[7:0]
+@28
+ULPI_tb.ULPI_mut.NXT
+ULPI_tb.ULPI_mut.STP
+ULPI_tb.ULPI_mut.U_RST
+@200
+-
+@28
+ULPI_tb.ULPI_mut.RW_busy
+ULPI_tb.ULPI_mut.RR_busy
+ULPI_tb.ULPI_mut.RECV_busy
+[pattern_trace] 1
+[pattern_trace] 0
