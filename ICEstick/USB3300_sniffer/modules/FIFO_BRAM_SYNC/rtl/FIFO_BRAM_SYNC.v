@@ -6,6 +6,7 @@
  * Parameters:
  *  - ALMOST_FULL. Ratio* that makes wr_almost_full HIGH (ALMOST_FULL to 1). [Default: 0.9]
  *  - ALMOST_EMPTY. Ratio* that makes rd_almost_empty LOW (0 to ALMOST_EMPTY). [Default: 0.1]
+ *  - DATA_WIDTH. Size of each cell. [Default: 8-bits]
  *  - FWFT_MODE. First Word Fall Through (1 > enable, 0 > disable). [ToDo]
  *  *Value = RATIO*BRAM_SIZE
  *
@@ -41,7 +42,8 @@
 module FIFO_BRAM_SYNC #(
                         parameter ALMOST_FULL  = 0.9,
                         parameter ALMOST_EMPTY = 0.1,
-                        parameter FWFT_MODE    = 1    // ToDo
+                        parameter DATA_WIDTH   = `FIFO_BRAM_8,
+                        parameter FWFT_MODE    = 1 // ToDo
                        )
                        (
                         // System signals
@@ -69,7 +71,6 @@ module FIFO_BRAM_SYNC #(
                         output wire rd_almost_empty // The FIFO memory is almost empty flag
                        );
 
-    localparam DATA_WIDTH = `FIFO_BRAM_8;         // Size of each cell [Default: 8-bits]
     localparam BRAM_MODE  = 4-$clog2(DATA_WIDTH); // ICE40 BRAM mode
     localparam BRAM_SIZE  = 256*(2**BRAM_MODE);   // Maximum number of bytes that can be stored in the FIFO
     localparam ADDR_SIZE  = $clog2(BRAM_SIZE);    // Bits of the address
@@ -84,34 +85,69 @@ module FIFO_BRAM_SYNC #(
     /// End of Error control
 
     /// BRAM init
-    wire [(DATA_WIDTH-1):0]BRAM_DATA_wr, BRAM_DATA_rd; // ICE40 BRAM ADDRESSES after 
-    wire  [(ADDR_SIZE-1):0]BRAM_ADDR_wr, BRAM_ADDR_rd; // ICE40 BRAM DATA after the selection of the wanted bits from the BRAM
+    wire [(DATA_WIDTH-1):0]BRAM_DATA_wr, BRAM_DATA_rd; // ICE40 BRAM DATA
+    wire  [(ADDR_SIZE-1):0]BRAM_ADDR_wr, BRAM_ADDR_rd; // ICE40 BRAM ADDRESSES
     wire BRAM_WE, BRAM_RE;
 
-    wire [(DATA_WIDTH-1):0]DW, DR;  // Shorter names for the DATA I/O
-    wire [(DATA_WIDTH-1):0]_NULLR_; // Null vector for the READ DATA
+    wire [(DATA_WIDTH-1):0]DW, DR;     // Shorter names for the DATA I/O
+    wire [(16-DATA_WIDTH-1):0]_NULLR_; // Null vector for the READ DATA
     assign DW = BRAM_DATA_wr; // Input assignment
     assign BRAM_DATA_rd = DR; // Output assignment
+
+    // BRAM block mask generator
+    wire [15:0]WDATA_temp, RDATA_temp;
+    wire [10:0]WADDR_temp, RADDR_temp;
+    generate
+        if(BRAM_MODE == 0) begin
+            assign WDATA_temp = DW;
+            assign DR = RDATA_temp;
+            assign WADDR_temp = {3'b0, BRAM_ADDR_wr};
+            assign RADDR_temp = {3'b0, BRAM_ADDR_rd};
+        end
+        else if(BRAM_MODE == 1) begin
+            assign WDATA_temp = {1'hx, DW[7], 1'hx, DW[6], 1'hx, DW[5], 1'hx, DW[4], 
+                                 1'hx, DW[3], 1'hx, DW[2], 1'hx, DW[1], 1'hx, DW[0]};
+            assign {_NULLR_[7], DR[7], _NULLR_[6], DR[6], _NULLR_[5], DR[5], _NULLR_[4], DR[4],
+                    _NULLR_[3], DR[3], _NULLR_[2], DR[2], _NULLR_[1], DR[1], _NULLR_[0], DR[0]} = RDATA_temp;
+            assign WADDR_temp = {2'b0, BRAM_ADDR_wr};
+            assign RADDR_temp = {2'b0, BRAM_ADDR_rd};
+        end
+        else if(BRAM_MODE == 2) begin
+            assign WDATA_temp = {1'hx, DW[3], 1'hx, 1'hx, 1'hx, 1'hx, DW[2], 1'hx, 
+                                 1'hx, DW[1], 1'hx, 1'hx, 1'hx, 1'hx, DW[0], 1'hx};
+            assign {_NULLR_[11], _NULLR_[10], DR[3], _NULLR_[9], _NULLR_[8], _NULLR_[7], DR[2], _NULLR_[6],
+                    _NULLR_[5],  _NULLR_[4],  DR[1], _NULLR_[3], _NULLR_[2], _NULLR_[1], DR[0], _NULLR_[0]} = RDATA_temp;
+            assign WADDR_temp = {1'b0, BRAM_ADDR_wr};
+            assign RADDR_temp = {1'b0, BRAM_ADDR_rd};
+        end
+        else if(BRAM_MODE == 3) begin
+            assign WDATA_temp = {1'hx, 1'hx, 1'hx, 1'hx, DW[1], 1'hx, 1'hx, 1'hx, 
+                                 1'hx, 1'hx, 1'hx, 1'hx, DW[0], 1'hx, 1'hx, 1'hx};
+            assign {_NULLR_[13], _NULLR_[12], _NULLR_[11], _NULLR_[10], DR[1], _NULLR_[9], _NULLR_[8], _NULLR_[7],
+                    _NULLR_[6],  _NULLR_[5],  _NULLR_[4],  _NULLR_[3],  DR[0], _NULLR_[2], _NULLR_[1], _NULLR_[0]} = RDATA_temp;
+            assign WADDR_temp = {BRAM_ADDR_wr};
+            assign RADDR_temp = {BRAM_ADDR_rd};
+        end
+    endgenerate
+
     SB_RAM40_4K #(
                   .WRITE_MODE(BRAM_MODE), // DATA Width
                   .READ_MODE(BRAM_MODE)   // DATA Width
                  )
     FIFO_BRAM    (
                   // WRITE signals
-                  .WDATA({1'hx, DW[7], 1'hx, DW[6], 1'hx, DW[5], 1'hx, DW[4],
-                          1'hx, DW[3], 1'hx, DW[2], 1'hx, DW[1], 1'hx, DW[0]}), // [Input, 16bits]
-                  .WADDR({2'b0, BRAM_ADDR_wr}), // [Input, 11bits]
-                  .WE(BRAM_WE),                 // [Input]
-                  .WCLK(clk),                   // [Input]
-                  .WCLKE(BRAM_WE),              // [Input]
+                  .WDATA(WDATA_temp), // [Input, 16bits]
+                  .WADDR(WADDR_temp), // [Input, 11bits]
+                  .WE(BRAM_WE),       // [Input]
+                  .WCLK(clk),         // [Input]
+                  .WCLKE(BRAM_WE),    // [Input]
 
                   // READ signals
-                  .RDATA({_NULLR_[7], DR[7], _NULLR_[6], DR[6], _NULLR_[5], DR[5], _NULLR_[4], DR[4],
-                          _NULLR_[3], DR[3], _NULLR_[2], DR[2], _NULLR_[1], DR[1], _NULLR_[0], DR[0]}), // [Output, 16bits]
-                  .RADDR({2'b0, BRAM_ADDR_rd}), // [Input, 11bits]
-                  .RE(BRAM_RE),                 // [Input]
-                  .RCLK(!clk),                  // [Input]
-                  .RCLKE(BRAM_RE)               // [Input]
+                  .RDATA(RDATA_temp), // [Output, 16bits]
+                  .RADDR(RADDR_temp), // [Input, 11bits]
+                  .RE(BRAM_RE),       // [Input]
+                  .RCLK(!clk),        // [Input]
+                  .RCLKE(BRAM_RE)     // [Input]
                  );
     /// End of BRAM init
 
