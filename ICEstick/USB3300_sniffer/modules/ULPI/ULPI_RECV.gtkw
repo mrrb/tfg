@@ -1,0 +1,107 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Sun Dec  2 22:43:08 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/sim/ULPI_RECV_tb.vcd"
+[dumpfile_mtime] "Sun Dec  2 22:42:30 2018"
+[dumpfile_size] 30142
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/ULPI_RECV.gtkw"
+[timestart] 0
+[size] 1920 1050
+[pos] -1 -1
+*-6.432468 240 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] ULPI_RECV_tb.
+[treeopen] ULPI_RECV_tb.ULPI_RECV_mut.
+[sst_width] 222
+[signals_width] 231
+[sst_expanded] 1
+[sst_vpaned_height] 294
+@28
+ULPI_RECV_tb.rst
+ULPI_RECV_tb.clk12
+ULPI_RECV_tb.clk60
+@200
+-
+@28
+ULPI_RECV_tb.ULPI_RECV_mut.ReadAllow
+ULPI_RECV_tb.busy
+@200
+-
+@22
+ULPI_RECV_tb.ULPI_RECV_mut.RxCMD[7:0]
+@28
+ULPI_RECV_tb.ULPI_RECV_mut.RxLineState[1:0]
+ULPI_RECV_tb.ULPI_RECV_mut.RxVbusState[1:0]
+ULPI_RECV_tb.ULPI_RECV_mut.RxActive
+ULPI_RECV_tb.ULPI_RECV_mut.RxError
+ULPI_RECV_tb.ULPI_RECV_mut.RxHostDisconnect
+ULPI_RECV_tb.ULPI_RECV_mut.RxID
+@200
+-
+@28
+ULPI_RECV_tb.DIR
+ULPI_RECV_tb.NXT
+@22
+ULPI_RECV_tb.DATA[7:0]
+@28
+ULPI_RECV_tb.STP
+@200
+-
+@28
+ULPI_RECV_tb.ULPI_RECV_mut.ULPI_RECV_state_r[1:0]
+@22
+ULPI_RECV_tb.ULPI_RECV_mut.RxCMD_r[7:0]
+ULPI_RECV_tb.ULPI_RECV_mut.USB_DATA_r[7:0]
+@24
+ULPI_RECV_tb.ULPI_RECV_mut.DATA_COUNTER[9:0]
+@200
+-
+-DATA Buffer
+@28
+ULPI_RECV_tb.ULPI_RECV_mut.DATA_BUFF.wr_dv
+@22
+ULPI_RECV_tb.ULPI_RECV_mut.DATA_BUFF.wr_DATA[7:0]
+@28
+ULPI_RECV_tb.ULPI_RECV_mut.DATA_BUFF.rd_en
+@22
+ULPI_RECV_tb.ULPI_RECV_mut.DATA_BUFF.rd_DATA[7:0]
+@28
+ULPI_RECV_tb.ULPI_RECV_mut.DATA_BUFF.wr_full
+ULPI_RECV_tb.ULPI_RECV_mut.DATA_BUFF.rd_empty
+@200
+-
+-DATA info Buffer
+@28
+ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.wr_dv
+@22
+ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.wr_DATA[15:0]
+@28
+ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_en
+@c00022
+ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+@28
+(0)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(1)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(2)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(3)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(4)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(5)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(6)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(7)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(8)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(9)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(10)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(11)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(12)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(13)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(14)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+(15)ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_DATA[15:0]
+@1401200
+-group_end
+@28
+ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.wr_full
+ULPI_RECV_tb.ULPI_RECV_mut.INFO_BUFF.rd_empty
+@200
+-Simulation
+[pattern_trace] 1
+[pattern_trace] 0
