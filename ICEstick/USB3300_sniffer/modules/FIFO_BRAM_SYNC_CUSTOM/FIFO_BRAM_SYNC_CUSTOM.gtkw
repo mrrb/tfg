@@ -1,0 +1,61 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Sun Dec  2 02:41:44 2018
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/FIFO_BRAM_SYNC_CUSTOM/sim/FIFO_BRAM_SYNC_CUSTOM_tb.vcd"
+[dumpfile_mtime] "Sun Dec  2 02:40:39 2018"
+[dumpfile_size] 71076
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/FIFO_BRAM_SYNC_CUSTOM/FIFO_BRAM_SYNC_CUSTOM.gtkw"
+[timestart] 0
+[size] 1920 1050
+[pos] -101 -101
+*-13.000000 34360 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 207
+[signals_width] 167
+[sst_expanded] 1
+[sst_vpaned_height] 307
+@28
+FIFO_BRAM_SYNC_tb.rst
+FIFO_BRAM_SYNC_tb.clk
+@200
+-
+@28
+FIFO_BRAM_SYNC_tb.wr_dv
+FIFO_BRAM_SYNC_tb.rd_en
+@200
+-
+@c00023
+FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+@28
+(0)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(1)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(2)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(3)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(4)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(5)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(6)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(7)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(8)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(9)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(10)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(11)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(12)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(13)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(14)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+(15)FIFO_BRAM_SYNC_tb.DATA_in[15:0]
+@1401201
+-group_end
+@22
+FIFO_BRAM_SYNC_tb.DATA_out[15:0]
+@200
+-
+@28
+FIFO_BRAM_SYNC_tb.rd_empty
+FIFO_BRAM_SYNC_tb.rd_almost_empty
+@200
+-
+@28
+FIFO_BRAM_SYNC_tb.wr_full
+FIFO_BRAM_SYNC_tb.wr_almost_full
+[pattern_trace] 1
+[pattern_trace] 0

@@ -34,10 +34,13 @@
     `define FIFO_BRAM_SYNC_ASYNC_RESET
 `endif
 
-`define FIFO_BRAM_16 16
-`define FIFO_BRAM_8  8
-`define FIFO_BRAM_4  4
-`define FIFO_BRAM_2  2
+`ifndef FIFO_BRAM_S
+    `define FIFO_BRAM_16 16
+    `define FIFO_BRAM_8  8
+    `define FIFO_BRAM_4  4
+    `define FIFO_BRAM_2  2
+    `define FIFO_BRAM_S
+`endif
 
 module FIFO_BRAM_SYNC #(
                         parameter ALMOST_FULL  = 0.9,
