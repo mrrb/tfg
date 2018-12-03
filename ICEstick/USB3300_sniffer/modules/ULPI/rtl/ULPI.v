@@ -16,8 +16,9 @@
     `define ULPI_ASYNC_RESET
 `endif
 
-`include "./modules/ULPI_RW.vh" // ULPI_REG_WRITE submodule 
-`include "./modules/ULPI_RR.vh" // ULPI_REG_READ submodule
+`include "./modules/ULPI_RW.vh"   // ULPI_REG_WRITE submodule 
+`include "./modules/ULPI_RR.vh"   // ULPI_REG_READ submodule
+`include "./modules/ULPI_RECV.vh" // ULPI_RECV submodule
 
  module ULPI (
               // System signals
@@ -36,6 +37,25 @@
               input  wire [7:0]REG_VAL_W,
               output wire [7:0]REG_VAL_R,
 
+              // Rx states
+              output wire [7:0]RxCMD,
+              output wire [1:0]RxLineState,
+              output wire [1:0]RxVbusState,
+              output wire RxActive,
+              output wire RxError,
+              output wire RxHostDisconnect,
+              output wire RxID,
+
+              // Buffer control
+              input  wire DATA_re,
+              input  wire INFO_re,
+              output wire [7:0]USB_DATA,
+              output wire [15:0]USB_INFO_DATA,
+              output wire DATA_buff_full,
+              output wire DATA_buff_empty,
+              output wire INFO_buff_full,
+              output wire INFO_buff_empty,
+
               // ULPI signals
               input  wire DIR,       // ULPI DIR (DIRection) signal
               input  wire NXT,       // ULPI NXT (NeXT) signal
@@ -49,36 +69,18 @@
     /// End of ULPI reset
 
     /// DATA inout selector
-    reg [7:0]DATA_out; // Data generated in the FPGA (link)
+    wire [7:0]DATA_in;     // Wire from which read the incoming data
+    assign DATA_in = DATA; // This assign just  make things clearer later on
+
+    wire [7:0]DATA_out;    // Data generated in the FPGA (link)
     assign DATA = (DIR) ? 8'bz : DATA_out; // When the PHY has the ownership of the bus, the FPGA must have the inputs in a HIGH impedance mode
                                            // so there will not have any conflicts.
-    wire [7:0]DATA_in;
-    assign DATA_in = DATA;
     /// End of DATA inout selector
 
-    // /// Metastability solver
-    // // Check the reference doc FPGA_ICE40/wp-01082-quartus-ii-metastability.pdf for more info
-    // // (Or https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/wp/wp-01082-quartus-ii-metastability.pdf)
-    // reg [7:0]DATA_A, DATA_B;
-    // wire [7:0]DATA_in;
-    // assign DATA_in = DATA_B;
-
-    // always @(posedge clk_ULPI `ULPI_ASYNC_RESET) begin
-    //     if(!rst) begin
-    //         DATA_A <= 0;
-    //         DATA_B <= 0;
-    //     end
-    //     else if(DIR) begin
-    //         DATA_A <= DATA;
-    //         DATA_B <= DATA_A;
-    //     end
-    // end
-    // /// End of Metastability solver
-
     /// Reg_Write submodule init
-    wire RW_busy;
-    wire [7:0]DATA_out_RW;
-    wire STP_RW;
+    wire STP_RW;  // ULPI STP signal from the Register_Write submodule
+    wire RW_busy; // Signal that indicates the submodule Register_Write is currently active
+    wire [7:0]DATA_out_RW; // ULPI DATA signals from the Register_Write submodule
     ULPI_REG_WRITE ULPI_RW (
                             // System signals
                             .rst(rst),            // [Input]
@@ -102,9 +104,9 @@
     /// End of Reg_Write submodule init
 
     /// Reg_Read submodule init
-    wire RR_busy;
-    wire [7:0]DATA_out_RR;
-    wire STP_RR;
+    wire STP_RR;  // ULPI STP signal from the Register_Read submodule
+    wire RR_busy; // Signal that indicates the submodule Register_Read is currently active
+    wire [7:0]DATA_out_RR; // ULPI DATA signals from the Register_Read submodule
     ULPI_REG_READ ULPI_RR (
                            // System signals
                            .rst(rst),            // [Input]
@@ -128,17 +130,52 @@
     /// End of Reg_Read submodule init
 
     /// ULPI reciver submodule init
-    wire RECV_busy; assign RECV_busy = 0;
-    wire [7:0]DATA_out_RECV; assign DATA_out_RECV = 0;
-    wire STP_RECV; assign STP_RECV = 0;
+    wire RECV_busy;
+
+    wire [7:0]DATA_out_RECV; // ULPI DATA signals from the ULPI_receiver submodule
+    wire STP_RECV;  // ULPI STP signal from the ULPI_receiver submodule
+    ULPI_RECV ULPI_RV (
+                       // System signals
+                       .rst(rst), // [Input]
+                       .clk_ULPI(clk_ULPI), // [Input]
+
+                       // Control signals
+                       .ReadAllow(ULPI_s_IDLE), // [Input]
+                       .busy(RECV_busy),
+
+                       // Rx states
+                       .RxCMD(RxCMD), // [Output]
+                       .RxLineState(RxLineState), // [Output]
+                       .RxVbusState(RxVbusState), // [Output]
+                       .RxActive(RxActive), // [Output]
+                       .RxError(RxError), // [Output]
+                       .RxHostDisconnect(RxHostDisconnect), // [Output]
+                       .RxID(RxID), // [Output]
+
+                       // Buffer control
+                       .DATA_re(DATA_re), // [Input]
+                       .INFO_re(INFO_re), // [Input]
+                       .USB_DATA(USB_DATA), // [Output]
+                       .USB_INFO_DATA(USB_INFO_DATA), // [Output]
+                       .DATA_buff_full(DATA_buff_full), // [Output]
+                       .DATA_buff_empty(DATA_buff_empty), // [Output]
+                       .INFO_buff_full(INFO_buff_full), // [Output]
+                       .INFO_buff_empty(INFO_buff_empty), // [Output]
+
+                       // ULPI signals
+                       .DIR(DIR), // [Input]
+                       .NXT(NXT), // [Input]
+                       .DATA_I(DATA_in), // [Input]
+                       .DATA_O(DATA_out_RECV), // [Output]
+                       .STP(STP_RECV) // [Output]
+                      );
     /// End of ULPI reciver submodule init
 
     /// ULPI master controller
     // Regs and wires
     reg [2:0]ULPI_state_r = 0; // Register that stores the current ULPI_RR state
 
-    reg STP_r;
-
+    wire STP_out;
     wire ctrl_PrW;
     wire ctrl_PrR;
 
@@ -159,8 +196,8 @@
     assign ctrl_PrW = PrW && ULPI_s_IDLE && !DIR; // #CONTROL
     assign ctrl_PrR = PrR && ULPI_s_IDLE && !DIR; // #CONTROL
 
-    assign STP = STP_r; // #OUTPUT
-    assign status = ULPI_state_r - 1'b1; // #OUTPUT
+    assign STP = STP_out; // #OUTPUT
+    assign status = ULPI_state_r; // #OUTPUT
 
     // States
     localparam ULPI_START     = 0;
@@ -170,29 +207,14 @@
     localparam ULPI_REG_READ  = 4;
 
     // Output mux
-    always @(*) begin
-        if(ULPI_s_START)          DATA_out = 8'b0;
-        else if(ULPI_s_IDLE)      DATA_out = 8'b0;
-        else if(ULPI_s_REG_WRITE) DATA_out = DATA_out_RW;
-        else if(ULPI_s_REG_READ)  DATA_out = DATA_out_RR;
-        else if(ULPI_s_RECV)      DATA_out = DATA_out_RECV;
-    end
-
-    always @(*) begin
-        if(ULPI_s_START)          STP_r = 8'b1;
-        else if(ULPI_s_IDLE)      STP_r = 8'b0;
-        else if(ULPI_s_REG_WRITE) STP_r = STP_RW;
-        else if(ULPI_s_REG_READ)  STP_r = STP_RR;
-        else if(ULPI_s_RECV)      STP_r = STP_RECV;
-    end
     assign DATA_out = (ULPI_s_REG_WRITE) ? DATA_out_RW   :
                       (ULPI_s_REG_READ)  ? DATA_out_RR   :
                       (ULPI_s_RECV)      ? DATA_out_RECV : 8'b0;
                    
-    assign STP_r = (ULPI_s_START)     ? 8'b1     :
-                   (ULPI_s_REG_WRITE) ? STP_RW   :
-                   (ULPI_s_REG_READ)  ? STP_RR   :
-                   (ULPI_s_RECV)      ? STP_RECV : 1'b0;
+    assign STP_out  = (ULPI_s_START)     ? 1'b1     :
+                      (ULPI_s_REG_WRITE) ? STP_RW   :
+                      (ULPI_s_REG_READ)  ? STP_RR   :
+                      (ULPI_s_RECV)      ? STP_RECV : 1'b0;
 
     // State machine
     always @(posedge clk_ULPI `ULPI_ASYNC_RESET) begin
@@ -226,5 +248,15 @@
         end
     end
     /// End of ULPI master controller
+
+    // ///
+    // // RXACTIVE
+    // reg RxActive = 0;
+    // always @(negedge clk_ULPI `ULPI_ASYNC_RESET) begin
+    //     if(!rst)            RxActive <= 0;
+    //     else if(DIR && NXT) RxActive <= 1;
+    //     else                RxActive <= 0;
+    // end
+    // ///
 
  endmodule

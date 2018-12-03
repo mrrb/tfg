@@ -57,7 +57,7 @@ module ULPI_RECV (
     assign RxEventEncoding = RxCMD_r[5:4];
 
     // Control registers and wires
-    reg [1:0]ULPI_RECV_state_r = 0;
+    reg ULPI_RECV_state_r = 0;
     reg [7:0]RxCMD_r = 0;
     reg [7:0]USB_DATA_r = 0;
     reg [9:0]DATA_COUNTER = 0; 

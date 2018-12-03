@@ -1,21 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Sun Nov 25 01:55:33 2018
+[*] Mon Dec  3 22:09:37 2018
 [*]
 [dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/sim/ULPI_tb.vcd"
-[dumpfile_mtime] "Sun Nov 25 01:55:03 2018"
-[dumpfile_size] 4563
+[dumpfile_mtime] "Mon Dec  3 22:09:23 2018"
+[dumpfile_size] 12390
 [savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI/ULPI.gtkw"
-[timestart] 0
-[size] 1920 1052
+[timestart] 309
+[size] 1920 1050
 [pos] -1 -1
-*-5.951128 150 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.951128 642 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] ULPI_tb.
 [treeopen] ULPI_tb.ULPI_mut.
 [sst_width] 222
 [signals_width] 203
 [sst_expanded] 1
-[sst_vpaned_height] 312
+[sst_vpaned_height] 292
 @28
 ULPI_tb.ULPI_mut.rst
 ULPI_tb.ULPI_mut.clk_ice
@@ -26,6 +26,7 @@ ULPI_tb.ULPI_mut.clk_ULPI
 ULPI_tb.ULPI_mut.PrW
 ULPI_tb.ULPI_mut.PrR
 ULPI_tb.ULPI_mut.NrD
+@24
 ULPI_tb.ULPI_mut.status[2:0]
 @200
 -
@@ -45,12 +46,22 @@ ULPI_tb.ULPI_mut.REG_VAL_W[7:0]
 ULPI_tb.ULPI_mut.REG_VAL_R[7:0]
 @200
 -
-@29
-ULPI_tb.ULPI_mut.clk_ULPI
 @28
+ULPI_tb.ULPI_mut.clk_ULPI
 ULPI_tb.ULPI_mut.DIR
-@22
+@c00022
 ULPI_tb.DATA[7:0]
+@28
+(0)ULPI_tb.DATA[7:0]
+(1)ULPI_tb.DATA[7:0]
+(2)ULPI_tb.DATA[7:0]
+(3)ULPI_tb.DATA[7:0]
+(4)ULPI_tb.DATA[7:0]
+(5)ULPI_tb.DATA[7:0]
+(6)ULPI_tb.DATA[7:0]
+(7)ULPI_tb.DATA[7:0]
+@1401200
+-group_end
 @28
 ULPI_tb.ULPI_mut.NXT
 ULPI_tb.ULPI_mut.STP
@@ -61,5 +72,53 @@ ULPI_tb.ULPI_mut.U_RST
 ULPI_tb.ULPI_mut.RW_busy
 ULPI_tb.ULPI_mut.RR_busy
 ULPI_tb.ULPI_mut.RECV_busy
+@200
+-
+@28
+ULPI_tb.ULPI_mut.RxLineState[1:0]
+ULPI_tb.ULPI_mut.RxVbusState[1:0]
+ULPI_tb.ULPI_mut.RxActive
+ULPI_tb.ULPI_mut.RxError
+ULPI_tb.ULPI_mut.RxHostDisconnect
+ULPI_tb.ULPI_mut.RxLineState[1:0]
+@200
+-
+@28
+ULPI_tb.ULPI_mut.INFO_buff_empty
+ULPI_tb.ULPI_mut.DATA_buff_empty
+@c00022
+ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+@28
+(0)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(1)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(2)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(3)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(4)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(5)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(6)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(7)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(8)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(9)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(10)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(11)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(12)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(13)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(14)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+(15)ULPI_tb.ULPI_mut.USB_INFO_DATA[15:0]
+@1401200
+-group_end
+@c00023
+ULPI_tb.ULPI_mut.USB_DATA[7:0]
+@29
+(0)ULPI_tb.ULPI_mut.USB_DATA[7:0]
+(1)ULPI_tb.ULPI_mut.USB_DATA[7:0]
+(2)ULPI_tb.ULPI_mut.USB_DATA[7:0]
+(3)ULPI_tb.ULPI_mut.USB_DATA[7:0]
+(4)ULPI_tb.ULPI_mut.USB_DATA[7:0]
+(5)ULPI_tb.ULPI_mut.USB_DATA[7:0]
+(6)ULPI_tb.ULPI_mut.USB_DATA[7:0]
+(7)ULPI_tb.ULPI_mut.USB_DATA[7:0]
+@1401201
+-group_end
 [pattern_trace] 1
 [pattern_trace] 0
