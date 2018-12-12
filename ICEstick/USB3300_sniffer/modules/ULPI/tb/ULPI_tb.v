@@ -40,7 +40,7 @@ module ULPI_tb ();
     assign DATA = (DIR) ? DATA_I : DATA_O;
     ULPI ULPI_mut (
                    .rst(rst), .clk_ice(clk12), .clk_ULPI(clk60),
-                   .PrW(PrW), .PrR(PrR), .NrD(NrD), .status(status),
+                   .PrW(PrW), .PrR(PrR), .status(status),
                    .ADDR(ADDR), .REG_VAL_W(REG_VAL_W), .REG_VAL_R(REG_VAL_R),
                    .DIR(DIR), .NXT(NXT), .DATA(DATA),
                    .DATA_re(DATA_re), .INFO_re(INFO_re),

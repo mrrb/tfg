@@ -29,7 +29,6 @@
               // Control signals
               input  wire PrW,
               input  wire PrR,
-              output wire NrD,
               output wire [2:0]status,
 
               // Register signals
@@ -57,25 +56,17 @@
               output wire INFO_buff_empty,
 
               // ULPI signals
-              input  wire DIR,       // ULPI DIR (DIRection) signal
-              input  wire NXT,       // ULPI NXT (NeXT) signal
-              inout  wire [7:0]DATA, // ULPI inout DATA signals
-              output wire STP,       // ULPI STP (SToP) signal
-              output wire U_RST      // ULPI RST (ReSeT) signal
+              input  wire DIR,           // ULPI DIR (DIRection) signal
+              input  wire NXT,           // ULPI NXT (NeXT) signal
+              input  wire [7:0]DATA_in,  // ULPI inout DATA signals
+              output wire [7:0]DATA_out, // ULPI inout DATA signals
+              output wire STP,           // ULPI STP (SToP) signal
+              output wire U_RST          // ULPI RST (ReSeT) signal
              );
 
     /// ULPI reset
     assign U_RST = rst;
     /// End of ULPI reset
-
-    /// DATA inout selector
-    wire [7:0]DATA_in;     // Wire from which read the incoming data
-    assign DATA_in = DATA; // This assign just  make things clearer later on
-
-    wire [7:0]DATA_out;    // Data generated in the FPGA (link)
-    assign DATA = (DIR) ? 8'bz : DATA_out; // When the PHY has the ownership of the bus, the FPGA must have the inputs in a HIGH impedance mode
-                                           // so there will not have any conflicts.
-    /// End of DATA inout selector
 
     /// Reg_Write submodule init
     wire STP_RW;  // ULPI STP signal from the Register_Write submodule
@@ -211,7 +202,7 @@
                       (ULPI_s_REG_READ)  ? DATA_out_RR   :
                       (ULPI_s_RECV)      ? DATA_out_RECV : 8'b0;
                    
-    assign STP_out  = (ULPI_s_START)     ? 1'b1     :
+    assign STP_out  = (ULPI_s_START)     ? 1'b0     :
                       (ULPI_s_REG_WRITE) ? STP_RW   :
                       (ULPI_s_REG_READ)  ? STP_RR   :
                       (ULPI_s_RECV)      ? STP_RECV : 1'b0;
@@ -248,15 +239,5 @@
         end
     end
     /// End of ULPI master controller
-
-    // ///
-    // // RXACTIVE
-    // reg RxActive = 0;
-    // always @(negedge clk_ULPI `ULPI_ASYNC_RESET) begin
-    //     if(!rst)            RxActive <= 0;
-    //     else if(DIR && NXT) RxActive <= 1;
-    //     else                RxActive <= 0;
-    // end
-    // ///
 
  endmodule
