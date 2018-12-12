@@ -1,27 +1,27 @@
 /*
  *
- * List of common baudrates with theirs optimal counter values
+ * List of common baudrates with theirs optimal counter values [60MHz]
  *
  */
 
-`define B921600 14
-`define B460800 27
-`define B256000 47
-`define B230400 53
-`define B153600 79
-`define B128000 94
+`define B921600 66
+`define B460800 131
+`define B256000 235
+`define B230400 261
+`define B153600 391
+`define B128000 469
 
-`define B115200 105
-`define B57600  209
-`define B56000  215
-`define B38400  313
-`define B28800  417
-`define B19200  625
-`define B14400  834
-`define B9600   1250
-`define B4800   2500
-`define B2400   5000
-`define B1200   10000
-`define B600    20000
-`define B300    40000
-`define B110    109091
+`define B115200 521
+`define B57600  1042
+`define B56000  1072
+`define B38400  1563
+`define B28800  2084
+`define B19200  3125
+`define B14400  4167
+`define B9600   6250
+`define B4800   12500
+`define B2400   25000
+`define B1200   50000
+`define B600    100000
+`define B300    200000
+`define B110    545455
