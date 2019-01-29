@@ -1,0 +1,28 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Tue Jan 29 18:59:28 2019
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/btn_debouncer/sim/btn_debouncer_tb.vcd"
+[dumpfile_mtime] "Tue Jan 29 18:59:23 2019"
+[dumpfile_size] 1241
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/btn_debouncer/btn_debouncer.gtkw"
+[timestart] 0
+[size] 1920 1054
+[pos] -1 -1
+*-7.940124 1248 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] btn_debouncer_tb.
+[sst_width] 210
+[signals_width] 194
+[sst_expanded] 1
+[sst_vpaned_height] 303
+@28
+btn_debouncer_tb.clk
+btn_debouncer_tb.clk_out
+btn_debouncer_tb.clk_pulse
+@200
+-
+@28
+btn_debouncer_tb.btn_in
+btn_debouncer_tb.btn_out
+[pattern_trace] 1
+[pattern_trace] 0
