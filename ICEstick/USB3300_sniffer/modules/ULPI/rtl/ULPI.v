@@ -30,6 +30,7 @@
               input  wire PrW,
               input  wire PrR,
               output wire [2:0]status,
+              output wire busy,
 
               // Register signals
               input  wire [5:0]ADDR,
@@ -65,7 +66,7 @@
              );
 
     /// ULPI reset
-    assign U_RST = rst;
+    assign U_RST = !rst;
     /// End of ULPI reset
 
     /// Reg_Write submodule init
@@ -162,6 +163,10 @@
                       );
     /// End of ULPI reciver submodule init
 
+    /// ULPI REG/READ stack
+    
+    /// End of ULPI REG/READ stack
+
     /// ULPI master controller
     // Regs and wires
     reg [2:0]ULPI_state_r = 0; // Register that stores the current ULPI_RR state
@@ -189,6 +194,7 @@
 
     assign STP = STP_out; // #OUTPUT
     assign status = ULPI_state_r; // #OUTPUT
+    assign busy = !ULPI_s_IDLE; // #OUTPUT
 
     // States
     localparam ULPI_START     = 0;
