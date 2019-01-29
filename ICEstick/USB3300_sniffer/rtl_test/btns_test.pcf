@@ -1,0 +1,10 @@
+set_io clk 21
+
+set_io IO_BTNs[0] 78
+set_io IO_BTNs[1] 81
+
+set_io IO_LEDs[0] 95
+set_io IO_LEDs[1] 96
+set_io IO_LEDs[2] 97
+set_io IO_LEDs[3] 98
+set_io IO_LEDs[4] 99
