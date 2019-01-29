@@ -1,5 +1,5 @@
 set_io clk_ice    21
-set_io clk_ULPI   44
+set_io clk_ULPI   45
 
 set_io UART_Rx    9
 set_io UART_Tx    8
@@ -15,19 +15,10 @@ set_io ULPI_DATA[5] 114
 set_io ULPI_DATA[6] 113
 set_io ULPI_DATA[7] 112
 set_io ULPI_STP     56
-set_io ULPI_RST     45
+set_io ULPI_RST     44 
 
-set_io IO_bank1[0] 78
-set_io IO_bank1[1] 79
-set_io IO_bank1[2] 80
-set_io IO_bank1[3] 81
-set_io IO_bank1[4] 87
-set_io IO_bank1[5] 88
-set_io IO_bank1[6] 90
-set_io IO_bank1[7] 91
-
-set_io IO_bank2[0] 61
-set_io IO_bank2[1] 62
+set_io IO_BTNs[0] 78
+set_io IO_BTNs[1] 81
 
 set_io IO_LEDs[0] 95
 set_io IO_LEDs[1] 96
