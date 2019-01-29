@@ -13,6 +13,8 @@
 module ULPI_tb ();
 
     /// Regs and wires
+    reg sim_chk = 0;
+
     reg rst = 0;
     reg PrW = 0;
     reg PrR = 0;
@@ -25,6 +27,7 @@ module ULPI_tb ();
     reg INFO_re = 0;
 
     wire NrD;
+    wire busy;
     wire [2:0]status;
     wire [7:0]REG_VAL_R;
     wire STP;
@@ -34,21 +37,35 @@ module ULPI_tb ();
     wire DATA_buff_full, DATA_buff_empty, INFO_buff_full, INFO_buff_empty;
     wire [7:0]USB_DATA;
     wire [15:0]USB_INFO_DATA;
+
+    wire [7:0]RxCMD;
+    wire [1:0]RxLineState;
+    wire [1:0]RxVbusState;
+    wire RxActive;
+    wire RxError;
+    wire RxHostDisconnect;
+    wire RxID;
     /// End of Regs and wires
 
     /// Module under test init
     assign DATA = (DIR) ? DATA_I : DATA_O;
     ULPI ULPI_mut (
+                   // System signals
                    .rst(rst), .clk_ice(clk12), .clk_ULPI(clk60),
-                   .PrW(PrW), .PrR(PrR), .status(status),
+                   // Control signals
+                   .PrW(PrW), .PrR(PrR), .status(status), .busy(busy),
+                   // Register signals
                    .ADDR(ADDR), .REG_VAL_W(REG_VAL_W), .REG_VAL_R(REG_VAL_R),
-                   .DIR(DIR), .NXT(NXT), .DATA(DATA),
-                   .DATA_re(DATA_re), .INFO_re(INFO_re),
-                   .USB_DATA(USB_DATA), .USB_INFO_DATA(USB_INFO_DATA), // Buffer control
-                   .DATA_buff_full(DATA_buff_full), .DATA_buff_empty(DATA_buff_empty), // Buffer control
-                   .INFO_buff_full(INFO_buff_full), .INFO_buff_empty(INFO_buff_empty), // Buffer control
-                   .STP(STP), .U_RST(U_RST)
-                    );
+                   // Rx states
+                   .RxCMD(RxCMD), .RxLineState(RxLineState), .RxVbusState(RxVbusState), .RxActive(RxActive),
+                   .RxError(RxError), .RxHostDisconnect(RxHostDisconnect), .RxID(RxID),
+                   // Buffer control
+                   .DATA_re(DATA_re), .INFO_re(INFO_re), .USB_DATA(USB_DATA), .USB_INFO_DATA(USB_INFO_DATA),.DATA_buff_full(DATA_buff_full),
+                   .DATA_buff_empty(DATA_buff_empty), .INFO_buff_full(INFO_buff_full), .INFO_buff_empty(INFO_buff_empty),
+                   // ULPI signals
+                   .DIR(DIR), .NXT(NXT), .DATA_in(DATA_I),
+                   .DATA_out(DATA_O), .STP(STP), .U_RST(U_RST)
+                  );
     /// End of Module under test init
 
     /// Clock gen
@@ -71,14 +88,16 @@ module ULPI_tb ();
         #0.3 DIR = 1; DATA_I = 8'h4D;
         #0.2 DIR = 0;
         
-        #0.6
+        sim_chk = 1;
+        #0.6 sim_chk = 0;
         
         // Test 0 - Initial RxCMD
         #0.2 DATA_I = 8'b11111111; DIR = 1;
         #0.2 DATA_I = 8'b10110111;
         #0.2 DIR = 0;
 
-        #0.5
+        sim_chk = 1;
+        #0.5 sim_chk = 0;
 
         // Test 1 - Write (AN 19.17)
         ADDR = 6'h16;
@@ -88,7 +107,8 @@ module ULPI_tb ();
         #0.1 NXT = 1;
         #0.4 NXT = 0;
 
-        #0.9
+        sim_chk = 1;
+        #0.9 sim_chk = 0;
 
         // Test 2 - Read (AN 19.17)
         PrR = 1; ADDR = 6'h16;
@@ -98,7 +118,8 @@ module ULPI_tb ();
         #0.2 DATA_I = 8'hBA;
         #0.2 DIR = 0;
 
-        #1
+        sim_chk = 1;
+        #1 sim_chk = 0;
 
         // Test 3 - Receive DATA
         #0.2 DATA_I = 8'b11111111; DIR = 1; NXT = 1;
@@ -110,21 +131,24 @@ module ULPI_tb ();
         #0.2 DATA_I = 8'hAB; NXT = 1;
         #0.2 NXT = 0; DIR = 0;
 
-        #0.5
+        sim_chk = 1;
+        #0.5 sim_chk = 0;
 
         // Buffer read - 1st RxCMD
         #0.2 INFO_re = 1;
         #0.2 INFO_re = 0;
              $display("USB_INFO_DATA = %b; RxCMD = %b; LEN = %b", USB_INFO_DATA, USB_INFO_DATA[15:10], USB_INFO_DATA[9:0]);
 
-        #0.2
+        sim_chk = 1;
+        #0.2 sim_chk = 0;
 
         // Buffer read - 2nd RxCMD
         #0.2 INFO_re = 1;
         #0.2 INFO_re = 0;
              $display("USB_INFO_DATA = %b; RxCMD = %b; LEN = %b", USB_INFO_DATA, USB_INFO_DATA[15:10], USB_INFO_DATA[9:0]);
 
-        #0.2
+        sim_chk = 1;
+        #0.2 sim_chk = 0;
 
         // Buffer read - 3rd RxCMD
         #0.2 INFO_re = 1;
