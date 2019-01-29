@@ -42,7 +42,7 @@ module UART #(
 
               // Control signals
               input  wire send_data,   // Send the current data in DATA IF there isn't any trasmission in progress
-              input  wire NxT,         // 
+              input  wire NxT,         // Next byte
               output wire TiP,         // Trasmission in Progress flag
               output wire NrD,         // New received Data flag
               output wire Tx_FULL,     // Internal Tx buffer FULL flag
