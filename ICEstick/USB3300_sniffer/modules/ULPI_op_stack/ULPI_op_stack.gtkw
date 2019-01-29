@@ -1,0 +1,47 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Tue Jan 29 12:00:18 2019
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI_op_stack/sim/ULPI_op_stack_tb.vcd"
+[dumpfile_mtime] "Tue Jan 29 11:56:46 2019"
+[dumpfile_size] 2985
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/ULPI_op_stack/ULPI_op_stack.gtkw"
+[timestart] 0
+[size] 1920 1054
+[pos] -1 -1
+*-8.000000 184 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] ULPI_op_stack_tb.
+[sst_width] 210
+[signals_width] 204
+[sst_expanded] 1
+[sst_vpaned_height] 303
+@28
+ULPI_op_stack_tb.rst
+ULPI_op_stack_tb.clk
+@200
+-
+@28
+ULPI_op_stack_tb.UART_Rx_EMPTY
+ULPI_op_stack_tb.UART_NxT
+@22
+ULPI_op_stack_tb.UART_DATA[7:0]
+@200
+-
+@28
+ULPI_op_stack_tb.op_stack_pull
+@22
+ULPI_op_stack_tb.op_stack_msg[15:0]
+@28
+ULPI_op_stack_tb.op_stack_full
+ULPI_op_stack_tb.op_stack_empty
+@200
+-
+@28
+ULPI_op_stack_tb.ULPI_op_stack_mut.n_byte_r
+ULPI_op_stack_tb.ULPI_op_stack_mut.serial_state_r[1:0]
+@22
+ULPI_op_stack_tb.ULPI_op_stack_mut.serial_msg_r[15:0]
+@29
+ULPI_op_stack_tb.ULPI_op_stack_mut.SERIAL_s_PUSH
+[pattern_trace] 1
+[pattern_trace] 0
