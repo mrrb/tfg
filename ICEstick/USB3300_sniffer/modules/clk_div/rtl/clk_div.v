@@ -37,19 +37,42 @@ module clk_div #(
                  input  wire enable     // Module enable signal
                 );
 
-    /// Counter register
-    reg [DIVIDER-1:0]clk_div_r = 0;
-    /// End of Counter register
+    generate
+        if(DIVIDER == 0) begin
+            assign clk_out = (enable) ? clk_in : 1'b0;
+            assign clk_pulse = (enable) ? clk_in : 1'b0;
+        end
+        else if(DIVIDER == 1) begin
+            /// Counter register
+            reg clk_div_r = 0;
+            /// End of Counter register
 
-    /// Controller
-    always @(posedge clk_in) begin
-        if(!enable) clk_div_r <= {1'b0,{(DIVIDER-1){1'b1}}};
-        else if(clk_div_r == (2**DIVIDER - 1)) clk_div_r <= 0;
-        else clk_div_r <= clk_div_r + 1'b1;
-    end
+            /// Controller
+            always @(posedge clk_in) begin
+                if(!enable) clk_div_r <= 0;
+                else clk_div_r <= clk_div_r + 1'b1;
+            end
 
-    assign clk_out = (enable) ? clk_div_r[DIVIDER-1] : 1'b0;
-    assign clk_pulse = (clk_div_r == {1'b1,{(DIVIDER-1){1'b0}}}) ? 1'b1 : 1'b0;
-    /// End of Controller
+            assign clk_out = (enable) ? clk_div_r : 1'b0;
+            assign clk_pulse = (enable) ? clk_div_r : 1'b0;
+            /// End of Controller
+        end
+        else begin
+            /// Counter register
+            reg [DIVIDER-1:0]clk_div_r = 0;
+            /// End of Counter register
+
+            /// Controller
+            always @(posedge clk_in) begin
+                if(!enable) clk_div_r <= {1'b0,{(DIVIDER-1){1'b1}}};
+                else if(clk_div_r == (2**DIVIDER - 1)) clk_div_r <= 0;
+                else clk_div_r <= clk_div_r + 1'b1;
+            end
+
+            assign clk_out = (enable) ? clk_div_r[DIVIDER-1] : 1'b0;
+            assign clk_pulse = (clk_div_r == {1'b1,{(DIVIDER-1){1'b0}}}) ? 1'b1 : 1'b0;
+            /// End of Controller
+        end
+    endgenerate
 
 endmodule
