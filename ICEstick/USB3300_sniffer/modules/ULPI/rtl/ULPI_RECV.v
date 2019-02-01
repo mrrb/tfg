@@ -150,7 +150,8 @@ module ULPI_RECV (
     end
 
     // DATA buffer
-    FIFO_BRAM_SYNC_CUSTOM #(.DATA_WIDTH(`FIFO_BRAM_8))
+    FIFO_BRAM_SYNC_CUSTOM #(.DATA_WIDTH(`FIFO_BRAM_8),
+                            .FIFO_SIZE_ML(4))
                 DATA_BUFF  (
                             // System signals
                             .rst(rst),
@@ -178,7 +179,8 @@ module ULPI_RECV (
                            );
 
     // INFO buffer
-    FIFO_BRAM_SYNC_CUSTOM #(.DATA_WIDTH(`FIFO_BRAM_16))
+    FIFO_BRAM_SYNC_CUSTOM #(.DATA_WIDTH(`FIFO_BRAM_16),
+                            .FIFO_SIZE_ML(2))
                 INFO_BUFF  (
                             // System signals
                             .rst(rst),
