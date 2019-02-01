@@ -1,25 +1,236 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Wed Nov  7 17:05:44 2018
+[*] Fri Feb  1 21:55:47 2019
 [*]
 [dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/sim/top_tb.vcd"
-[dumpfile_mtime] "Wed Nov  7 16:38:19 2018"
-[dumpfile_size] 194944
+[dumpfile_mtime] "Fri Feb  1 21:51:29 2019"
+[dumpfile_size] 111039
 [savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/top.gtkw"
 [timestart] 0
 [size] 1920 1052
 [pos] -1 -1
-*-8.951129 148 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-10.940125 230 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top_tb.
-[sst_width] 222
-[signals_width] 154
+[treeopen] top_tb.USB3300_sniffer_mut.
+[treeopen] top_tb.USB3300_sniffer_mut.ULPI_op_stack.
+[sst_width] 210
+[signals_width] 209
 [sst_expanded] 1
-[sst_vpaned_height] 303
+[sst_vpaned_height] 259
 @28
-top_tb.USB3300_sniffer.clk_ctrl
-top_tb.USB3300_sniffer.clk_ice
-top_tb.USB3300_sniffer.clk_test
+top_tb.USB3300_sniffer_mut.rst
+top_tb.USB3300_sniffer_mut.clk_ice
+top_tb.USB3300_sniffer_mut.clk_ULPI
 @200
 -
+@28
+top_tb.USB3300_sniffer_mut.clk_div_ice
+top_tb.USB3300_sniffer_mut.clk_div_ULPI
+top_tb.USB3300_sniffer_mut.clk_debounce
+@200
+-
+@20c00024
+top_tb.IO_LEDs[4:0]
+@28
+(0)top_tb.IO_LEDs[4:0]
+(1)top_tb.IO_LEDs[4:0]
+(2)top_tb.IO_LEDs[4:0]
+(3)top_tb.IO_LEDs[4:0]
+(4)top_tb.IO_LEDs[4:0]
+@1401200
+-group_end
+@200
+-
+-UART
+@28
+top_tb.USB3300_sniffer_mut.UART.clk_Rx
+top_tb.USB3300_sniffer_mut.UART.Rx
+@c00022
+top_tb.USB3300_sniffer_mut.UART.O_DATA[7:0]
+@28
+(0)top_tb.USB3300_sniffer_mut.UART.O_DATA[7:0]
+(1)top_tb.USB3300_sniffer_mut.UART.O_DATA[7:0]
+(2)top_tb.USB3300_sniffer_mut.UART.O_DATA[7:0]
+(3)top_tb.USB3300_sniffer_mut.UART.O_DATA[7:0]
+(4)top_tb.USB3300_sniffer_mut.UART.O_DATA[7:0]
+(5)top_tb.USB3300_sniffer_mut.UART.O_DATA[7:0]
+(6)top_tb.USB3300_sniffer_mut.UART.O_DATA[7:0]
+(7)top_tb.USB3300_sniffer_mut.UART.O_DATA[7:0]
+@1401200
+-group_end
+@200
+-
+@28
+top_tb.USB3300_sniffer_mut.UART.clk_Tx
+top_tb.USB3300_sniffer_mut.UART.Tx
+@c00022
+top_tb.USB3300_sniffer_mut.UART.I_DATA[7:0]
+@28
+(0)top_tb.USB3300_sniffer_mut.UART.I_DATA[7:0]
+(1)top_tb.USB3300_sniffer_mut.UART.I_DATA[7:0]
+(2)top_tb.USB3300_sniffer_mut.UART.I_DATA[7:0]
+(3)top_tb.USB3300_sniffer_mut.UART.I_DATA[7:0]
+(4)top_tb.USB3300_sniffer_mut.UART.I_DATA[7:0]
+(5)top_tb.USB3300_sniffer_mut.UART.I_DATA[7:0]
+(6)top_tb.USB3300_sniffer_mut.UART.I_DATA[7:0]
+(7)top_tb.USB3300_sniffer_mut.UART.I_DATA[7:0]
+@1401200
+-group_end
+@200
+-
+@28
+top_tb.USB3300_sniffer_mut.UART.NxT
+top_tb.USB3300_sniffer_mut.UART.send_data
+top_tb.USB3300_sniffer_mut.UART.Rx_EMPTY
+top_tb.USB3300_sniffer_mut.UART.Tx_FULL
+@200
+-
+-ULPI
+@c00022
+top_tb.USB3300_sniffer_mut.ULPI.ADDR[5:0]
+@28
+(0)top_tb.USB3300_sniffer_mut.ULPI.ADDR[5:0]
+(1)top_tb.USB3300_sniffer_mut.ULPI.ADDR[5:0]
+(2)top_tb.USB3300_sniffer_mut.ULPI.ADDR[5:0]
+(3)top_tb.USB3300_sniffer_mut.ULPI.ADDR[5:0]
+(4)top_tb.USB3300_sniffer_mut.ULPI.ADDR[5:0]
+(5)top_tb.USB3300_sniffer_mut.ULPI.ADDR[5:0]
+@1401200
+-group_end
+@28
+top_tb.USB3300_sniffer_mut.ULPI.PrR
+@c00022
+top_tb.USB3300_sniffer_mut.ULPI.REG_VAL_R[7:0]
+@28
+(0)top_tb.USB3300_sniffer_mut.ULPI.REG_VAL_R[7:0]
+(1)top_tb.USB3300_sniffer_mut.ULPI.REG_VAL_R[7:0]
+(2)top_tb.USB3300_sniffer_mut.ULPI.REG_VAL_R[7:0]
+(3)top_tb.USB3300_sniffer_mut.ULPI.REG_VAL_R[7:0]
+(4)top_tb.USB3300_sniffer_mut.ULPI.REG_VAL_R[7:0]
+(5)top_tb.USB3300_sniffer_mut.ULPI.REG_VAL_R[7:0]
+(6)top_tb.USB3300_sniffer_mut.ULPI.REG_VAL_R[7:0]
+(7)top_tb.USB3300_sniffer_mut.ULPI.REG_VAL_R[7:0]
+@1401200
+-group_end
+@28
+top_tb.USB3300_sniffer_mut.ULPI.PrW
+@22
+top_tb.USB3300_sniffer_mut.ULPI.REG_VAL_W[7:0]
+@200
+-
+@22
+top_tb.USB3300_sniffer_mut.ULPI.RxCMD[7:0]
+@c00022
+top_tb.USB3300_sniffer_mut.ULPI.USB_DATA[7:0]
+@28
+(0)top_tb.USB3300_sniffer_mut.ULPI.USB_DATA[7:0]
+(1)top_tb.USB3300_sniffer_mut.ULPI.USB_DATA[7:0]
+(2)top_tb.USB3300_sniffer_mut.ULPI.USB_DATA[7:0]
+(3)top_tb.USB3300_sniffer_mut.ULPI.USB_DATA[7:0]
+(4)top_tb.USB3300_sniffer_mut.ULPI.USB_DATA[7:0]
+(5)top_tb.USB3300_sniffer_mut.ULPI.USB_DATA[7:0]
+(6)top_tb.USB3300_sniffer_mut.ULPI.USB_DATA[7:0]
+(7)top_tb.USB3300_sniffer_mut.ULPI.USB_DATA[7:0]
+@1401200
+-group_end
+@c00022
+top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+@28
+(0)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(1)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(2)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(3)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(4)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(5)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(6)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(7)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(8)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(9)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(10)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(11)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(12)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(13)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(14)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+(15)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
+@1401200
+-group_end
+@200
+-
+@28
+top_tb.USB3300_sniffer_mut.ULPI_DIR
+@c00022
+top_tb.USB3300_sniffer_mut.ULPI_DATA[7:0]
+@28
+(0)top_tb.USB3300_sniffer_mut.ULPI_DATA[7:0]
+(1)top_tb.USB3300_sniffer_mut.ULPI_DATA[7:0]
+(2)top_tb.USB3300_sniffer_mut.ULPI_DATA[7:0]
+(3)top_tb.USB3300_sniffer_mut.ULPI_DATA[7:0]
+(4)top_tb.USB3300_sniffer_mut.ULPI_DATA[7:0]
+(5)top_tb.USB3300_sniffer_mut.ULPI_DATA[7:0]
+(6)top_tb.USB3300_sniffer_mut.ULPI_DATA[7:0]
+(7)top_tb.USB3300_sniffer_mut.ULPI_DATA[7:0]
+@1401200
+-group_end
+@28
+top_tb.USB3300_sniffer_mut.ULPI_NXT
+top_tb.USB3300_sniffer_mut.ULPI_RST
+top_tb.USB3300_sniffer_mut.ULPI_STP
+@200
+-
+-OP stack
+@28
+top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_pull
+@c00022
+top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+@28
+(0)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(1)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(2)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(3)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(4)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(5)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(6)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(7)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(8)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(9)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(10)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(11)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(12)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(13)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(14)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+(15)top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_msg[15:0]
+@1401200
+-group_end
+@28
+top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_empty
+@200
+-
+-Main controller
+@28
+top_tb.USB3300_sniffer_mut.main_controller.force_send
+@22
+top_tb.USB3300_sniffer_mut.main_controller.MAIN_state_r[3:0]
+@28
+top_tb.USB3300_sniffer_mut.main_controller.MAIN_cmd_r[1:0]
+@22
+top_tb.USB3300_sniffer_mut.main_controller.ULPI_ADDR_r[5:0]
+top_tb.USB3300_sniffer_mut.main_controller.UART_Tx_DATA_r[7:0]
+@200
+-
+-Buttons
+@c00028
+top_tb.IO_BTNs[1:0]
+@28
+(0)top_tb.IO_BTNs[1:0]
+(1)top_tb.IO_BTNs[1:0]
+@1401200
+-group_end
+@200
+-
+@24
+top_tb.test_counter[31:0]
+@200
+-
+-Random
 [pattern_trace] 1
 [pattern_trace] 0

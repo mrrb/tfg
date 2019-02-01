@@ -23,49 +23,35 @@
 
 `include "./modules/UART.vh"
 `include "./modules/ULPI.vh"
-// `include "./modules/ULPI_WRAPPER.vh"
+`include "./modules/ULPI_WRAPPER.vh"
 `include "./modules/clk_div.vh"
 `include "./modules/ULPI_op_stack.vh"
 `include "./modules/btn_debouncer.vh"
-`include "./modules/main_controller.vh"
 
- module USB3300_sniffer #(
-                          parameter DIV_TIMERS = 25,
-                          parameter DIV_DEBOUNCE = 19,
-                        //   parameter COUNTER_BAUDRATE = `B115200
-                          parameter COUNTER_BAUDRATE = `B921600
-                         )
-                         (
-                          // System signals
-                          input  wire clk_ice,        // 12MHz clock located in the ICEstick board
-                          input  wire clk_ULPI,       // 60MHz clock from the usb3300 module
+ module USB3300_sniffer (
+                         // System signals
+                         input  wire clk_ice,        // 12MHz clock located in the ICEstick board
+                         input  wire clk_ULPI,       // 60MHz clock from the usb3300 module
 
-                          // ULPI signals
-                          input  wire ULPI_DIR,       // ULPI DIRECTION
-                          input  wire ULPI_NXT,       // ULPI NEXT
-                          inout  wire [7:0]ULPI_DATA, // ULPI 8-bit parallel data
-                          output wire ULPI_STP,       // ULPI STOP
-                          output wire ULPI_RST,       // USB3300 RESET pin
+                         // ULPI signals
+                         input  wire ULPI_DIR,       // ULPI DIRECTION
+                         input  wire ULPI_NXT,       // ULPI NEXT
+                         inout  wire [7:0]ULPI_DATA, // ULPI 8-bit parallel data
+                         output wire ULPI_STP,       // ULPI STOP
+                         output wire ULPI_RST,       // USB3300 RESET pin
 
-                          // UART signals
-                          input  wire UART_Rx,        // Serial Read
-                          output wire UART_Tx,        // Serial Write
+                         // UART signals
+                         input  wire UART_Rx,        // Serial Read
+                         output wire UART_Tx,        // Serial Write
 
-                          // I/O
-                          input  wire [1:0]IO_BTNs,   // 
-                          output wire [4:0]IO_LEDs,   // 4 (red) + 1 (green) LED's on the ICEstick board
-                          output wire [2:0]IO_test
-                         );
-
-/// Config
-    parameter LED_CLK_ULPI_DIV_EN = 1;
-    parameter LED_CLK_ICE_DIV_EN  = 1;
-/// End of Config
-
+                         // I/O
+                         input  wire [1:0]IO_BTNs,   // 
+                         output wire [4:0]IO_LEDs,   // 4 (red) + 1 (green) LED's on the ICEstick board
+                        );
 /// Reset
     wire rst;
     assign rst = btn1_debounce;
-/// End of reset
+///
 
 /// Buttons
     wire btn1_debounce, btn2_debounce;
@@ -84,14 +70,14 @@
                         .clk(clk_debounce),     // [Input]
                         
                         // Button
-                        .btn_in(!IO_BTNs[1]),   // [Input]
+                        .btn_in(IO_BTNs[1]),    // [Input]
                         .btn_out(btn2_debounce) // [Output]
                        );
-/// End of Buttons
+///
 
 /// Timers & clocks
     wire clk_div_ice, clk_div_ice_pulse;
-    clk_div       #(.DIVIDER(DIV_TIMERS))
+    clk_div       #(.DIVIDER(24))
     clk_div_ice_m  (
                     // Clock signals
                     .clk_in(clk_ice),              // [Input]
@@ -99,11 +85,11 @@
                     .clk_pulse(clk_div_ice_pulse), // [Output]
 
                     // Control signals
-                    .enable(LED_CLK_ICE_DIV_EN)    // [Input]
+                    .enable(1'b1)                  // [Input]
                    );
 
     wire clk_div_ULPI, clk_div_ULPI_pulse;
-    clk_div        #(.DIVIDER(DIV_TIMERS))
+    clk_div        #(.DIVIDER(24))
     clk_div_ULPI_m  (
                      // Clock signals
                      .clk_in(clk_ULPI),              // [Input]
@@ -111,11 +97,11 @@
                      .clk_pulse(clk_div_ULPI_pulse), // [Output]
 
                      // Control signals
-                     .enable(LED_CLK_ULPI_DIV_EN)    // [Input]
+                     .enable(1'b1)                   // [Input]
                     );
 
     wire clk_debounce;
-    clk_div     #(.DIVIDER(DIV_DEBOUNCE))
+    clk_div     #(.DIVIDER(19))
     clk_div_btn  (
                   // Clock signals
                   .clk_in(clk_ice),       // [Input]
@@ -124,23 +110,20 @@
                   // Control signals
                   .enable(1'b1)           // [Input]
                  );
-/// End of Timers & clocks
+///
 
 
 /// Assings
     /// IO_LEDs assigns
-    assign IO_LEDs[0] = clk_div_ice;   // Middle LED
-    assign IO_LEDs[1] = clk_div_ULPI;  // Top LED (near FPGA ic)
-    assign IO_LEDs[2] = rst;           // Left LED
-    assign IO_LEDs[3] = ULPI_DIR;      // Bottom LED
-    assign IO_LEDs[4] = btn2_debounce; // Right LED
-/// End of Assings
+    assign IO_LEDs[0] = clk_div_ice;  // Middle LED
+    assign IO_LEDs[1] = clk_div_ULPI; // Top LED (near FPGA ic)
+    assign IO_LEDs[2] = rst;          // Left LED
+    assign IO_LEDs[3] = ULPI_DIR;     // Bottom LED
+    assign IO_LEDs[4] = 0;            // Right LED
+///
 
 
 /// Test assigns
-    assign IO_test[0] = UART_Rx;
-    assign IO_test[1] = UART_Tx;
-    assign IO_test[2] = UART_send;
     // assign UART_DATA_in = UTMI_data_in_o;
     // assign UART_send    = !UART_Rx_EMPTY;
     // assign UART_NxT     = !UART_Rx_EMPTY;
@@ -157,7 +140,7 @@
     // assign UART_DATA_in = UART_DATA_out;
     // assign UART_send    = !UART_Rx_EMPTY;
     // assign UART_NxT     = !UART_Rx_EMPTY;
-/// End of Test assigns
+///
 
 
 /// PLL
@@ -190,7 +173,7 @@
 		            .REFERENCECLK(clk_ice),   // [Input]
 		            .PLLOUTCORE(clk_ctrl)     // [Output]
 		           );
-/// End of PLL
+///
 
 
 /// UART
@@ -203,7 +186,7 @@
     wire UART_Rx_FULL, UART_Rx_EMPTY; // Rx buffer status signals
     wire UART_Rx_clk, UART_Tx_clk;    // UART Rx/Tx clocks
 
-    UART #(.BAUDS(COUNTER_BAUDRATE))
+    UART #(.BAUDS(`B921600))
     UART  (
            // System signals
            .rst(rst),               // [Input]
@@ -228,7 +211,7 @@
            .Rx_FULL(UART_Rx_FULL),  // [Output]
            .Rx_EMPTY(UART_Rx_EMPTY) // [Output]
           );
-/// End of UART
+///
 
 /// ULPI INOUT tristate controller
     wire [7:0] ULPI_DATA_in, ULPI_DATA_out;
@@ -256,7 +239,7 @@
     assign ULPI_DATA_in = ULPI_DATA;
     assign ULPI_DATA = (ULPI_DIR) ? 8'bz : ULPI_DATA_out; // When the PHY has the ownership of the bus, the FPGA must have the inputs in a HIGH impedance mode
                                                           // so there will not have any conflicts.
-/// End of ULPI INOUT tristate controller
+///
 
 /// ULPI
     wire ULPI_PrW, ULPI_PrR;
@@ -318,7 +301,7 @@
                .STP(ULPI_STP),                           // [Output]
                .U_RST(ULPI_RST)                          // [Output]
               );
-/// End of ULPI
+///
 
 
 /// ULPI op stack
@@ -341,129 +324,93 @@
                                  .op_stack_full(op_stack_full),  // [Output]
                                  .op_stack_empty(op_stack_empty) // [Output]
                                 );
-/// End of ULPI op stack
+///
+
+
 
 
 /// TOP controller
-    main_controller main_controller (                        
-                                     // System signals
-                                     .rst(rst), // [Input]
-                                     .clk(clk_ULPI), // [Input]
-                                     .force_send(btn2_debounce),
+    // TOP Regs and wires
+    // Control registers and wires
+    reg [2:0]TOP_state_r = 0;
+    reg [5:0]ULPI_ADDR_r = 0;
+    reg [7:0]ULPI_REG_VAL_W_r = 0;
 
-                                     // Op stack
-                                     .op_stack_msg(op_stack_msg), // [Input]
-                                     .op_stack_empty(op_stack_empty), // [Input]
-                                     .op_stack_pull(op_stack_pull), // [Output]
-
-                                     // DATA ULPI signals
-                                     .ULPI_USB_DATA(ULPI_USB_DATA), // [Input]
-                                     .ULPI_USB_INFO_DATA(ULPI_USB_INFO_DATA), // [Input]
-                                     .ULPI_DATA_buff_empty(ULPI_DATA_buff_empty), // [Input]
-                                     .ULPI_INFO_buff_empty(ULPI_INFO_buff_empty), // [Input]
-                                     .ULPI_DATA_re(ULPI_DATA_re), // [Output]
-                                     .ULPI_INFO_re(ULPI_INFO_re), // [Output]
-
-                                     // General ULPI signals
-                                     .ULPI_busy(ULPI_busy), // [Input]
-
-                                     // Register ULPI signals
-                                     .ULPI_REG_VAL_R(ULPI_REG_VAL_R), // [Input]
-                                     .ULPI_REG_VAL_W(ULPI_REG_VAL_W), // [Output]
-                                     .ULPI_ADDR(ULPI_ADDR), // [Output]
-                                     .ULPI_PrW(ULPI_PrW), // [Output]
-                                     .ULPI_PrR(ULPI_PrR), // [Output]
-
-                                     // UART
-                                     .UART_Tx_FULL(UART_Tx_FULL), // [Input]
-                                     .UART_Tx_DATA(UART_DATA_in), // [Output]
-                                     .UART_send(UART_send) // [Output]
-                                    );
-/// End of TOP controller
-
-
-// /// TOP controller
-//     // TOP Regs and wires
-//     // Control registers and wires
-//     reg [2:0]TOP_state_r = 0;
-//     reg [5:0]ULPI_ADDR_r = 0;
-//     reg [7:0]ULPI_REG_VAL_W_r = 0;
-
-//     // Flags
-//     wire TOP_s_START;     // HIGH if TOP_state_r == TOP_START,     else LOW
-//     wire TOP_s_CHK_WR;    // HIGH if TOP_state_r == TOP_CHK_WR,    else LOW
-//     wire TOP_s_CHK_WAIT;  // HIGH if TOP_state_r == TOP_CHK_WAIT,  else LOW
-//     wire TOP_s_CHK_RD;    // HIGH if TOP_state_r == TOP_CHK_RD,    else LOW
-//     wire TOP_s_IDLE;      // HIGH if TOP_state_r == TOP_IDLE,      else LOW
+    // Flags
+    wire TOP_s_START;     // HIGH if TOP_state_r == TOP_START,     else LOW
+    wire TOP_s_CHK_WR;    // HIGH if TOP_state_r == TOP_CHK_WR,    else LOW
+    wire TOP_s_CHK_WAIT;  // HIGH if TOP_state_r == TOP_CHK_WAIT,  else LOW
+    wire TOP_s_CHK_RD;    // HIGH if TOP_state_r == TOP_CHK_RD,    else LOW
+    wire TOP_s_IDLE;      // HIGH if TOP_state_r == TOP_IDLE,      else LOW
     
-//     // Assigns
-//     assign TOP_s_START    = (TOP_state_r == TOP_START)    ? 1'b1 : 1'b0; // #FLAG
-//     assign TOP_s_CHK_WR   = (TOP_state_r == TOP_CHK_WR)   ? 1'b1 : 1'b0; // #FLAG
-//     assign TOP_s_CHK_WAIT = (TOP_state_r == TOP_CHK_WAIT) ? 1'b1 : 1'b0; // #FLAG
-//     assign TOP_s_CHK_RD   = (TOP_state_r == TOP_CHK_RD)   ? 1'b1 : 1'b0; // #FLAG
-//     assign TOP_s_IDLE     = (TOP_state_r == TOP_IDLE)     ? 1'b1 : 1'b0; // #FLAG
+    // Assigns
+    assign TOP_s_START    = (TOP_state_r == TOP_START)    ? 1'b1 : 1'b0; // #FLAG
+    assign TOP_s_CHK_WR   = (TOP_state_r == TOP_CHK_WR)   ? 1'b1 : 1'b0; // #FLAG
+    assign TOP_s_CHK_WAIT = (TOP_state_r == TOP_CHK_WAIT) ? 1'b1 : 1'b0; // #FLAG
+    assign TOP_s_CHK_RD   = (TOP_state_r == TOP_CHK_RD)   ? 1'b1 : 1'b0; // #FLAG
+    assign TOP_s_IDLE     = (TOP_state_r == TOP_IDLE)     ? 1'b1 : 1'b0; // #FLAG
 
-//     assign ULPI_ADDR = ULPI_ADDR_r;  // #CONTROL
-//     assign ULPI_PrW  = TOP_s_CHK_WR; // #CONTROL
-//     assign ULPI_PrR  = TOP_s_CHK_RD; // #CONTROL
+    assign ULPI_ADDR = ULPI_ADDR_r;  // #CONTROL
+    assign ULPI_PrW  = TOP_s_CHK_WR; // #CONTROL
+    assign ULPI_PrR  = TOP_s_CHK_RD; // #CONTROL
 
-//     assign ULPI_REG_VAL_W = ULPI_REG_VAL_W_r; // #DATA
-//     // End of TOP Regs and wires
+    assign ULPI_REG_VAL_W = ULPI_REG_VAL_W_r; // #DATA
+    // End of TOP Regs and wires
 
-//     // TOP States (See module description at the beginning of this file to get more info)
-//     localparam TOP_START    = 0;
-//     localparam TOP_CHK_WR   = 1;
-//     localparam TOP_CHK_WAIT = 2;
-//     localparam TOP_CHK_RD   = 3;
-//     localparam TOP_IDLE     = 4;
-//     // End of TOP States
+    // TOP States (See module description at the beginning of this file to get more info)
+    localparam TOP_START    = 0;
+    localparam TOP_CHK_WR   = 1;
+    localparam TOP_CHK_WAIT = 2;
+    localparam TOP_CHK_RD   = 3;
+    localparam TOP_IDLE     = 4;
+    // End of TOP States
 
-//     // TOP controller
-//     // States
-//     always @(posedge clk_ULPI `TOP_ASYNC_RESET) begin
-//         if(!rst) TOP_state_r <= TOP_START;
-//         else begin
-//             case(TOP_state_r)
-//                 TOP_START: begin
-//                     TOP_state_r <= TOP_CHK_WR;
-//                 end
-//                 TOP_CHK_WR: begin
-//                     TOP_state_r <= TOP_CHK_WAIT;
-//                 end
-//                 TOP_CHK_WAIT: begin
-//                     if(ULPI_busy) TOP_state_r <= TOP_CHK_WAIT;
-//                     else          TOP_state_r <= TOP_CHK_RD;
-//                 end
-//                 TOP_CHK_RD: begin
-//                     TOP_state_r <= TOP_IDLE;
-//                 end
-//                 TOP_IDLE: begin
-//                     if(ULPI_busy) TOP_state_r <= TOP_IDLE;
-//                     else          TOP_state_r <= TOP_START;
-//                 end
-//                 default: TOP_state_r <= TOP_START;
-//             endcase
-//         end
-//     end
+    // TOP controller
+    // States
+    always @(posedge clk_ULPI `TOP_ASYNC_RESET) begin
+        if(!rst) TOP_state_r <= TOP_START;
+        else begin
+            case(TOP_state_r)
+                TOP_START: begin
+                    TOP_state_r <= TOP_CHK_WR;
+                end
+                TOP_CHK_WR: begin
+                    TOP_state_r <= TOP_CHK_WAIT;
+                end
+                TOP_CHK_WAIT: begin
+                    if(ULPI_busy) TOP_state_r <= TOP_CHK_WAIT;
+                    else          TOP_state_r <= TOP_CHK_RD;
+                end
+                TOP_CHK_RD: begin
+                    TOP_state_r <= TOP_IDLE;
+                end
+                TOP_IDLE: begin
+                    if(ULPI_busy) TOP_state_r <= TOP_IDLE;
+                    else          TOP_state_r <= TOP_START;
+                end
+                default: TOP_state_r <= TOP_START;
+            endcase
+        end
+    end
 
-//     // Address & Data select
-//     always @(negedge clk_ULPI `TOP_ASYNC_RESET) begin
-//         if(!rst) begin
-//             ULPI_ADDR_r <= 6'h00;
-//             ULPI_REG_VAL_W_r <= 8'b0;
-//         end
-//         else if(TOP_s_CHK_WR) begin 
-//             ULPI_REG_VAL_W_r <= 8'hAA;
-//             ULPI_ADDR_r <= 6'h16;
-//         end
-//         else if(TOP_s_CHK_RD) begin
-//             ULPI_ADDR_r <= 6'h00;
-//         end
-//         else begin 
-//             ULPI_ADDR_r <= 6'h00;
-//         end
-//     end
-//     // End of TOP controllers
-// /// End of TOP controllers
+    // Address & Data select
+    always @(negedge clk_ULPI `TOP_ASYNC_RESET) begin
+        if(!rst) begin
+            ULPI_ADDR_r <= 6'h00;
+            ULPI_REG_VAL_W_r <= 8'b0;
+        end
+        else if(TOP_s_CHK_WR) begin 
+            ULPI_REG_VAL_W_r <= 8'hAA;
+            ULPI_ADDR_r <= 6'h16;
+        end
+        else if(TOP_s_CHK_RD) begin
+            ULPI_ADDR_r <= 6'h00;
+        end
+        else begin 
+            ULPI_ADDR_r <= 6'h00;
+        end
+    end
+    // End of TOP controllers
+/// End of TOP controllers
 
 endmodule

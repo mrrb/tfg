@@ -25,3 +25,7 @@ set_io IO_LEDs[1] 96
 set_io IO_LEDs[2] 97
 set_io IO_LEDs[3] 98
 set_io IO_LEDs[4] 99
+
+set_io IO_test[0] 60
+set_io IO_test[1] 61
+set_io IO_test[2] 62

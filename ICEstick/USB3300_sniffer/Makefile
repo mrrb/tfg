@@ -7,7 +7,7 @@ SIM_DIR   := ./sim
 PRE_DIR   := ./
 BUILD_DIR := ./build
 
-FREQ_MIN  := 100.5
+FREQ_MIN  := 60
 
 all: prog
 
@@ -31,7 +31,7 @@ $(SIM_DIR)/$(M_NAME)_tb.vcd: $(SIM_DIR)/$(M_NAME)_tb.out
 $(BUILD_DIR)/$(M_NAME).blif: $(RTL_DIR)/$(M_NAME).v
 	mkdir -p $(BUILD_DIR)/
 	# -retime -abc2 /// -relut -noabc -noflatten
-	yosys -p "synth_ice40 -top $(Y_NAME) -blif $(BUILD_DIR)/$(M_NAME).blif -json $(BUILD_DIR)/$(M_NAME).json -abc2 -retime; \
+	yosys -p "synth_ice40 -top $(Y_NAME) -blif $(BUILD_DIR)/$(M_NAME).blif -json $(BUILD_DIR)/$(M_NAME).json; \
 			  write_verilog -attr2comment $(BUILD_DIR)/$(M_NAME)_yosys.v; \
 			  write_table $(BUILD_DIR)/$(M_NAME)_table.csv;" \
 		  $< -d -l $(BUILD_DIR)/yosys.log
