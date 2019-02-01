@@ -19,7 +19,7 @@
 `default_nettype none
 
 `ifdef ASYNC_RESET
-    `define ULPI_STACK_CTRL_ASYNC_RESET
+    `define ULPI_STACK_CTRL_ASYNC_RESET or negedge rst
 `else
     `define ULPI_STACK_CTRL_ASYNC_RESET
 `endif
