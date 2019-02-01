@@ -1,27 +1,39 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Sun Nov 11 19:17:36 2018
+[*] Thu Jan 31 12:26:51 2019
 [*]
 [dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/clk_div/sim/clk_div_tb.vcd"
-[dumpfile_mtime] "Sun Nov 11 19:17:33 2018"
-[dumpfile_size] 6463
+[dumpfile_mtime] "Thu Jan 31 12:26:43 2019"
+[dumpfile_size] 11253
 [savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/clk_div/clk_div.gtkw"
 [timestart] 0
 [size] 1920 1052
 [pos] -1 -1
-*-11.149963 852 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-11.149963 1550 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [sst_width] 222
 [signals_width] 147
 [sst_expanded] 1
-[sst_vpaned_height] 293
-@29
-clk_div_tb.clk
+[sst_vpaned_height] 284
 @28
-clk_div_tb.clk_out
-clk_div_tb.clk_pulse
+clk_div_tb.clk
+clk_div_tb.enable
 @200
 -
+-CLK1. DIV = 0.
 @28
-clk_div_tb.enable
+clk_div_tb.clk_out1
+clk_div_tb.clk_pulse1
+@200
+-
+-CLK2. DIV = 1.
+@28
+clk_div_tb.clk_out2
+clk_div_tb.clk_pulse2
+@200
+-
+-CLK3. DIV = 5.
+@28
+clk_div_tb.clk_out3
+clk_div_tb.clk_pulse3
 [pattern_trace] 1
 [pattern_trace] 0
