@@ -1,0 +1,129 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Fri Feb  1 19:57:52 2019
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/main_controller/sim/main_controller_tb.vcd"
+[dumpfile_mtime] "Fri Feb  1 19:57:45 2019"
+[dumpfile_size] 7347
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/main_controller/main_controller.gtkw"
+[timestart] 8336
+[size] 1920 1052
+[pos] -1 -1
+*-7.940125 9739 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] main_controller_tb.
+[sst_width] 210
+[signals_width] 260
+[sst_expanded] 1
+[sst_vpaned_height] 258
+@28
+main_controller_tb.rst
+main_controller_tb.clk
+main_controller_tb.force_send
+@200
+-
+@28
+main_controller_tb.op_stack_empty
+@c00022
+main_controller_tb.op_stack_msg[15:0]
+@28
+(0)main_controller_tb.op_stack_msg[15:0]
+(1)main_controller_tb.op_stack_msg[15:0]
+(2)main_controller_tb.op_stack_msg[15:0]
+(3)main_controller_tb.op_stack_msg[15:0]
+(4)main_controller_tb.op_stack_msg[15:0]
+(5)main_controller_tb.op_stack_msg[15:0]
+(6)main_controller_tb.op_stack_msg[15:0]
+(7)main_controller_tb.op_stack_msg[15:0]
+(8)main_controller_tb.op_stack_msg[15:0]
+(9)main_controller_tb.op_stack_msg[15:0]
+(10)main_controller_tb.op_stack_msg[15:0]
+(11)main_controller_tb.op_stack_msg[15:0]
+(12)main_controller_tb.op_stack_msg[15:0]
+(13)main_controller_tb.op_stack_msg[15:0]
+(14)main_controller_tb.op_stack_msg[15:0]
+(15)main_controller_tb.op_stack_msg[15:0]
+@1401200
+-group_end
+@28
+main_controller_tb.op_stack_pull
+@200
+-
+@28
+main_controller_tb.UART_Tx_FULL
+@c00022
+main_controller_tb.UART_Tx_DATA[7:0]
+@28
+(0)main_controller_tb.UART_Tx_DATA[7:0]
+(1)main_controller_tb.UART_Tx_DATA[7:0]
+(2)main_controller_tb.UART_Tx_DATA[7:0]
+(3)main_controller_tb.UART_Tx_DATA[7:0]
+(4)main_controller_tb.UART_Tx_DATA[7:0]
+(5)main_controller_tb.UART_Tx_DATA[7:0]
+(6)main_controller_tb.UART_Tx_DATA[7:0]
+(7)main_controller_tb.UART_Tx_DATA[7:0]
+@1401200
+-group_end
+@28
+main_controller_tb.UART_send
+@200
+-
+@28
+main_controller_tb.ULPI_busy
+@22
+main_controller_tb.ULPI_REG_VAL_R[7:0]
+@c00022
+main_controller_tb.ULPI_REG_VAL_W[7:0]
+@28
+(0)main_controller_tb.ULPI_REG_VAL_W[7:0]
+(1)main_controller_tb.ULPI_REG_VAL_W[7:0]
+(2)main_controller_tb.ULPI_REG_VAL_W[7:0]
+(3)main_controller_tb.ULPI_REG_VAL_W[7:0]
+(4)main_controller_tb.ULPI_REG_VAL_W[7:0]
+(5)main_controller_tb.ULPI_REG_VAL_W[7:0]
+(6)main_controller_tb.ULPI_REG_VAL_W[7:0]
+(7)main_controller_tb.ULPI_REG_VAL_W[7:0]
+@1401200
+-group_end
+@c00022
+main_controller_tb.ULPI_ADDR[5:0]
+@28
+(0)main_controller_tb.ULPI_ADDR[5:0]
+(1)main_controller_tb.ULPI_ADDR[5:0]
+(2)main_controller_tb.ULPI_ADDR[5:0]
+(3)main_controller_tb.ULPI_ADDR[5:0]
+(4)main_controller_tb.ULPI_ADDR[5:0]
+(5)main_controller_tb.ULPI_ADDR[5:0]
+@1401200
+-group_end
+@28
+main_controller_tb.ULPI_PrR
+main_controller_tb.ULPI_PrW
+@200
+-
+@28
+main_controller_tb.ULPI_INFO_re
+main_controller_tb.ULPI_INFO_buff_empty
+@22
+main_controller_tb.ULPI_USB_INFO_DATA[15:0]
+@28
+main_controller_tb.main_controller_mut.INFO_count_r[1:0]
+@200
+-
+@28
+main_controller_tb.ULPI_DATA_re
+@23
+main_controller_tb.ULPI_USB_DATA[7:0]
+@28
+main_controller_tb.ULPI_DATA_buff_empty
+@22
+main_controller_tb.main_controller_mut.DATA_count_r[9:0]
+@200
+-
+@28
+main_controller_tb.main_controller_mut.MAIN_cmd_r[1:0]
+@22
+main_controller_tb.main_controller_mut.MAIN_state_r[3:0]
+@24
+main_controller_tb.test_num[32:0]
+[pattern_trace] 1
+[pattern_trace] 0
