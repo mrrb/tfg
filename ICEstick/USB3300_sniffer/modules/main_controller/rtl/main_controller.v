@@ -100,7 +100,8 @@ module main_controller (
 
     assign UART_Tx_DATA = UART_Tx_DATA_r; // #OUTPUT
     assign UART_send = MAIN_s_REG_WAIT2  ||
-                       MAIN_s_RECV_SEND1;   // #OUTPUT
+                       MAIN_s_RECV_SEND1 ||
+                       MAIN_s_RECV_SEND2;   // #OUTPUT
 
     assign op_stack_pull = MAIN_s_REG_READ  ||
                            MAIN_s_REG_WRITE ||

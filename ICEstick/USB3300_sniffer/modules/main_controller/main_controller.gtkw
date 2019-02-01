@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Fri Feb  1 19:57:52 2019
+[*] Fri Feb  1 21:38:23 2019
 [*]
 [dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/main_controller/sim/main_controller_tb.vcd"
-[dumpfile_mtime] "Fri Feb  1 19:57:45 2019"
-[dumpfile_size] 7347
+[dumpfile_mtime] "Fri Feb  1 21:38:13 2019"
+[dumpfile_size] 7383
 [savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/main_controller/main_controller.gtkw"
-[timestart] 8336
+[timestart] 0
 [size] 1920 1052
 [pos] -1 -1
-*-7.940125 9739 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-10.940125 5950 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] main_controller_tb.
 [sst_width] 210
 [signals_width] 260
 [sst_expanded] 1
-[sst_vpaned_height] 258
+[sst_vpaned_height] 250
 @28
 main_controller_tb.rst
 main_controller_tb.clk
@@ -63,7 +63,7 @@ main_controller_tb.UART_Tx_DATA[7:0]
 (7)main_controller_tb.UART_Tx_DATA[7:0]
 @1401200
 -group_end
-@28
+@29
 main_controller_tb.UART_send
 @200
 -
@@ -111,7 +111,7 @@ main_controller_tb.main_controller_mut.INFO_count_r[1:0]
 -
 @28
 main_controller_tb.ULPI_DATA_re
-@23
+@22
 main_controller_tb.ULPI_USB_DATA[7:0]
 @28
 main_controller_tb.ULPI_DATA_buff_empty
