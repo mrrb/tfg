@@ -121,12 +121,12 @@ module main_controller_tb ();
         #4 UART_Tx_FULL = 0;
         #2.5
 
-        // // Test 6. UART forced send last register.
-        // test_num = 6;
-        // force_send = 1;
-        // ULPI_REG_VAL_R = 8'b01101000;
-        // #1.5 force_send = 0;
-        // #3.5
+        // Test 6. UART forced send last register.
+        test_num = 6;
+        force_send = 1;
+        ULPI_REG_VAL_R = 8'b01101000;
+        #1.5 force_send = 0;
+        #3.5
 
         // Test 7. RECV send test.
         test_num = 7;

@@ -73,9 +73,10 @@ module main_controller (
     wire MAIN_s_IDLE;       // HIGH if MAIN_state_r == MAIN_IDLE,       else LOW
     wire MAIN_s_REG_READ;   // HIGH if MAIN_state_r == MAIN_REG_READ,   else LOW
     wire MAIN_s_REG_WRITE;  // HIGH if MAIN_state_r == MAIN_REG_WRITE,  else LOW
-    wire MAIN_s_REG_WAIT1;  // HIGH if MAIN_state_r == MAIN_REG_WAIT1,  else LOW
+    wire MAIN_s_REG_WAIT;   // HIGH if MAIN_state_r == MAIN_REG_WAIT,   else LOW
     wire MAIN_s_REG_SEND;   // HIGH if MAIN_state_r == MAIN_REG_SEND,   else LOW
-    wire MAIN_s_REG_WAIT2;  // HIGH if MAIN_state_r == MAIN_REG_WAIT2,  else LOW
+    wire MAIN_s_FORCE_SEND; // HIGH if MAIN_state_r == MAIN_FORCE_SEND, else LOW
+    wire MAIN_s_UART_WAIT;  // HIGH if MAIN_state_r == MAIN_UART_WAIT,  else LOW
     wire MAIN_s_RECV;       // HIGH if MAIN_state_r == MAIN_RECV,       else LOW
     wire MAIN_s_RECV_SEND1; // HIGH if MAIN_state_r == MAIN_RECV_SEND1, else LOW
     wire MAIN_s_RECV_WAIT;  // HIGH if MAIN_state_r == MAIN_RECV_WAIT,  else LOW
@@ -85,9 +86,10 @@ module main_controller (
     assign MAIN_s_IDLE       = (MAIN_state_r == MAIN_IDLE)       ? 1'b1 : 1'b0; // #FLAG
     assign MAIN_s_REG_READ   = (MAIN_state_r == MAIN_REG_READ)   ? 1'b1 : 1'b0; // #FLAG
     assign MAIN_s_REG_WRITE  = (MAIN_state_r == MAIN_REG_WRITE)  ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_REG_WAIT1  = (MAIN_state_r == MAIN_REG_WAIT1)  ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_REG_WAIT   = (MAIN_state_r == MAIN_REG_WAIT)   ? 1'b1 : 1'b0; // #FLAG
     assign MAIN_s_REG_SEND   = (MAIN_state_r == MAIN_REG_SEND)   ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_REG_WAIT2  = (MAIN_state_r == MAIN_REG_WAIT2)  ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_FORCE_SEND = (MAIN_state_r == MAIN_FORCE_SEND) ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_UART_WAIT  = (MAIN_state_r == MAIN_UART_WAIT)  ? 1'b1 : 1'b0; // #FLAG
     assign MAIN_s_RECV       = (MAIN_state_r == MAIN_RECV)       ? 1'b1 : 1'b0; // #FLAG
     assign MAIN_s_RECV_SEND1 = (MAIN_state_r == MAIN_RECV_SEND1) ? 1'b1 : 1'b0; // #FLAG
     assign MAIN_s_RECV_WAIT  = (MAIN_state_r == MAIN_RECV_WAIT)  ? 1'b1 : 1'b0; // #FLAG
@@ -95,11 +97,11 @@ module main_controller (
 
     assign ULPI_ADDR = ULPI_ADDR_r; // #OUTPUT
     assign ULPI_REG_VAL_W = ULPI_REG_VAL_W_r; // #OUTPUT
-    assign ULPI_PrW = (MAIN_cmd_r == 2'b10) ? MAIN_s_REG_WAIT1 : 1'b0; // #OUTPUT
-    assign ULPI_PrR = (MAIN_cmd_r == 2'b11) ? MAIN_s_REG_WAIT1 : 1'b0; // #OUTPUT
+    assign ULPI_PrW = (MAIN_cmd_r == 2'b10) ? MAIN_s_REG_WAIT : 1'b0; // #OUTPUT
+    assign ULPI_PrR = (MAIN_cmd_r == 2'b11) ? MAIN_s_REG_WAIT : 1'b0; // #OUTPUT
 
     assign UART_Tx_DATA = UART_Tx_DATA_r; // #OUTPUT
-    assign UART_send = MAIN_s_REG_WAIT2  ||
+    assign UART_send = MAIN_s_UART_WAIT  ||
                        MAIN_s_RECV_SEND1 ||
                        MAIN_s_RECV_SEND2;   // #OUTPUT
 
@@ -116,13 +118,14 @@ module main_controller (
     localparam MAIN_IDLE       = 0;
     localparam MAIN_REG_READ   = 1;
     localparam MAIN_REG_WRITE  = 2;
-    localparam MAIN_REG_WAIT1  = 3;
+    localparam MAIN_REG_WAIT   = 3;
     localparam MAIN_REG_SEND   = 4;
-    localparam MAIN_REG_WAIT2  = 5;
-    localparam MAIN_RECV       = 6;
-    localparam MAIN_RECV_SEND1 = 7;
-    localparam MAIN_RECV_WAIT  = 8;
-    localparam MAIN_RECV_SEND2 = 9;
+    localparam MAIN_FORCE_SEND = 5;
+    localparam MAIN_UART_WAIT  = 6;
+    localparam MAIN_RECV       = 7;
+    localparam MAIN_RECV_SEND1 = 8;
+    localparam MAIN_RECV_WAIT  = 9;
+    localparam MAIN_RECV_SEND2 = 10;
     // End of TOP States
 
     // TOP controller
@@ -132,7 +135,7 @@ module main_controller (
         else begin
             case(MAIN_state_r)
                 MAIN_IDLE: begin
-                    if(!op_stack_empty || force_send) begin
+                    if(!op_stack_empty) begin
                         /*
                            00 -> DATA_RECV
                            01 -> REG_SEND
@@ -141,31 +144,36 @@ module main_controller (
                          */
                         if(op_stack_msg[15:14] == 2'b00 && !ULPI_INFO_buff_empty)
                             MAIN_state_r <= MAIN_RECV;
-                        else if(op_stack_msg[15:14] == 2'b01 || force_send)
+                        else if(op_stack_msg[15:14] == 2'b01)
                             MAIN_state_r <= MAIN_REG_SEND;
                         if(op_stack_msg[15:14] == 2'b10)
                             MAIN_state_r <= MAIN_REG_WRITE;
                         else if(op_stack_msg[15:14] == 2'b11)
                             MAIN_state_r <= MAIN_REG_READ;
                     end
+                    else if(force_send)
+                        MAIN_state_r <= MAIN_FORCE_SEND;
                     else
                         MAIN_state_r <= MAIN_IDLE;
                 end
                 MAIN_REG_READ: begin
-                    MAIN_state_r <= MAIN_REG_WAIT1;
+                    MAIN_state_r <= MAIN_REG_WAIT;
                 end
                 MAIN_REG_WRITE: begin
-                    MAIN_state_r <= MAIN_REG_WAIT1;
+                    MAIN_state_r <= MAIN_REG_WAIT;
                 end
-                MAIN_REG_WAIT1: begin
+                MAIN_REG_WAIT: begin
                     if(!ULPI_busy) MAIN_state_r <= MAIN_IDLE;
-                    else           MAIN_state_r <= MAIN_REG_WAIT1;
+                    else           MAIN_state_r <= MAIN_REG_WAIT;
                 end
                 MAIN_REG_SEND: begin
-                    MAIN_state_r <= MAIN_REG_WAIT2;
+                    MAIN_state_r <= MAIN_UART_WAIT;
                 end
-                MAIN_REG_WAIT2: begin
-                    if(UART_Tx_FULL) MAIN_state_r <= MAIN_REG_WAIT2;
+                MAIN_FORCE_SEND: begin
+                    MAIN_state_r <= MAIN_UART_WAIT;
+                end
+                MAIN_UART_WAIT: begin
+                    if(UART_Tx_FULL) MAIN_state_r <= MAIN_UART_WAIT;
                     else             MAIN_state_r <= MAIN_IDLE;
                 end
                 MAIN_RECV: begin
@@ -229,6 +237,10 @@ module main_controller (
             UART_Tx_DATA_r <= DATA_count_r[7:0];
         else if(MAIN_s_RECV_SEND2)
             UART_Tx_DATA_r <= ULPI_USB_DATA;
+        else if(MAIN_s_FORCE_SEND)
+            // UART_Tx_DATA_r <= "M";
+            UART_Tx_DATA_r <= 8'b01001101;
+            // UART_Tx_DATA_r <= 8'b10110010;
     end
 
     // DATA counter & RxCMD
