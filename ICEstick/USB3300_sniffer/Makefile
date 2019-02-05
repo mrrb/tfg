@@ -7,7 +7,7 @@ SIM_DIR   := ./sim
 PRE_DIR   := ./
 BUILD_DIR := ./build
 
-FREQ_MIN  := 60
+FREQ_MIN  := 61
 
 all: prog
 
