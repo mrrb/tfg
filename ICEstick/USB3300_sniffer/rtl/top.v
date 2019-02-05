@@ -28,12 +28,14 @@
 `include "./modules/ULPI_op_stack.vh"
 `include "./modules/btn_debouncer.vh"
 `include "./modules/main_controller.vh"
+`include "./modules/signal_trigger.vh"
 
  module USB3300_sniffer #(
-                          parameter DIV_TIMERS = 25,
+                          parameter DIV_TIMERS = 24,
                           parameter DIV_DEBOUNCE = 19,
                         //   parameter COUNTER_BAUDRATE = `B115200
                           parameter COUNTER_BAUDRATE = `B921600
+                        //   parameter COUNTER_BAUDRATE = 16 /* Max tested baudrate 3750000 bauds -> 16 */
                          )
                          (
                           // System signals
@@ -58,8 +60,8 @@
                          );
 
 /// Config
-    parameter LED_CLK_ULPI_DIV_EN = 1;
-    parameter LED_CLK_ICE_DIV_EN  = 1;
+    parameter LED_CLK_ULPI_DIV_EN = 1'b1;
+    parameter LED_CLK_ICE_DIV_EN  = 1'b1;
 /// End of Config
 
 /// Reset
@@ -69,6 +71,7 @@
 
 /// Buttons
     wire btn1_debounce, btn2_debounce;
+    wire btn2_pulse;
 
     btn_debouncer btn1 (
                         // System signals
@@ -87,6 +90,12 @@
                         .btn_in(!IO_BTNs[1]),   // [Input]
                         .btn_out(btn2_debounce) // [Output]
                        );
+
+    signal_trigger btn2_trigger (
+                                 .clk(clk_ULPI),               // [Input]
+                                 .input_signal(btn2_debounce), // [Input]
+                                 .output_signal(btn2_pulse)    // [Output]
+                                );
 /// End of Buttons
 
 /// Timers & clocks
@@ -349,7 +358,7 @@
                                      // System signals
                                      .rst(rst), // [Input]
                                      .clk(clk_ULPI), // [Input]
-                                     .force_send(btn2_debounce),
+                                     .force_send(btn2_pulse),
 
                                      // Op stack
                                      .op_stack_msg(op_stack_msg), // [Input]
