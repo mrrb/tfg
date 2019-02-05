@@ -1,0 +1,23 @@
+[*]
+[*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
+[*] Fri Feb  1 22:42:59 2019
+[*]
+[dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/signal_trigger/sim/signal_trigger_tb.vcd"
+[dumpfile_mtime] "Fri Feb  1 22:42:29 2019"
+[dumpfile_size] 897
+[savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/modules/signal_trigger/signal_trigger.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -30 -30
+*-9.000000 1713 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 210
+[signals_width] 121
+[sst_expanded] 1
+[sst_vpaned_height] 302
+@28
+signal_trigger_tb.clk
+signal_trigger_tb.input_signal
+@29
+signal_trigger_tb.output_signal
+[pattern_trace] 1
+[pattern_trace] 0
