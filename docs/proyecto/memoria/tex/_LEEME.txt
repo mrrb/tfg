@@ -1,3 +1,0 @@
-En esta carpeta debes meter el cuerpo de la memoria.
-
-Organiza la estructura como quieras, con subcarpetas si es necesario.  Usar muchas carpetas juega en tu contra, dificulta los movimientos y la búsqueda.  Mi recomendación es que uses una estructura tan plana como puedas.
