@@ -69,31 +69,35 @@ module main_controller (
 
     reg [7:0] UART_Tx_DATA_r = 0;
 
+    reg toggle_r = 0;
+
     // Flags
-    wire MAIN_s_IDLE;       // HIGH if MAIN_state_r == MAIN_IDLE,       else LOW
-    wire MAIN_s_REG_READ;   // HIGH if MAIN_state_r == MAIN_REG_READ,   else LOW
-    wire MAIN_s_REG_WRITE;  // HIGH if MAIN_state_r == MAIN_REG_WRITE,  else LOW
-    wire MAIN_s_REG_WAIT;   // HIGH if MAIN_state_r == MAIN_REG_WAIT,   else LOW
-    wire MAIN_s_REG_SEND;   // HIGH if MAIN_state_r == MAIN_REG_SEND,   else LOW
-    wire MAIN_s_FORCE_SEND; // HIGH if MAIN_state_r == MAIN_FORCE_SEND, else LOW
-    wire MAIN_s_UART_WAIT;  // HIGH if MAIN_state_r == MAIN_UART_WAIT,  else LOW
-    wire MAIN_s_RECV;       // HIGH if MAIN_state_r == MAIN_RECV,       else LOW
-    wire MAIN_s_RECV_SEND1; // HIGH if MAIN_state_r == MAIN_RECV_SEND1, else LOW
-    wire MAIN_s_RECV_WAIT;  // HIGH if MAIN_state_r == MAIN_RECV_WAIT,  else LOW
-    wire MAIN_s_RECV_SEND2; // HIGH if MAIN_state_r == MAIN_RECV_SEND2, else LOW
+    wire MAIN_s_IDLE;        // HIGH if MAIN_state_r == MAIN_IDLE,        else LOW
+    wire MAIN_s_REG_READ;    // HIGH if MAIN_state_r == MAIN_REG_READ,    else LOW
+    wire MAIN_s_REG_WRITE;   // HIGH if MAIN_state_r == MAIN_REG_WRITE,   else LOW
+    wire MAIN_s_REG_WAIT;    // HIGH if MAIN_state_r == MAIN_REG_WAIT,    else LOW
+    wire MAIN_s_REG_SEND;    // HIGH if MAIN_state_r == MAIN_REG_SEND,    else LOW
+    wire MAIN_s_FORCE_SEND;  // HIGH if MAIN_state_r == MAIN_FORCE_SEND,  else LOW
+    wire MAIN_s_UART_WAIT;   // HIGH if MAIN_state_r == MAIN_UART_WAIT,   else LOW
+    wire MAIN_s_RECV;        // HIGH if MAIN_state_r == MAIN_RECV,        else LOW
+    wire MAIN_s_RECV_SEND1;  // HIGH if MAIN_state_r == MAIN_RECV_SEND1,  else LOW
+    wire MAIN_s_RECV_WAIT;   // HIGH if MAIN_state_r == MAIN_RECV_WAIT,   else LOW
+    wire MAIN_s_RECV_SEND2;  // HIGH if MAIN_state_r == MAIN_RECV_SEND2,  else LOW
+    wire MAIN_s_RECV_TOGGLE; // HIGH if MAIN_state_r == MAIN_RECV_TOGGLE, else LOW
 
     // Assigns
-    assign MAIN_s_IDLE       = (MAIN_state_r == MAIN_IDLE)       ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_REG_READ   = (MAIN_state_r == MAIN_REG_READ)   ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_REG_WRITE  = (MAIN_state_r == MAIN_REG_WRITE)  ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_REG_WAIT   = (MAIN_state_r == MAIN_REG_WAIT)   ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_REG_SEND   = (MAIN_state_r == MAIN_REG_SEND)   ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_FORCE_SEND = (MAIN_state_r == MAIN_FORCE_SEND) ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_UART_WAIT  = (MAIN_state_r == MAIN_UART_WAIT)  ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_RECV       = (MAIN_state_r == MAIN_RECV)       ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_RECV_SEND1 = (MAIN_state_r == MAIN_RECV_SEND1) ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_RECV_WAIT  = (MAIN_state_r == MAIN_RECV_WAIT)  ? 1'b1 : 1'b0; // #FLAG
-    assign MAIN_s_RECV_SEND2 = (MAIN_state_r == MAIN_RECV_SEND2) ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_IDLE        = (MAIN_state_r == MAIN_IDLE)        ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_REG_READ    = (MAIN_state_r == MAIN_REG_READ)    ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_REG_WRITE   = (MAIN_state_r == MAIN_REG_WRITE)   ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_REG_WAIT    = (MAIN_state_r == MAIN_REG_WAIT)    ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_REG_SEND    = (MAIN_state_r == MAIN_REG_SEND)    ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_FORCE_SEND  = (MAIN_state_r == MAIN_FORCE_SEND)  ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_UART_WAIT   = (MAIN_state_r == MAIN_UART_WAIT)   ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_RECV        = (MAIN_state_r == MAIN_RECV)        ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_RECV_SEND1  = (MAIN_state_r == MAIN_RECV_SEND1)  ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_RECV_WAIT   = (MAIN_state_r == MAIN_RECV_WAIT)   ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_RECV_SEND2  = (MAIN_state_r == MAIN_RECV_SEND2)  ? 1'b1 : 1'b0; // #FLAG
+    assign MAIN_s_RECV_TOGGLE = (MAIN_state_r == MAIN_RECV_TOGGLE) ? 1'b1 : 1'b0; // #FLAG
 
     assign ULPI_ADDR = ULPI_ADDR_r; // #OUTPUT
     assign ULPI_REG_VAL_W = ULPI_REG_VAL_W_r; // #OUTPUT
@@ -105,27 +109,29 @@ module main_controller (
                        MAIN_s_RECV_SEND1 ||
                        MAIN_s_RECV_SEND2;   // #OUTPUT
 
-    assign op_stack_pull = MAIN_s_REG_READ  ||
-                           MAIN_s_REG_WRITE ||
-                           MAIN_s_RECV      ||
-                           MAIN_s_REG_SEND;   // #OUTPUT
+    assign op_stack_pull = MAIN_s_REG_READ    ||
+                           MAIN_s_REG_WRITE   ||
+                           MAIN_s_RECV        ||
+                           MAIN_s_RECV_TOGGLE ||
+                           MAIN_s_REG_SEND;      // #OUTPUT
 
     assign ULPI_INFO_re = MAIN_s_RECV; // #OUTPUT
     assign ULPI_DATA_re = MAIN_s_RECV_SEND2 && !UART_Tx_FULL; // #OUTPUT
     // End of TOP Regs and wires
 
     // TOP States
-    localparam MAIN_IDLE       = 0;
-    localparam MAIN_REG_READ   = 1;
-    localparam MAIN_REG_WRITE  = 2;
-    localparam MAIN_REG_WAIT   = 3;
-    localparam MAIN_REG_SEND   = 4;
-    localparam MAIN_FORCE_SEND = 5;
-    localparam MAIN_UART_WAIT  = 6;
-    localparam MAIN_RECV       = 7;
-    localparam MAIN_RECV_SEND1 = 8;
-    localparam MAIN_RECV_WAIT  = 9;
-    localparam MAIN_RECV_SEND2 = 10;
+    localparam MAIN_IDLE        = 0;
+    localparam MAIN_REG_READ    = 1;
+    localparam MAIN_REG_WRITE   = 2;
+    localparam MAIN_REG_WAIT    = 3;
+    localparam MAIN_REG_SEND    = 4;
+    localparam MAIN_FORCE_SEND  = 5;
+    localparam MAIN_UART_WAIT   = 6;
+    localparam MAIN_RECV        = 7;
+    localparam MAIN_RECV_SEND1  = 8;
+    localparam MAIN_RECV_WAIT   = 9;
+    localparam MAIN_RECV_SEND2  = 10;
+    localparam MAIN_RECV_TOGGLE = 11;
     // End of TOP States
 
     // TOP controller
@@ -142,8 +148,8 @@ module main_controller (
                            10 -> REG_WRITE
                            11 -> REG_READ
                          */
-                        if(op_stack_msg[15:14] == 2'b00 && !ULPI_INFO_buff_empty)
-                            MAIN_state_r <= MAIN_RECV;
+                        if(op_stack_msg[15:14] == 2'b00)
+                            MAIN_state_r <= MAIN_RECV_TOGGLE;
                         else if(op_stack_msg[15:14] == 2'b01)
                             MAIN_state_r <= MAIN_REG_SEND;
                         if(op_stack_msg[15:14] == 2'b10)
@@ -151,6 +157,8 @@ module main_controller (
                         else if(op_stack_msg[15:14] == 2'b11)
                             MAIN_state_r <= MAIN_REG_READ;
                     end
+                    else if(!ULPI_INFO_buff_empty && toggle_r)
+                        MAIN_state_r <= MAIN_RECV;
                     else if(force_send)
                         MAIN_state_r <= MAIN_FORCE_SEND;
                     else
@@ -164,6 +172,7 @@ module main_controller (
                 end
                 MAIN_REG_WAIT: begin
                     if(!ULPI_busy) MAIN_state_r <= MAIN_IDLE;
+                    // if(!ULPI_busy) MAIN_state_r <= MAIN_FORCE_SEND;
                     else           MAIN_state_r <= MAIN_REG_WAIT;
                 end
                 MAIN_REG_SEND: begin
@@ -196,6 +205,9 @@ module main_controller (
                 MAIN_RECV_SEND2: begin
                     if(UART_Tx_FULL || DATA_count_r != 0) MAIN_state_r <= MAIN_RECV_SEND2;
                     else             MAIN_state_r <= MAIN_IDLE;
+                end
+                MAIN_RECV_TOGGLE: begin
+                    MAIN_state_r <= MAIN_IDLE;
                 end
                 default: MAIN_state_r <= MAIN_IDLE;
             endcase
@@ -239,7 +251,7 @@ module main_controller (
             UART_Tx_DATA_r <= ULPI_USB_DATA;
         else if(MAIN_s_FORCE_SEND)
             // UART_Tx_DATA_r <= "M";
-            UART_Tx_DATA_r <= 8'b01001101;
+            UART_Tx_DATA_r <= ULPI_REG_VAL_R;
             // UART_Tx_DATA_r <= 8'b10110010;
     end
 
@@ -267,6 +279,14 @@ module main_controller (
             INFO_count_r <= 2;
         else if(MAIN_s_RECV_SEND1 && !UART_Tx_FULL)
             INFO_count_r <= INFO_count_r - 1'b1;
+    end
+
+    // Toggle
+    always @(negedge clk `MAIN_CONTROLLER_ASYNC_RESET) begin
+        if(!rst)
+            toggle_r = 0;
+        else if(MAIN_s_RECV_TOGGLE && op_stack_msg[7:0] == 8'b10010110)
+            toggle_r = !toggle_r;
     end
     // End of TOP controllers
 /// End of TOP controller

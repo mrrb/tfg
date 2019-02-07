@@ -128,99 +128,155 @@ module main_controller_tb ();
         #1.5 force_send = 0;
         #3.5
 
-        // Test 7. RECV send test.
+        // Test 7. Send DATA [toggle_r = 0].
         test_num = 7;
         ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
         ULPI_USB_INFO_DATA = 16'b11000100_00000001; ULPI_INFO_buff_empty = 0;
-        op_stack_msg = 16'b00100001_10010110;
-        op_stack_empty = 0;
-        #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
-        #4 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
+        #1.5 ULPI_INFO_buff_empty = 1;
+        #1 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
         #2.5
 
-        // Test 8. RECV (more than 1byte) send test.
+        // Test 8. Toggle recv [Off -> On].
         test_num = 8;
+        op_stack_msg = 16'b00000000_10010110;
+        op_stack_empty = 0;
+        #1.5 op_stack_empty = 1;
+        #2.5
+
+        // Test 9. Send DATA [toggle_r = 1].
+        test_num = 9;
         ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
         ULPI_USB_INFO_DATA = 16'b11000100_00000011; ULPI_INFO_buff_empty = 0;
-        op_stack_msg = 16'b00100001_10010110;
-        op_stack_empty = 0;
-        #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
+        #1.5 ULPI_INFO_buff_empty = 1;
         #4 ULPI_USB_DATA = 8'hBC;
         #1 ULPI_USB_DATA = 8'hCC;
         #1 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
         #2.5
 
-        // Test 9. RECV send empty.!!
-        test_num = 9;
-        ULPI_USB_INFO_DATA = 16'b11000100_00000000; ULPI_INFO_buff_empty = 0;
-        op_stack_msg = 16'b00100001_10010110;
-        op_stack_empty = 0;
-        #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
-        #4.5
-
-        // Test 10. RECV send test with TxFull in MAIN_RECV_SEND1.
+        // Test 10. Send DATA with TxFull in MAIN_RECV_SEND1 [toggle_r = 1].
         test_num = 10;
         UART_Tx_FULL = 1;
         ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
-        ULPI_USB_INFO_DATA = 16'b11000100_00000001; ULPI_INFO_buff_empty = 0;
-        op_stack_msg = 16'b00100001_10010110;
-        op_stack_empty = 0;
-        #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
-        #2 UART_Tx_FULL = 0;
-        #4 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
-        #2.5
-
-        // Test 11. RECV send test with TxFull in MAIN_RECV_SEND2.
-        test_num = 11;
-        ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
-        ULPI_USB_INFO_DATA = 16'b11000100_00000001; ULPI_INFO_buff_empty = 0;
-        op_stack_msg = 16'b00100001_10010110;
-        op_stack_empty = 0;
-        #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
-        #3 UART_Tx_FULL = 1;
-        #3 UART_Tx_FULL = 0;
-        #1 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
-        #2.5
-
-        // Test 12. RECV send (more than 1byte) test with TxFull in MAIN_RECV_SEND2.!!
-        test_num = 12;
-        ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
         ULPI_USB_INFO_DATA = 16'b11000100_00000011; ULPI_INFO_buff_empty = 0;
-        op_stack_msg = 16'b00100001_10010110;
-        op_stack_empty = 0;
-        #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
-        #3 UART_Tx_FULL = 1;
-        #3 UART_Tx_FULL = 0;
-        #1 ULPI_USB_DATA = 8'hBC;
+        #1.5 ULPI_INFO_buff_empty = 1;
+        #2 UART_Tx_FULL = 0;
+        #4 ULPI_USB_DATA = 8'hBC;
         #1 ULPI_USB_DATA = 8'hCC;
         #1 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
         #2.5
 
-        // Test 13. RECV send test with TxFull in MAIN_RECV_WAIT.
-        test_num = 13;
+        // Test 11. Send DATA with TxFull in MAIN_RECV_SEND2 [toggle_r = 1].
+        test_num = 11;
         ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
-        ULPI_USB_INFO_DATA = 16'b11000100_00000001; ULPI_INFO_buff_empty = 0;
-        op_stack_msg = 16'b00100001_10010110;
-        op_stack_empty = 0;
-        #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
-        #2.5 UART_Tx_FULL = 1;
-        #1.5 UART_Tx_FULL = 0;
-        #2 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
+        ULPI_USB_INFO_DATA = 16'b11000100_00000011; ULPI_INFO_buff_empty = 0;
+        #1.5 ULPI_INFO_buff_empty = 1;
+        #3 UART_Tx_FULL = 1;
+        #3 UART_Tx_FULL = 0;
+        #4 ULPI_USB_DATA = 8'hBC;
+        #1 ULPI_USB_DATA = 8'hCC;
+        #1 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
         #2.5
 
-        // Test 14. RECV send test with reset.
-        test_num = 14;
-        ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
-        ULPI_USB_INFO_DATA = 16'b11000100_00000001; ULPI_INFO_buff_empty = 0;
-        op_stack_msg = 16'b00100001_10010110;
+        // Test 11. Toggle recv [On -> Off].
+        test_num = 11;
+        op_stack_msg = 16'b00000000_10010110;
         op_stack_empty = 0;
-        #1 rst = 0;
-        op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
-        ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
-        #1 rst = 1;
+        #1.5 op_stack_empty = 1;
         #2.5
 
-        $finish;
+        // // Test 7. RECV send test.
+        // test_num = 7;
+        // ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
+        // ULPI_USB_INFO_DATA = 16'b11000100_00000001; ULPI_INFO_buff_empty = 0;
+        // op_stack_msg = 16'b00100001_10010110;
+        // op_stack_empty = 0;
+        // #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
+        // #4 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
+        // #2.5
+
+        // // Test 8. RECV (more than 1byte) send test.
+        // test_num = 8;
+        // ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
+        // ULPI_USB_INFO_DATA = 16'b11000100_00000011; ULPI_INFO_buff_empty = 0;
+        // op_stack_msg = 16'b00100001_10010110;
+        // op_stack_empty = 0;
+        // #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
+        // #4 ULPI_USB_DATA = 8'hBC;
+        // #1 ULPI_USB_DATA = 8'hCC;
+        // #1 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
+        // #2.5
+
+        // // Test 9. RECV send empty.!!
+        // test_num = 9;
+        // ULPI_USB_INFO_DATA = 16'b11000100_00000000; ULPI_INFO_buff_empty = 0;
+        // op_stack_msg = 16'b00100001_10010110;
+        // op_stack_empty = 0;
+        // #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
+        // #4.5
+
+        // // Test 10. RECV send test with TxFull in MAIN_RECV_SEND1.
+        // test_num = 10;
+        // UART_Tx_FULL = 1;
+        // ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
+        // ULPI_USB_INFO_DATA = 16'b11000100_00000001; ULPI_INFO_buff_empty = 0;
+        // op_stack_msg = 16'b00100001_10010110;
+        // op_stack_empty = 0;
+        // #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
+        // #2 UART_Tx_FULL = 0;
+        // #4 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
+        // #2.5
+
+        // // Test 11. RECV send test with TxFull in MAIN_RECV_SEND2.
+        // test_num = 11;
+        // ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
+        // ULPI_USB_INFO_DATA = 16'b11000100_00000001; ULPI_INFO_buff_empty = 0;
+        // op_stack_msg = 16'b00100001_10010110;
+        // op_stack_empty = 0;
+        // #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
+        // #3 UART_Tx_FULL = 1;
+        // #3 UART_Tx_FULL = 0;
+        // #1 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
+        // #2.5
+
+        // // Test 12. RECV send (more than 1byte) test with TxFull in MAIN_RECV_SEND2.!!
+        // test_num = 12;
+        // ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
+        // ULPI_USB_INFO_DATA = 16'b11000100_00000011; ULPI_INFO_buff_empty = 0;
+        // op_stack_msg = 16'b00100001_10010110;
+        // op_stack_empty = 0;
+        // #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
+        // #3 UART_Tx_FULL = 1;
+        // #3 UART_Tx_FULL = 0;
+        // #1 ULPI_USB_DATA = 8'hBC;
+        // #1 ULPI_USB_DATA = 8'hCC;
+        // #1 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
+        // #2.5
+
+        // // Test 13. RECV send test with TxFull in MAIN_RECV_WAIT.
+        // test_num = 13;
+        // ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
+        // ULPI_USB_INFO_DATA = 16'b11000100_00000001; ULPI_INFO_buff_empty = 0;
+        // op_stack_msg = 16'b00100001_10010110;
+        // op_stack_empty = 0;
+        // #1.5 op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
+        // #2.5 UART_Tx_FULL = 1;
+        // #1.5 UART_Tx_FULL = 0;
+        // #2 ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
+        // #2.5
+
+        // // Test 14. RECV send test with reset.
+        // test_num = 14;
+        // ULPI_USB_DATA = 8'hAC; ULPI_DATA_buff_empty = 0;
+        // ULPI_USB_INFO_DATA = 16'b11000100_00000001; ULPI_INFO_buff_empty = 0;
+        // op_stack_msg = 16'b00100001_10010110;
+        // op_stack_empty = 0;
+        // #1 rst = 0;
+        // op_stack_empty = 1; ULPI_INFO_buff_empty = 1;
+        // ULPI_DATA_buff_empty = 1; ULPI_USB_DATA = 8'h00;
+        // #1 rst = 1;
+        // #2.5
+
+        #2 $finish;
     end
     /// End of Simulation
 
