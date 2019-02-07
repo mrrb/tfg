@@ -130,8 +130,32 @@ module top_tb ();
         #0.4 NXT = 0;
         #2
 
-        // Test 6. Receive 4 ULPI bytes.
+        // Test 6. Receive 6 ULPI bytes.
         test_counter = 6;
+        #0.2 DATA_r = 8'b11111111; DIR = 1; NXT = 1;
+        #0.2 DATA_r = 8'b10110111; NXT = 0;
+        #0.2 DATA_r = 8'hA4; NXT = 1;
+        #0.2 DATA_r = 8'h3F;
+        #0.2 DATA_r = 8'h03;
+        #0.2 DATA_r = 8'h00;
+        #0.2 DATA_r = 8'hFF;
+        #0.2 DATA_r = 8'b10010110; NXT = 0;
+        #0.2 DATA_r = 8'hAB; NXT = 1;
+        #0.2 NXT = 0; DIR = 0;
+        #2
+
+        // Test 7. Toggle recv.
+        test_counter = 7;
+        #0.4 Rx = 0; /* START */ #0.4 Rx = 0; /* Bit 0 */ #0.4 Rx = 0; /* Bit 1 */ #0.4 Rx = 0; /* Bit 2 */ #0.4 Rx = 0; /* Bit 3 */
+        #0.4 Rx = 0; /* Bit 4 */ #0.4 Rx = 0; /* Bit 5 */ #0.4 Rx = 0; /* Bit 6 */ #0.4 Rx = 0; /* Bit 7 */ #0.4 Rx = 1; /* STOP */
+        #1
+        // Byte 2
+        #0.4 Rx = 0; /* START */ #0.4 Rx = 0; /* Bit 0 */ #0.4 Rx = 1; /* Bit 1 */ #0.4 Rx = 1; /* Bit 2 */ #0.4 Rx = 0; /* Bit 3 */
+        #0.4 Rx = 1; /* Bit 4 */ #0.4 Rx = 0; /* Bit 5 */ #0.4 Rx = 0; /* Bit 6 */ #0.4 Rx = 1; /* Bit 7 */ #0.4 Rx = 1; /* STOP */
+        #50
+
+        // Test 8. Receive 4 ULPI bytes.
+        test_counter = 8;
         #0.2 DATA_r = 8'b11111111; DIR = 1; NXT = 1;
         #0.2 DATA_r = 8'b10110111; NXT = 0;
         #0.2 DATA_r = 8'hA4; NXT = 1;
@@ -140,17 +164,24 @@ module top_tb ();
         #0.2 DATA_r = 8'b10010110; NXT = 0;
         #0.2 DATA_r = 8'hAB; NXT = 1;
         #0.2 NXT = 0; DIR = 0;
+        #40
+
+        // Test 9. TxCMD change.
+        test_counter = 9;
+        #0.2 DATA_r = 8'b11111111; DIR = 1; NXT = 1;
+        #0.2 DATA_r = 8'b10110111; NXT = 0;
+        #0.2 NXT = 0; DIR = 0;
         #2
 
-        // Test 7. Send 4 Bytes of ULPI data.
-        test_counter = 7;
+        // Test 10. Toggle recv.
+        test_counter = 10;
         #0.4 Rx = 0; /* START */ #0.4 Rx = 0; /* Bit 0 */ #0.4 Rx = 0; /* Bit 1 */ #0.4 Rx = 0; /* Bit 2 */ #0.4 Rx = 0; /* Bit 3 */
         #0.4 Rx = 0; /* Bit 4 */ #0.4 Rx = 0; /* Bit 5 */ #0.4 Rx = 0; /* Bit 6 */ #0.4 Rx = 0; /* Bit 7 */ #0.4 Rx = 1; /* STOP */
         #1
         // Byte 2
-        #0.4 Rx = 0; /* START */ #0.4 Rx = 0; /* Bit 0 */ #0.4 Rx = 0; /* Bit 1 */ #0.4 Rx = 0; /* Bit 2 */ #0.4 Rx = 0; /* Bit 3 */
-        #0.4 Rx = 0; /* Bit 4 */ #0.4 Rx = 0; /* Bit 5 */ #0.4 Rx = 0; /* Bit 6 */ #0.4 Rx = 0; /* Bit 7 */ #0.4 Rx = 1; /* STOP */
-        #40
+        #0.4 Rx = 0; /* START */ #0.4 Rx = 0; /* Bit 0 */ #0.4 Rx = 1; /* Bit 1 */ #0.4 Rx = 1; /* Bit 2 */ #0.4 Rx = 0; /* Bit 3 */
+        #0.4 Rx = 1; /* Bit 4 */ #0.4 Rx = 0; /* Bit 5 */ #0.4 Rx = 0; /* Bit 6 */ #0.4 Rx = 1; /* Bit 7 */ #0.4 Rx = 1; /* STOP */
+        #4
 
         $finish;
     end

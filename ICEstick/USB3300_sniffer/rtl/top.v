@@ -34,8 +34,8 @@
                           parameter DIV_TIMERS = 24,
                           parameter DIV_DEBOUNCE = 19,
                         //   parameter COUNTER_BAUDRATE = `B115200
-                          parameter COUNTER_BAUDRATE = `B921600
-                        //   parameter COUNTER_BAUDRATE = 16 /* Max tested baudrate 3750000 bauds -> 16 */
+                        //   parameter COUNTER_BAUDRATE = `B921600
+                          parameter COUNTER_BAUDRATE = 16 /* Max tested baudrate 3750000 bauds -> 16 */
                          )
                          (
                           // System signals

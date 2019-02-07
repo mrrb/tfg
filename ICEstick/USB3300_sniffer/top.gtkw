@@ -1,22 +1,22 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Sat Feb  2 17:03:34 2019
+[*] Wed Feb  6 22:41:13 2019
 [*]
 [dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/sim/top_tb.vcd"
-[dumpfile_mtime] "Sat Feb  2 17:03:22 2019"
-[dumpfile_size] 102825
+[dumpfile_mtime] "Wed Feb  6 22:41:02 2019"
+[dumpfile_size] 149347
 [savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/top.gtkw"
 [timestart] 0
 [size] 1920 1052
 [pos] -1 -1
-*-10.940125 3466 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-10.940125 17826 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top_tb.
 [treeopen] top_tb.USB3300_sniffer_mut.
 [treeopen] top_tb.USB3300_sniffer_mut.ULPI_op_stack.
 [sst_width] 210
 [signals_width] 209
 [sst_expanded] 1
-[sst_vpaned_height] 251
+[sst_vpaned_height] 235
 @28
 top_tb.USB3300_sniffer_mut.rst
 top_tb.USB3300_sniffer_mut.clk_ice
@@ -118,6 +118,8 @@ top_tb.USB3300_sniffer_mut.ULPI.PrW
 top_tb.USB3300_sniffer_mut.ULPI.REG_VAL_W[7:0]
 @200
 -
+@28
+top_tb.USB3300_sniffer_mut.ULPI.ULPI_state_r[2:0]
 @22
 top_tb.USB3300_sniffer_mut.ULPI.RxCMD[7:0]
 @c00022
@@ -133,7 +135,7 @@ top_tb.USB3300_sniffer_mut.ULPI.USB_DATA[7:0]
 (7)top_tb.USB3300_sniffer_mut.ULPI.USB_DATA[7:0]
 @1401200
 -group_end
-@c00023
+@c00022
 top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
 @28
 (0)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
@@ -152,7 +154,7 @@ top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
 (13)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
 (14)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
 (15)top_tb.USB3300_sniffer_mut.ULPI.USB_INFO_DATA[15:0]
-@1401201
+@1401200
 -group_end
 @200
 -
@@ -210,7 +212,7 @@ top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_empty
 top_tb.USB3300_sniffer_mut.main_controller.force_send
 @22
 top_tb.USB3300_sniffer_mut.main_controller.MAIN_state_r[3:0]
-@28
+@29
 top_tb.USB3300_sniffer_mut.main_controller.MAIN_cmd_r[1:0]
 @22
 top_tb.USB3300_sniffer_mut.main_controller.ULPI_ADDR_r[5:0]
@@ -233,6 +235,7 @@ top_tb.test_counter[31:0]
 -
 -Random
 @28
+top_tb.USB3300_sniffer_mut.main_controller.toggle_r
 top_tb.USB3300_sniffer_mut.btn2_pulse
 [pattern_trace] 1
 [pattern_trace] 0
