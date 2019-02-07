@@ -144,7 +144,7 @@ module ULPI_RECV (
     reg INFO_dv_r = 0;
     always @(negedge clk_ULPI `ULPI_RECV_ASYNC_RESET) begin
         if(!rst) INFO_dv_r <= 0;
-        else if(ULPI_RECV_s_READ && !(ctrl_DATA || ctrl_RxCMD))
+        else if(ULPI_RECV_s_READ && !(ctrl_DATA || ctrl_RxCMD) && DATA_COUNTER > 0)
             INFO_dv_r <= 1;
         else INFO_dv_r <= 0;
     end
