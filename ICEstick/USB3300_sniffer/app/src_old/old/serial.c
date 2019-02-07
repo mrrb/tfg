@@ -63,13 +63,12 @@ void set_blocking (int fd, int should_block)
         LOG_E("error %d setting term attributes", errno);
 }
 
-int serial_open(char* portname)
+void serial_open(serial_t *serial)
 {
-    int fd = open(portname, O_RDWR | O_NOCTTY | O_SYNC);
-    if (fd < 0)
+    serial->fd = open(serial->port_name, O_RDWR | O_NOCTTY | O_SYNC);
+    if (serial->fd < 0)
     {
-        LOG_E("error %d opening %s: %s", errno, portname, strerror(errno));
-        return -1;
+        LOG_E("error %d opening %s: %s", errno, serial->port_name, strerror(errno));
     }
-    return fd;
+    set_blocking(serial->fd, 1); 
 }

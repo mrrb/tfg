@@ -29,6 +29,21 @@
 
 #include <stdlib.h>
 
+void print_main_menu(void)
+{
+    LOG(ANSI_ERASE_LINE);
+    LOG(ANSI_TEXT_COLOR_GREEN "## Main menu ##" ANSI_GRAPHICS_RESET "\n");
+                          LOG("0. Config Port.\n");
+                          LOG("1. Open Port.\n");
+                          LOG("2. Send \"Register Read\" command.\n" 
+                              "3. Send \"Register Write\" command.\n"
+                              "4. Send \"Register Send\" command.\n"
+                              "5. Send \"RECV toggle\" command.\n");
+                          LOG("6. Close Port.\n");
+                          LOG("7. Exit.\n");
+                          LOG("> ");
+}
+
 int main(int argc, char const *argv[])
 {
     /* ## CONFIG ## */
@@ -36,8 +51,7 @@ int main(int argc, char const *argv[])
     serial = &serial_s;
 
     serial_set_portname(serial, "/dev/ttyUSB1");
-    serial_set_baudrate(serial, 3750000);
-    // serial_set_baudrate(serial, 921600);
+    serial_set_baudrate(serial, 921600);
     
     serial_open(serial);
     
@@ -47,40 +61,45 @@ int main(int argc, char const *argv[])
     FILE * fp;
     fp = fopen("out.log", "w+");
 
-    // printf("## Register read Test ##\n");
-    // addr = 0x00;
-    // reg_read(serial, addr);
-    // recv_reg(serial, &reg);
-    // printf("Read addr 0x%x\n", addr);
-    // printf("0x%x\n\n", reg);
+    
+    /* ## MAIN LOOP ## */
 
+    char usr_in = '\0';
+    print_main_menu();
+    while((usr_in = getchar()) != '7')
+    {
+        if(usr_in == '0')
+        {
 
-    // printf("## Register write Test ##\n");
-    // addr = 0x16;
-    // data = 0x07;
-    // reg_write(serial, addr, data);
-    // reg_read(serial, addr);
-    // recv_reg(serial, &reg);
-    // printf("Write '%c' (0b"BYTE_TO_BINARY_PATTERN" - 0x%x) to the addr 0x%x\n", data, BYTE_TO_BINARY(data), data, addr);
-    // printf("0x%x\n", reg);
+        }
+        else if(usr_in == '1')
+        {
+            
+        }
+        else if(usr_in == '2')
+        {
 
-    // raw_usb_data_t usb_data;
-    // int code, j;
-    // for(unsigned int i=0; i<100; i++)
-    // {
-    //     code = recv_data(serial, &usb_data);
+        }
+        else if(usr_in == '3')
+        {
 
-    //     if(usb_data.data_len > 0)
-    //     {
-    //         fprintf(fp, "Data_len: %d, TxCMD: "BYTE_TO_BINARY_PATTERN, usb_data.data_len, BYTE_TO_BINARY(usb_data.TxCMD<<2));
-    //         fprintf(fp, " PID: "BYTE_TO_BINARY_PATTERN"\n", BYTE_TO_BINARY(usb_data.data[0]));
+        }
+        else if(usr_in == '4')
+        {
 
-    //         for(j=0; j<usb_data.data_len-1; j++)
-    //             fprintf(fp, "\t%d - 0x%x\n", j, usb_data.data[j]);
-    //     }
-    //     else
-    //         i--;
-    // }
+        }
+        else if(usr_in == '5')
+        {
+
+        }
+        else if(usr_in == '6')
+        {
+
+        }
+        print_main_menu();
+    }
+    
+
     recv_data_toggle(serial);
 
     char buf_info[2];
@@ -88,9 +107,9 @@ int main(int argc, char const *argv[])
     uint8_t TxCMD;
     uint16_t data_len;
     int i, j;
-    for(i=0; i<100000; i++)
+    for(i=0; i<10000; i++)
     {
-        if(i%100 == 0)
+        if(i%10 == 0)
             LOG("DATA #%d\n", i);
 
         if(serial_read(serial, 2, buf_info) < 2)

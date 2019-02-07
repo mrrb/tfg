@@ -12,17 +12,19 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-struct _serial_config_s
+struct _serial_s
 {
     unsigned int baudrate;
     char *port_name;
 
+    int fd;
+
     int is_open;
 };
-typedef struct _serial_config_s serial_config_t;
+typedef struct _serial_s serial_t;
 
-int set_interface_attribs (int fd, int speed, int parity);
-void set_blocking (int fd, int should_block);
-int serial_open(char* portname);
+// int set_interface_attribs (int fd, int speed, int parity);
+// void set_blocking (int fd, int should_block);
+void serial_open(serial_t *serial);
 
 #endif /* _SERIAL_H_ */

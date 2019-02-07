@@ -19,9 +19,53 @@ void init_colors_pairs(void)
 }
 
 
-void init_main_menu()
+void init_main_menu(window_t *win)
 {
-    
+    plot_item_t open_port[] = {
+                               {ITEM_TYPE_INT_INPUT, "Baudrate", "921600", 7, 0},
+                               {ITEM_TYPE_TXT_INPUT, "Device port", "/dev/ttyUSB1", 30, 0},
+                               {ITEM_TYPE_BTN, "Open port", NULL, 'o', 0},
+                               {ITEM_TYPE_BTN, "Go back", NULL, 'b', 0},
+                              };
+
+    plot_item_t reg_read[] = {
+                              {ITEM_TYPE_BIN_INPUT, "Register Address", NULL, 6, 1},
+                              {ITEM_TYPE_BTN, "Send command", NULL, 's ', 0},
+                              {ITEM_TYPE_BTN, "Go back", NULL, 'b', 0},
+                              {ITEM_TYPE_TXT, "PAYLOAD", "11000000_00000000 (0x8C000)", 30, 0},
+                             };
+
+    plot_item_t reg_write[] = {
+                               {ITEM_TYPE_BIN_INPUT, "Register Address", NULL, 6, 1},
+                               {ITEM_TYPE_BIN_INPUT, "Register Data", "00000000", 8, 1},
+                               {ITEM_TYPE_BTN, "Send command", NULL, 's', 0},
+                               {ITEM_TYPE_BTN, "Go back", NULL, 'b', 0},
+                               {ITEM_TYPE_TXT, "PAYLOAD", "10000000_00000000 (0x8000)", 30, 0},
+                              };
+
+    plot_item_t recv_reg[] = {
+                              {ITEM_TYPE_BTN, "Send command", NULL, 's', 0},
+                              {ITEM_TYPE_BTN, "Go back", NULL, 'b', 0},
+                              {ITEM_TYPE_TXT, "PAYLOAD", "01000000_00000000 (0x4000)", 30, 0},
+                             };
+
+    plot_item_t recv_data[] = {
+                               {ITEM_TYPE_BTN, "Send command", NULL, 's', 0},
+                               {ITEM_TYPE_BTN, "Go back", NULL, 'b', 0},
+                               {ITEM_TYPE_TXT, "PAYLOAD", "00000000_00000000 (0x0000)", 30, 0},
+                              };
+
+    plot_item_t close_port[] = {
+                                {ITEM_TYPE_BTN, "Close port", NULL, 'c', 0},
+                                {ITEM_TYPE_BTN, "Go back", NULL, 'b', 0},
+                               };
+
+    win->items_open_port  = open_port;
+    win->items_reg_read   = reg_read;
+    win->items_reg_write  = reg_write;
+    win->items_recv_reg   = recv_reg;
+    win->items_recv_data  = recv_data;
+    win->items_close_port = close_port;
 }
 
 
@@ -82,6 +126,8 @@ window_t *window_init(void)
     win->active_item    = -1;
 
     win->_init_done = 1;
+
+    init_main_menu(win);
 
     return win;
 }
@@ -190,49 +236,49 @@ void plot_btn(WINDOW w, int pos_y, int pos_x)
 }
 
 
-void plot_default_menu(window_t *win)
+void plot_default_menu(window_t *win, app_data_t *app_data)
 {
     char header_text[] = "Default menu title!!";
     print_header_title(win, header_text);
 }
 
 
-void plot_open_port_menu(window_t *win)
+void plot_open_port_menu(window_t *win, app_data_t *app_data)
 {
     char header_text[] = "Open port title!!";
     print_header_title(win, header_text);
 }
 
 
-void plot_reg_read_menu(window_t *win)
+void plot_reg_read_menu(window_t *win, app_data_t *app_data)
 {
     char header_text[] = "Register read title!!";
     print_header_title(win, header_text);
 }
 
 
-void plot_reg_write_menu(window_t *win)
+void plot_reg_write_menu(window_t *win, app_data_t *app_data)
 {
     char header_text[] = "Register write title!!";
     print_header_title(win, header_text);
 }
 
 
-void plot_recv_reg_menu(window_t *win)
+void plot_recv_reg_menu(window_t *win, app_data_t *app_data)
 {
     char header_text[] = "Receive register value title!!";
     print_header_title(win, header_text);
 }
 
 
-void plot_recv_data_menu(window_t *win)
+void plot_recv_data_menu(window_t *win, app_data_t *app_data)
 {
     char header_text[] = "Receive DATA title!!";
     print_header_title(win, header_text);
 }
 
 
-void plot_close_port_menu(window_t *win)
+void plot_close_port_menu(window_t *win, app_data_t *app_data)
 {
     char header_text[] = "Close port title!!";
     print_header_title(win, header_text);
@@ -240,6 +286,24 @@ void plot_close_port_menu(window_t *win)
 
 
 void print_nav_items(window_t *win)
+{
+    int text_width = win->nav_size.x - 2;
+    for(int i=0; i<win->size_nav_items; i++)
+    {
+        if(i == win->selected_item)
+            // wattron(win->win_nav, A_STANDOUT);
+            wattron(win->win_nav, COLOR_PAIR(TXT_NAV_HIGHLIGHT_PAIR));
+        else
+            // wattroff(win->win_nav, A_STANDOUT);
+            wattron(win->win_nav, COLOR_PAIR(TXT_NAV_NORMAL_PAIR));
+        mvwprintw(win->win_nav, i+1, 1, "%.*s", text_width, win->nav_items[i]);
+        wattroff(win->win_nav, COLOR_PAIR(TXT_NAV_NORMAL_PAIR));
+        wattroff(win->win_nav, COLOR_PAIR(TXT_NAV_HIGHLIGHT_PAIR));
+    }
+}
+
+
+void print_main_items(window_t *win)
 {
     int text_width = win->nav_size.x - 2;
     for(int i=0; i<win->size_nav_items; i++)

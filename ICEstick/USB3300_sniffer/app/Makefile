@@ -2,9 +2,9 @@ CC := clang
 # CC := gcc
 # CFLAGS := -std=c17
 CFLAGS := -Wall -Wextra -Wundef -std=gnu17
-# CFLAGS += `pkg-config --cflags lib`
-LFLAGS := -lm -lncurses
-# LFLAGS += `pkg-config --libs stdlib`
+CFLAGS += `pkg-config --cflags ncurses libserialport`
+LFLAGS := -lm
+LFLAGS += `pkg-config --libs libserialport ncurses`
 
 BUILD_DIR := ./build
 SRC_DIR   := ./src
@@ -12,7 +12,7 @@ SRC_DIR   := ./src
 MAIN_OUT_NAME := serial.run
 TEST_OUT_NAME := test.run
 
-SRC_NAMES     = serial menu
+SRC_NAMES     = serial_ctrl
 MAIN_SRC_NAME = main
 TEST_SRC_NAME = test
 
