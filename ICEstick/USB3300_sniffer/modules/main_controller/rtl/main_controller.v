@@ -1,13 +1,46 @@
 /*
  *
  * main_controller module
- * main_controller module let 
+ * This module controls all the others submodules.
  *
  * Inputs:
- *  - 
+ *  - rst. Reset signal.
+ *  - clk. Reference clock.
+ *  - force_send. This signal forces the send of a byte through the serial port.
+ *  - op_stack_msg. Operation that the controller has to do.
+ *  - op_stack_empty. Signal that indicates that the operation buffer is empty.
+ *  - ULPI_busy. Signal that indicates that the ULPI controller is busy.
+ *  - ULPI_USB_DATA. Data received through the ULPI module that is stored in the buffer.
+ *  - ULPI_USB_INFO_DATA. Information about the data stored in the buffer (Last TxCMD and size). 
+ *  - ULPI_DATA_buff_empty. Signal that indicates that the ULPI DATA buffer is empty
+ *  - ULPI_INFO_buff_empty. Signal that indicates that the ULPI INFO buffer is empty
+ *  - ULPI_REG_VAL_R. Value stored in the register with the address given by ULPI_ADDR of the USB3300 ic.
+ *  - UART_Tx_FULL. Signal that indicates that the UART transmission buffer is full.
  *
  * Outputs:
- *  - 
+ *  - op_stack_pull. Signal that makes the operation stack gets the next operation.
+ *  - ULPI_DATA_re. Signal that makes the ULPI_DATA buffer gets the next stored value.
+ *  - ULPI_INFO_re. Signal that makes the ULPI_INFO buffer gets the next stored value.
+ *  - ULPI_REG_VAL_W. Data that is going to be stored in a USB3300 register.
+ *  - ULPI_ADDR. Address that is going to be read/write.
+ *  - ULPI_PrW. Signal that makes the ULPI controller write the USB3300 ULPI_ADDR register with the data in ULPI_REG_VAL_W.
+ *  - ULPI_PrR. Signal that makes the ULPI controller read the USB3300 ULPI_ADDR register.
+ *  - UART_Tx_DATA. Data that is going to be send in through the serial port.
+ *  - UART_send. Signal that send the data of UART_Tx_DATA.
+ *
+ * States:
+ *  - MAIN_IDLE. The module is waiting for a new operation.
+ *  - MAIN_REG_READ. The module activates the signal that controls the REGISTER READ operation.
+ *  - MAIN_REG_WRITE. The module activates the signal that controls the REGISTER WRITE operation.
+ *  - MAIN_REG_WAIT. The module waits until the ULPI module isn't busy.
+ *  - MAIN_REG_SEND. The module stores the ULPI_REG_VAL_R data in the UART_Tx register.
+ *  - MAIN_FORCE_SEND. The module stores an arbitrary value in the UART_Tx register.
+ *  - MAIN_UART_WAIT. The module waits until the data in the UART_Tx register has been accepetd by the UART module.
+ *  - MAIN_RECV. If enabled, the module prepares the data stored in the ULPI buffer.
+ *  - MAIN_RECV_SEND1. The module sends the 2bytes of INFO data.
+ *  - MAIN_RECV_WAIT. The module waits until the UART_Tx buffer is empty and goes back to the IDLE state if there isn't any data in the buffer or goes to the second sending state.
+ *  - MAIN_RECV_SEND2. The module send n bytes (n was obtained in the INFO data) of data through the UART connection.
+ *  - MAIN_RECV_TOGGLE. The module turns on/off the capability to send the data stored in the ULPI buffer.
  *
  */
 
@@ -21,55 +54,55 @@
 
 module main_controller (
                         // System signals
-                        input  wire rst,            // Reset signal
-                        input  wire clk,            // Reference clock input
-                        input  wire force_send,
+                        input  wire rst,                       // Reset signal
+                        input  wire clk,                       // Reference clock input
+                        input  wire force_send,                // Send an arbitrary value
 
                         // Op stack
-                        input  wire [15:0] op_stack_msg,
-                        input  wire op_stack_empty,                        
-                        output wire op_stack_pull,
+                        input  wire [15:0] op_stack_msg,       // Next operation stored in the op_buffer
+                        input  wire op_stack_empty,            // Signal that indicates that the op_stack is empty
+                        output wire op_stack_pull,             // Signal that request a new operation
 
                         // General ULPI signals
-                        input  wire ULPI_busy,
+                        input  wire ULPI_busy,                 // Sgnal that indicates that the ULPI module is busy
                         
                         // DATA ULPI signals
-                        input  wire [7:0] ULPI_USB_DATA,
-                        input  wire [15:0] ULPI_USB_INFO_DATA,
-                        input  wire ULPI_DATA_buff_empty,
-                        input  wire ULPI_INFO_buff_empty,
-                        output wire ULPI_DATA_re,
-                        output wire ULPI_INFO_re,
+                        input  wire [7:0] ULPI_USB_DATA,       // USB DATA ready to be read
+                        input  wire [15:0] ULPI_USB_INFO_DATA, // INFORMATION about the USB DATA
+                        input  wire ULPI_DATA_buff_empty,      // Signal that indicates that the ULPI_DATA_buff is empty
+                        input  wire ULPI_INFO_buff_empty,      // Signal that indicates that the ULPI_INFO_buff is empty
+                        output wire ULPI_DATA_re,              // Signal that requests the next stored data byte
+                        output wire ULPI_INFO_re,              // Signal that requests the next INFO DATA
 
                         // Register ULPI signals
-                        input  wire [7:0] ULPI_REG_VAL_R,
-                        output wire [7:0] ULPI_REG_VAL_W,
-                        output wire [5:0] ULPI_ADDR,
-                        output wire ULPI_PrW,
-                        output wire ULPI_PrR,
+                        input  wire [7:0] ULPI_REG_VAL_R,      // Readed ULPI register value
+                        output wire [7:0] ULPI_REG_VAL_W,      // ULPI register value to be written
+                        output wire [5:0] ULPI_ADDR,           // ULPI register address
+                        output wire ULPI_PrW,                  // Perform Register Write
+                        output wire ULPI_PrR,                  // Perform Register Read
 
                         // UART
-                        input  wire UART_Tx_FULL,
-                        output wire [7:0] UART_Tx_DATA,
-                        output wire UART_send
+                        input  wire UART_Tx_FULL,              // Signal that indicates that the UART_Tx buffer is empty
+                        output wire [7:0] UART_Tx_DATA,        // UART data
+                        output wire UART_send                  // Signal that makes the UART module send a byte
                        );
 
     /// TOP controller
     // TOP Regs and wires
     // Control registers and wires
-    reg [3:0] MAIN_state_r = 0; // Register that stores the current TOP state
-    reg [1:0] MAIN_cmd_r = 0;
+    reg [3:0] MAIN_state_r = 0; // Register that stores the current module state
+    reg [1:0] MAIN_cmd_r = 0;   // Register that stores the command that the controller is doing
 
-    reg [5:0] ULPI_ADDR_r = 0;
-    reg [7:0] ULPI_REG_VAL_W_r = 0;
+    reg [5:0] ULPI_ADDR_r = 0;      // Address where the ULPI module has to read/write
+    reg [7:0] ULPI_REG_VAL_W_r = 0; // Register where the register value that is going to be write is temporarily stored
 
-    reg [5:0] RxCMD_r = 0;
-    reg [1:0] INFO_count_r = 0;
-    reg [9:0] DATA_count_r = 0;
+    reg [5:0] RxCMD_r = 0;      // Last RxCMD known
+    reg [1:0] INFO_count_r = 0; // Register thar gets track of the current INFO byte transferred
+    reg [9:0] DATA_count_r = 0; // Register that gets track of the current DATA byte trasnferred
 
-    reg [7:0] UART_Tx_DATA_r = 0;
+    reg [7:0] UART_Tx_DATA_r = 0; // Register that stores the byte that is going to be send through the serial port
 
-    reg toggle_r = 0;
+    reg toggle_r = 0; // Register that activates the automatic data send
 
     // Flags
     wire MAIN_s_IDLE;        // HIGH if MAIN_state_r == MAIN_IDLE,        else LOW
@@ -143,7 +176,7 @@ module main_controller (
                 MAIN_IDLE: begin
                     if(!op_stack_empty) begin
                         /*
-                           00 -> DATA_RECV
+                           00 -> RECV_TOGGLE
                            01 -> REG_SEND
                            10 -> REG_WRITE
                            11 -> REG_READ

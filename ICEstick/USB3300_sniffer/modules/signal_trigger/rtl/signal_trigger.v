@@ -1,13 +1,15 @@
 /*
  *
  * signal_trigger module
- * signal_trigger module let 
+ * This module generates a pulse in output_signal with the same width that the input clock whenever input_signal is HIGH.
+ * input_signal first must be go back to a LOW state to generate again another pulse.
  *
  * Inputs:
- *  - 
+ *  - clk. Reference clock.
+ *  - input_signal. Signal from which the module generates a pulse.
  *
  * Outputs:
- *  - 
+ *  - output_signal. Generated pulse.
  *
  */
 

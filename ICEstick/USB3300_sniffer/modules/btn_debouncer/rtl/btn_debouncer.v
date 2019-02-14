@@ -1,6 +1,7 @@
 /*
  *
  * btn_debouncer module
+ * This module prevent errors caused by physical artifacts while reading external buttons
  *
  * Inputs:
  *  - clk. Debouncing reference clock.
@@ -27,6 +28,8 @@ module btn_debouncer (
                       input  wire btn_in, // Physical button input
                       output wire btn_out // Debounce button output
                      );
+
+    // The btn_in signal has to be HIGH at least 3 clock pulses to make btn_out HIGH
 
     assign btn_out = r1 & r2 & r3;
 
