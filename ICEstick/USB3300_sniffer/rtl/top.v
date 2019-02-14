@@ -1,11 +1,21 @@
 /*
  * 
- * This is the top file for the USB3300 sniffer, where all the controllers and modules are loaded
+ * This is the top file for the USB3300 sniffer, where all the controllers and modules are loaded.
  * 
  * Modules initialization:
- *  - PLL. Module that generates the Master clock (≅100.5MHz).
+ *  - PLL. Module that generates the Master clock (≅100.5MHz) [NOT IN USE, ONLY ADDED FOR TESTING!!].
  *  - UART. Module that manages the serial communication between the FPGA and the processing unit (a computer in this case).
  *  - ULPI. Module that manages the ULPI interface between the USB3300 ic and the FPGA.
+ *  - clk_div. Module used 3 times, that generates a clock divided n times.
+ *     - clk_div_ice_m.  Status clock generated from clk_ice.
+ *     - clk_div_ULPI_m. Status clock generated from clk_ULPI.
+ *     - clk_div_btn.    Button debouncing clock generated from clk_ULPI.
+ *  - ULPI_op_stack. Module that process and stores incoming orders from the processing unit (a computer in this case).
+ *  - btn_debouncer. Module used 2 times, that clean up physical artifacts generated in the button.
+ *     - btn1. Reset button.
+ *     - btn2. Test button.
+ *  - signal_trigger. Module that generates a pulse whenever the input signal goes from LOW to HIGH.
+ *  - main_controller. Module that controls all the operations that the other modules have to do.
  * 
  */
 
@@ -19,16 +29,15 @@
     `define TOP_ASYNC_RESET
 `endif
 
-`include "./rtl/bauds.vh"
+`include "./rtl/bauds.vh" // Predefined standard bauds with it reference values
 
 `include "./modules/UART.vh"
 `include "./modules/ULPI.vh"
-// `include "./modules/ULPI_WRAPPER.vh"
 `include "./modules/clk_div.vh"
 `include "./modules/ULPI_op_stack.vh"
 `include "./modules/btn_debouncer.vh"
-`include "./modules/main_controller.vh"
 `include "./modules/signal_trigger.vh"
+`include "./modules/main_controller.vh"
 
  module USB3300_sniffer #(
                           parameter DIV_TIMERS = 24,
@@ -54,9 +63,9 @@
                           output wire UART_Tx,        // Serial Write
 
                           // I/O
-                          input  wire [1:0]IO_BTNs,   // 
+                          input  wire [1:0]IO_BTNs,   // Reset and test buttons
                           output wire [4:0]IO_LEDs,   // 4 (red) + 1 (green) LED's on the ICEstick board
-                          output wire [2:0]IO_test
+                          output wire [2:0]IO_test    // Testing signals: UART_Rx, UART_Tx, UART_send.
                          );
 
 /// Config
@@ -187,10 +196,10 @@
 
     SB_PLL40_CORE #(
 		            .FEEDBACK_PATH("SIMPLE"),
-		            .DIVR(4'b0000),		      // DIVR =  0
+		            .DIVR(4'b0000),		        // DIVR =  0
 		            .DIVF(7'b1000010),	      // DIVF = 66
-		            .DIVQ(3'b011),		      // DIVQ =  3
-		            .FILTER_RANGE(3'b001)	  // FILTER_RANGE = 1
+		            .DIVQ(3'b011),		        // DIVQ =  3
+		            .FILTER_RANGE(3'b001)	    // FILTER_RANGE = 1
 	               )
            pll_gen (
 		            .LOCK(pll_locked),        // [Output]
@@ -203,11 +212,11 @@
 
 
 /// UART
-    wire [7:0]UART_DATA_in;
-    wire [7:0]UART_DATA_out;
-    wire UART_send;
-    wire UART_TiP, UART_NrD;         // 
-    wire UART_NxT;
+    wire [7:0]UART_DATA_in;           // DATA to send
+    wire [7:0]UART_DATA_out;          // Received DATA
+    wire UART_send;                   // Signal to send the DATA
+    wire UART_TiP, UART_NrD;          // Signal that indicates that there is a Transmission in Progress or New received DATA
+    wire UART_NxT;                    // Signal to get NexT stored Rx byte
     wire UART_Tx_FULL;                // Tx buffer status signals
     wire UART_Rx_FULL, UART_Rx_EMPTY; // Rx buffer status signals
     wire UART_Rx_clk, UART_Tx_clk;    // UART Rx/Tx clocks
@@ -334,6 +343,7 @@
     wire op_stack_pull;
     wire [15:0] op_stack_msg;
     wire op_stack_full, op_stack_empty;
+
     ULPI_op_stack ULPI_op_stack (
                                  // System signals
                                  .rst(rst),                      // [Input]
@@ -356,37 +366,37 @@
 /// TOP controller
     main_controller main_controller (                        
                                      // System signals
-                                     .rst(rst), // [Input]
-                                     .clk(clk_ULPI), // [Input]
-                                     .force_send(btn2_pulse),
+                                     .rst(rst),                                   // [Input]
+                                     .clk(clk_ULPI),                              // [Input]
+                                     .force_send(btn2_pulse),                     // [Input]
 
                                      // Op stack
-                                     .op_stack_msg(op_stack_msg), // [Input]
-                                     .op_stack_empty(op_stack_empty), // [Input]
-                                     .op_stack_pull(op_stack_pull), // [Output]
+                                     .op_stack_msg(op_stack_msg),                 // [Input]
+                                     .op_stack_empty(op_stack_empty),             // [Input]
+                                     .op_stack_pull(op_stack_pull),               // [Output]
 
                                      // DATA ULPI signals
-                                     .ULPI_USB_DATA(ULPI_USB_DATA), // [Input]
-                                     .ULPI_USB_INFO_DATA(ULPI_USB_INFO_DATA), // [Input]
+                                     .ULPI_USB_DATA(ULPI_USB_DATA),               // [Input]
+                                     .ULPI_USB_INFO_DATA(ULPI_USB_INFO_DATA),     // [Input]
                                      .ULPI_DATA_buff_empty(ULPI_DATA_buff_empty), // [Input]
                                      .ULPI_INFO_buff_empty(ULPI_INFO_buff_empty), // [Input]
-                                     .ULPI_DATA_re(ULPI_DATA_re), // [Output]
-                                     .ULPI_INFO_re(ULPI_INFO_re), // [Output]
+                                     .ULPI_DATA_re(ULPI_DATA_re),                 // [Output]
+                                     .ULPI_INFO_re(ULPI_INFO_re),                 // [Output]
 
                                      // General ULPI signals
-                                     .ULPI_busy(ULPI_busy), // [Input]
+                                     .ULPI_busy(ULPI_busy),                       // [Input]
 
                                      // Register ULPI signals
-                                     .ULPI_REG_VAL_R(ULPI_REG_VAL_R), // [Input]
-                                     .ULPI_REG_VAL_W(ULPI_REG_VAL_W), // [Output]
-                                     .ULPI_ADDR(ULPI_ADDR), // [Output]
-                                     .ULPI_PrW(ULPI_PrW), // [Output]
-                                     .ULPI_PrR(ULPI_PrR), // [Output]
+                                     .ULPI_REG_VAL_R(ULPI_REG_VAL_R),             // [Input]
+                                     .ULPI_REG_VAL_W(ULPI_REG_VAL_W),             // [Output]
+                                     .ULPI_ADDR(ULPI_ADDR),                       // [Output]
+                                     .ULPI_PrW(ULPI_PrW),                         // [Output]
+                                     .ULPI_PrR(ULPI_PrR),                         // [Output]
 
                                      // UART
-                                     .UART_Tx_FULL(UART_Tx_FULL), // [Input]
-                                     .UART_Tx_DATA(UART_DATA_in), // [Output]
-                                     .UART_send(UART_send) // [Output]
+                                     .UART_Tx_FULL(UART_Tx_FULL),                 // [Input]
+                                     .UART_Tx_DATA(UART_DATA_in),                 // [Output]
+                                     .UART_send(UART_send)                        // [Output]
                                     );
 /// End of TOP controller
 
