@@ -1,10 +1,13 @@
 CC := clang
 # CC := gcc
+
 # CFLAGS := -std=c17
 CFLAGS := -Wall -Wextra -Wundef -std=gnu17
-CFLAGS += `pkg-config --cflags ncurses libserialport`
+CFLAGS += `pkg-config --cflags ncurses libserialport json-c`
+
 LFLAGS := -lm
-LFLAGS += `pkg-config --libs libserialport ncurses`
+LFLAGS += `pkg-config --libs libserialport ncurses json-c`
+LFLAGS += -lpthread
 
 BUILD_DIR := ./build
 SRC_DIR   := ./src
@@ -12,7 +15,7 @@ SRC_DIR   := ./src
 MAIN_OUT_NAME := serial.run
 TEST_OUT_NAME := test.run
 
-SRC_NAMES     = serial_ctrl
+SRC_NAMES     = serial_ctrl menu thread_functions
 MAIN_SRC_NAME = main
 TEST_SRC_NAME = test
 
@@ -58,7 +61,6 @@ build: $(BUILD_DIR)/$(OUT_NAME)
 clean:
 	rm -fdr $(BUILD_DIR)/
 	rm -f $(SRC_DIR)/*.o
-	rm -f $(SRC_DIR)/gnuplot_i/*.o
 
 ###
 
