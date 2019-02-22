@@ -1,0 +1,24 @@
+digraph ULPI_REG_READ_states
+{
+    // label = "ULPI_REG_READ states machine";
+    nodesep = 0.4;
+    splines="spline";
+
+    a [label="ULPI_RR_IDLE", shape="doublecircle"];
+    b [label="ULPI_RR_TXCMD", shape="circle"];
+    c [label="ULPI_RR_WAIT1", shape="circle"];
+    d [label="ULPI_RR_READ", shape="circle"];
+    e [label="ULPI_RR_WAIT2", shape="circle"];
+
+    a -> a [label="!PrR"];
+    a -> b [label="PrR"];
+
+    b -> b [label="!NXT_r"];
+    b -> c [label="NXT_r"];
+
+    c -> d [label="1"];
+
+    d -> e [label="1"];
+
+    e -> a [label="1"];
+}

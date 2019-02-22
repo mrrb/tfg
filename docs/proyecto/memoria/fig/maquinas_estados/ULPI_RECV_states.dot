@@ -1,0 +1,15 @@
+digraph ULPI_RECV_states
+{
+    // label = "ULPI_RECV states machine";
+    nodesep = 0.4;
+    splines="spline";
+
+    a [label="ULPI_RECV_IDLE", shape="doublecircle"];
+    b [label="ULPI_RECV_READ", shape="circle"];
+
+    // a -> a [label="!((ctrl_DATA || ctrl_RxCMD) & ReadAllow)"];
+    a -> b [label="(ctrl_DATA || ctrl_RxCMD) & ReadAllow"];
+
+    b -> b [label="(ctrl_DATA | ctrl_RxCMD)"];
+    b -> a [label="!(ctrl_DATA | ctrl_RxCMD)"];
+}

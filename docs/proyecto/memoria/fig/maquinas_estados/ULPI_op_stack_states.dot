@@ -1,0 +1,19 @@
+digraph ULPI_op_stack_states
+{
+    nodesep = .9;
+    splines="spline";
+
+    node [shape="circle"];
+
+    IDLE [label="SERIAL_IDLE", shape="doublecircle"];
+    READ [label="SERIAL_READ"];
+    PUSH [label="SERIAL_PUSH"];
+
+    IDLE -> IDLE [label="UART_Rx_EMPTY"];
+    IDLE -> READ [label="!UART_Rx_EMPTY"];
+
+    READ -> IDLE [label="n_byte_r = 0"];
+    READ -> PUSH [label="n_byte_r = 1"];
+
+    PUSH -> IDLE [label="1"];
+}

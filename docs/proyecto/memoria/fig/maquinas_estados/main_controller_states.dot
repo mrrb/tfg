@@ -1,0 +1,57 @@
+digraph main_controller_states
+{
+    nodesep = 0.8;
+    splines="spiline";
+
+    node [shape="circle"];
+
+    IDLE [label="MAIN_IDLE", shape="doublecircle"];
+    REG_READ [label="MAIN_REG_READ"];
+    REG_WRITE [label="MAIN_REG_WRITE"];
+    REG_WAIT [label="MAIN_REG_WAIT"];
+    REG_SEND [label="MAIN_REG_SEND"];
+    FORCE [label="MAIN_FORCE_SEND"];
+    UART_WAIT [label="MAIN_UART_WAIT"];
+    RECV        [label="MAIN_RECV"];
+    RECV_SEND1  [label="MAIN_RECV_SEND1"];
+    RECV_WAIT   [label="MAIN_RECV_WAIT"];
+    RECV_SEND2  [label="MAIN_RECV_SEND2"];
+    RECV_TOGGLE [label="MAIN_RECV_TOGGLE"];
+
+
+    IDLE -> RECV_TOGGLE [label="!op_stack_empty &\n op_stack_msg[15:14] = 00"];
+    IDLE -> REG_SEND [label="!op_stack_empty &\n op_stack_msg[15:14] = 01"];
+    IDLE -> REG_WRITE [label="!op_stack_empty &\n op_stack_msg[15:14] = 10"];
+    IDLE -> REG_READ [label="!op_stack_empty &\n op_stack_msg[15:14] = 11"];
+    IDLE -> RECV [label="op_stack_empty &\n ULPI_INFO_buff_empty &\n toggle_r"];
+    IDLE -> FORCE [label="!op_stack_empty &\n (!ULPI_INFO_buff_empty | !toggle_r) &\n force_send"];
+    IDLE -> IDLE [label="!op_stack_empty &\n (!ULPI_INFO_buff_empty | !toggle_r) &\n !force_send"];
+
+    REG_READ -> REG_WAIT [label="1"];
+
+    REG_WRITE -> REG_WAIT [label="1"];
+
+    REG_WAIT -> IDLE [label="!ULPI_busy"];
+    REG_WAIT -> REG_WAIT [label="ULPI_busy"];
+
+    REG_SEND -> UART_WAIT [label="1"];
+
+    FORCE -> UART_WAIT [label="1"];
+
+    UART_WAIT -> IDLE [label="!UART_Tx_FULL"];
+    UART_WAIT -> UART_WAIT [label="UART_Tx_FULL"];
+
+    RECV -> RECV_SEND1 [label="1"];
+
+    RECV_SEND1 -> RECV_WAIT [label="INFO_count_r = 0"];
+    RECV_SEND1 -> RECV_SEND1 [label="UART_Tx_FULL |\n INFO_count_r \!= 0"];
+
+    RECV_WAIT -> IDLE [label="!UART_Tx_FULL &\n DATA_count_r = 0"];
+    RECV_WAIT -> RECV_SEND2 [label="!UART_Tx_FULL &\n DATA_count_r \!= 0"];
+    RECV_WAIT -> RECV_WAIT [label="UART_Tx_FULL"];
+
+    RECV_SEND2 -> IDLE [label="DATA_count_r != 0"];
+    RECV_SEND2 -> RECV_SEND2 [label="UART_Tx_FULL |\n DATA_count_r \!= 0"];
+
+    RECV_TOGGLE -> IDLE [label="1"];
+}

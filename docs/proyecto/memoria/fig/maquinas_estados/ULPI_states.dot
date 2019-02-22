@@ -1,0 +1,33 @@
+digraph ULPI_states
+{
+    // label = "ULPI states machine";
+    nodesep = 0.8;
+    splines="spline";
+
+    a [label="ULPI_START", shape="doublecircle"];
+    b [label="ULPI_IDLE", shape="circle"];
+    c [label="ULPI_RECV", shape="circle"];
+    d [label="ULPI_REG_WRITE", shape="circle"];
+    e [label="ULPI_REG_READ", shape="circle"];
+
+    a -> a [label="DIR"];
+    a -> b [label="!DIR"];
+
+    b -> c [label="RECV_busy"];
+    b -> d [label="ctrl_PrW"];
+    b -> e [label="ctrl_PrR"];
+    b -> b [label="
+!RECV_busy &
+!ctrl_PrW &
+!ctrl_PrR
+                  "];
+
+    c -> b [label="!RECV_busy"];
+    c -> c [label="RECV_busy"];
+
+    d -> b [label="!RW_busy"];
+    d -> d [label="RW_busy"];
+
+    e -> b [label="!RR_busy"];
+    e -> e [label="RR_busy"];
+}

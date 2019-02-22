@@ -1,0 +1,22 @@
+digraph ULPI_REG_WRITE_states
+{
+    // label = "ULPI_REG_WRITE states machine";
+    nodesep = 0.35;
+    splines="spline";
+
+    a [label="ULPI_RW_IDLE", shape="doublecircle"];
+    b [label="ULPI_RW_TXCMD", shape="circle"];
+    c [label="ULPI_RW_DATA", shape="circle"];
+    d [label="ULPI_RW_STOP", shape="circle"];
+
+    a -> a [label="!PrW"];
+    a -> b [label="PrW"];
+
+    b -> b [label="!NXT_r"];
+    b -> c [label="NXT_r"];
+
+    c -> c [label="!NXT_r"];
+    c -> d [label="NXT_r"];
+
+    d -> a [label="1"];
+}

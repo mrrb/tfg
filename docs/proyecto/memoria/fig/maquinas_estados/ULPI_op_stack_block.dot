@@ -1,0 +1,62 @@
+digraph ULPI_op_stack_states
+{
+    nodesep = .9;
+    splines="ortho";
+    rankdir="LR";
+    rank="same";
+
+    node [shape="record"];
+
+    subgraph inputs
+    {
+        rst [shape="none"];
+        clk [shape="none"];
+        UART_DATA [shape="none"];
+        UART_Rx_EMPTY [shape="none"];
+        op_stack_pull [shape="none"];
+    }
+    
+    subgraph outputs
+    {
+        UART_NxT [shape="none"];
+        op_stack_msg [shape="none"];
+        op_stack_full [shape="none"];
+        op_stack_empty [shape="none"];
+    }
+
+    subgraph main
+    { 
+        FIFO [label=<
+                     <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0">
+                        <TR>
+                            <TD COLSPAN="2">FIFO</TD>
+                        </TR>
+                        <TR>
+                            <TD ALIGN="LEFT" PORT="rst">rst</TD>
+                            <TD ALIGN="RIGHT" PORT="RW_stack_full">RW_stack_full</TD>
+                        </TR>
+                        <TR>
+                            <TD ALIGN="LEFT" PORT="clk">clk</TD>
+                            <TD ALIGN="RIGHT" PORT="RW_stack_a_full">RW_stack_a_full</TD>
+                        </TR>
+                        <TR>
+                            <TD ALIGN="LEFT" PORT="wr_dv">wr_dv</TD>
+                            <TD ALIGN="RIGHT" PORT="op_stack_msg">op_stack_msg</TD>
+                        </TR>
+                        <TR>
+                            <TD ALIGN="LEFT" PORT="wr_DATA">wr_DATA</TD>
+                            <TD ALIGN="RIGHT" PORT="RW_stack_empty">RW_stack_empty</TD>
+                        </TR>
+                        <TR>
+                            <TD ALIGN="LEFT" PORT="rd_en">rd_en</TD>
+                            <TD ALIGN="RIGHT" PORT="RW_stack_a_empty">RW_stack_a_empty</TD>
+                        </TR>
+                     </TABLE>
+                     >, shape="none"]
+    }
+    clk -> FIFO:clk;
+    rst -> FIFO:rst;
+
+    FIFO:op_stack_full -> op_stack_full;
+    FIFO:op_stack_empty -> op_stack_empty;
+}
