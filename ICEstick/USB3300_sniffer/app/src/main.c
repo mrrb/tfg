@@ -25,105 +25,44 @@
  */
 
 #include "common.h"
+#include "menu.h"
 #include "serial_ctrl.h"
+#include "thread_functions.h"
 
-#include <stdlib.h>
+#include <pthread.h>
 
 int main(int argc, char const *argv[])
 {
-    /* ## CONFIG ## */
+    /* ## SERIAL CONFIG ## */
     serial_t serial_s, *serial;
     serial = &serial_s;
 
-    serial_set_portname(serial, "/dev/ttyUSB1");
-    serial_set_baudrate(serial, 3750000);
-    // serial_set_baudrate(serial, 921600);
-    
-    serial_open(serial);
-    
-    uint8_t reg;
-    uint8_t addr, data;
-
-    FILE * fp;
-    fp = fopen("out.log", "w+");
-
-    // printf("## Register read Test ##\n");
-    // addr = 0x00;
-    // reg_read(serial, addr);
-    // recv_reg(serial, &reg);
-    // printf("Read addr 0x%x\n", addr);
-    // printf("0x%x\n\n", reg);
-
-
-    // printf("## Register write Test ##\n");
-    // addr = 0x16;
-    // data = 0x07;
-    // reg_write(serial, addr, data);
-    // reg_read(serial, addr);
-    // recv_reg(serial, &reg);
-    // printf("Write '%c' (0b"BYTE_TO_BINARY_PATTERN" - 0x%x) to the addr 0x%x\n", data, BYTE_TO_BINARY(data), data, addr);
-    // printf("0x%x\n", reg);
-
-    // raw_usb_data_t usb_data;
-    // int code, j;
-    // for(unsigned int i=0; i<100; i++)
-    // {
-    //     code = recv_data(serial, &usb_data);
-
-    //     if(usb_data.data_len > 0)
-    //     {
-    //         fprintf(fp, "Data_len: %d, TxCMD: "BYTE_TO_BINARY_PATTERN, usb_data.data_len, BYTE_TO_BINARY(usb_data.TxCMD<<2));
-    //         fprintf(fp, " PID: "BYTE_TO_BINARY_PATTERN"\n", BYTE_TO_BINARY(usb_data.data[0]));
-
-    //         for(j=0; j<usb_data.data_len-1; j++)
-    //             fprintf(fp, "\t%d - 0x%x\n", j, usb_data.data[j]);
-    //     }
-    //     else
-    //         i--;
-    // }
-    recv_data_toggle(serial);
-
-    char buf_info[2];
-    char *buf_data;
-    uint8_t TxCMD;
-    uint16_t data_len;
-    int i, j;
-    for(i=0; i<100000; i++)
+    sctrl_err_t err = serial_init(serial);
+    if(err != SCTRL_OK)
     {
-        if(i%100 == 0)
-            LOG("DATA #%d\n", i);
-
-        if(serial_read(serial, 2, buf_info) < 2)
-            break;
-
-        TxCMD = ((uint8_t)buf_info[0]&0xFC)>>2;
-        data_len = ((uint16_t)buf_info[0]&0x03)<<8 | (uint16_t)buf_info[1];
-        
-        buf_data = (char *)calloc(data_len, sizeof(char));
-        if(serial_read(serial, data_len, buf_data) < data_len)
-            break;
-
-        fprintf(fp, "Data_len: %d, RxCMD: "BYTE_TO_BINARY_PATTERN, data_len, BYTE_TO_BINARY(TxCMD));
-
-        if(data_len > 0)
-        {
-            fprintf(fp, " PID: "BYTE_TO_BINARY_PATTERN"\n", BYTE_TO_BINARY(buf_data[0]));
-
-            for(j=1; j<data_len; j++)
-                fprintf(fp, "\t\t%d - 0x%x\n", j, buf_data[j] & 0xff);
-        }
-        else
-            fprintf(fp, "\n");
-
-        fprintf(fp, "\n");
-        free(buf_data);
+        LOG_E("Could not init serial port! Error code %d.\n", err);
+        return 1;
     }
-
-    LOG_I("Loop count: %d\n", i);
-    recv_data_toggle(serial);
+    serial_set_blocking(serial, 1); // Non blocking serial read/write
 
 
-    serial_close(serial);
+    /* ## MENU CONFIG ## */
+    menu_t menu_s, *menu;
+    menu = &menu_s;
 
+    menu_init(menu, serial);
+
+
+    /* ## THREAD CONFIG ## */
+    pthread_t menu_thread_id, serial_ctrl_thread_id;
+
+    pthread_create(&menu_thread_id, NULL, menu_thread_loop, (void *)menu); /* Menu Thread */
+    pthread_create(&serial_ctrl_thread_id, NULL, serial_thread_loop, (void *)menu); /* Serial Control Thread */
+
+    pthread_join(menu_thread_id, NULL); 
+    pthread_join(serial_ctrl_thread_id, NULL);
+
+    /* ## END ## */
+    LOG("\nBye!\n");
     return 0;
 }
