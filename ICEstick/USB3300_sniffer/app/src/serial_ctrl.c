@@ -5,6 +5,7 @@
 #include <malloc.h>
 #include <math.h>
 
+// #define DEFAULT_BAUDRATE 921600
 #define DEFAULT_BAUDRATE 3750000
 #define DEFAULT_PORT "/dev/ttyUSB1"
 
@@ -43,7 +44,7 @@ sctrl_err_t serial_set_portname(serial_t *serial, char *portname)
 // Serial blocking
 sctrl_err_t serial_set_blocking(serial_t *serial, uint8_t blocking_en)
 {
-    if(blocking_en == 1 || blocking_en == 0)
+    if(blocking_en == 2 || blocking_en == 1 || blocking_en == 0)
     {
         serial->blocking_en = blocking_en;
         return SCTRL_OK;
@@ -117,7 +118,6 @@ sctrl_err_t serial_init(serial_t *serial)
     if((err = serial_set_stopbits(serial, 1)) != SCTRL_OK)
         return err;
 
-    serial_set_timeout(serial, ceil(15*(921600/serial->baudrate)));
     serial_set_blocking(serial, 1);
 
     serial->init_done = 1;
@@ -174,24 +174,25 @@ sctrl_err_t serial_open(serial_t *serial)
     sctrl_err_t err;
     if(serial->is_open == 0)
     {
-        if((err = serial_config(serial)) == SP_OK)
+        if((err = serial_config(serial)) == SCTRL_OK)
             serial->is_open = 1;
         return err;
     }
 
-    return SCTRL_OPEN_WHILE_OPEN;
+    return SCTRL_ALREADY_OPEN;
 }
 
 sctrl_err_t serial_close(serial_t *serial)
 {
-    sctrl_err_t err;
     if(serial->is_open == 1)
     {
-        if((err = sp_close(serial->sp_port)) == SP_OK)
+        if(sp_close(serial->sp_port) == SP_OK)
             serial->is_open = 0;
-        return err;
+        return SCTRL_OK;
     }
-    return SCTRL_CLOSE_WHILE_CLOSE;
+    else
+        return SCTRL_ALREADY_CLOSE;
+    return SCTRL_ERR;
 }
 
 int serial_input_waiting(serial_t *serial)
@@ -222,12 +223,11 @@ int serial_read(serial_t *serial, size_t n_bytes, char *buffer)
             return sp_blocking_read(serial->sp_port , buffer, n_bytes, serial->timeout_ms);
         else if(serial->blocking_en == 2)
         {
-            while((size_t) sp_input_waiting(serial->sp_port) < n_bytes)
+            for(size_t i=0; i<n_bytes; i++)
             {
-                LOG("asd");
-                serial_delay(serial, 1);
+                while(sp_nonblocking_read(serial->sp_port , buffer+i, 1) <= 0)
+                    serial_delay(serial, 1);                
             }
-            return sp_nonblocking_read(serial->sp_port , buffer, n_bytes);
         }
         else	
             return sp_nonblocking_read(serial->sp_port , buffer, n_bytes);
@@ -241,6 +241,8 @@ int serial_write(serial_t *serial, size_t n_bytes, char *buffer)
     if(serial->is_open)
     {
         if(serial->blocking_en == 1)
+            return sp_blocking_write(serial->sp_port , buffer, n_bytes, serial->timeout_ms);
+        else if(serial->blocking_en == 2)
             return sp_blocking_write(serial->sp_port , buffer, n_bytes, serial->timeout_ms);
         else	
             return sp_nonblocking_write(serial->sp_port , buffer, n_bytes);
@@ -263,13 +265,13 @@ sctrl_err_t reg_read(serial_t *serial, uint8_t addr)
     full_cmd[0] |= 0b11<<6;
     full_cmd[0] |= addr;
 
-    char buf[2];
+    char buf[3];
     sprintf(buf, "%c%c", (char)full_cmd[0], (char)full_cmd[1]);
 
     if(serial_write(serial, 2, buf) < 2)
         return SCTRL_ERR;
     
-    serial_delay(serial, 2);
+    sp_drain(serial->sp_port);
 
     return SCTRL_OK;
 }
@@ -282,13 +284,13 @@ sctrl_err_t reg_write(serial_t *serial, uint8_t addr, uint8_t data)
     full_cmd[0] |= addr;
     full_cmd[1] |= data;
 
-    char buf[2];
+    char buf[3];
     sprintf(buf, "%c%c", (char)full_cmd[0], (char)full_cmd[1]);
 
     if(serial_write(serial, 2, buf) < 2)
         return SCTRL_ERR;
 
-    serial_delay(serial, 2);
+    sp_drain(serial->sp_port);
     
     return SCTRL_OK;
 }
@@ -300,13 +302,13 @@ sctrl_err_t recv_data_toggle(serial_t *serial)
     full_cmd[0] |= 0b00<<6;
     full_cmd[1]  = 0b10010110;
 
-    char buf[2];
+    char buf[3];
     sprintf(buf, "%c%c", (char)full_cmd[0], (char)full_cmd[1]);
 
     if(serial_write(serial, 2, buf) < 2)
         return SCTRL_ERR;
     
-    serial_delay(serial, 2);
+    sp_drain(serial->sp_port);
     
     return SCTRL_OK;
 }
@@ -317,13 +319,13 @@ sctrl_err_t recv_reg(serial_t *serial, uint8_t *reg_val)
 
     full_cmd[0] |= 0b01<<6;
 
-    char buf[2];
+    char buf[3];
     sprintf(buf, "%c%c", (char)full_cmd[0], (char)full_cmd[1]);
 
     if(serial_write(serial, 2, buf) < 2)
         return SCTRL_ERR;
 
-    serial_delay(serial, 3);
+    sp_drain(serial->sp_port);
 
     if(serial_read(serial, 1, (char *)reg_val) < 1)
         return SCTRL_ERR;

@@ -8,6 +8,12 @@
 #include <stdint.h>
 #include <malloc.h>
 #include <unistd.h>
+#include <time.h>
+#include <jansson.h>
+
+/*
+ *  ToDo: Whenever read_en goes low, all the remaining data packets in the buffer must be saved.
+ */
 
 /* Menu Thread loop */
 
@@ -27,21 +33,36 @@ void *menu_thread_loop(void *vargp)
 
 void *serial_thread_loop(void *vargp)
 {
+    // File save
+    json_t *root = json_object(); //
+    json_t *usb_data_array = json_array(); //
+
+    json_object_set_new(root, "date", json_integer( (unsigned long)time(NULL) ));
+    json_object_set_new(root, "USB_data", usb_data_array);
+
+    // System renames
     menu_t *menu = (menu_t *) vargp;
     serial_t *serial = menu->serial;
 
+    // Value of the read register
     uint8_t reg_val = 0;
 
+    // Error code
     sctrl_err_t err;
 
+    // Packet read
+    raw_usb_data_t usb_data;
 
-    char buf_info[2];
-    char *buf_data;
-    uint8_t TxCMD;
-    uint16_t data_len;
+    // Buffer where the data_len and TxCMD are stored
+    uint8_t buf_info[2];
 
-    FILE * fp;
-    fp = fopen("out.log", "w+");
+    // Pointer to an array of uint8_t where all the received bytes are stored
+    uint8_t *buf_data;
+
+    // Number of bytes read in the serial port
+    int bytes_read;
+
+    long int total_packages = 0;
 
     for(;;)
     {
@@ -68,7 +89,7 @@ void *serial_thread_loop(void *vargp)
                         LOG_E("Error code %d.", err);
                 }
                 else
-                    LOG_E("Port already open (Error code %d).\n", SCTRL_OPEN_WHILE_OPEN);
+                    LOG_E("Port already open (Error code %d).\n", SCTRL_ALREADY_OPEN);
             }
             else if(opt == OPT_CLOSE_PORT)
             {
@@ -78,7 +99,7 @@ void *serial_thread_loop(void *vargp)
                         LOG_E("Error code %d.", err);
                 }
                 else
-                    LOG_E("Port already closed (Error code %d).\n", SCTRL_CLOSE_WHILE_CLOSE);
+                    LOG_E("Port already closed (Error code %d).\n", SCTRL_ALREADY_CLOSE);
             }
             else if(opt == OPT_REG_READ)
             {
@@ -120,12 +141,12 @@ void *serial_thread_loop(void *vargp)
                     if((err = recv_data_toggle(menu->serial)) == SCTRL_OK)
                         if(menu->read_en == 1)
                         {
-                            // Wait to clean all messages
+                            serial_delay(serial, 2);
+                            sp_flush(serial->sp_port, SP_BUF_INPUT);
                             menu->read_en = 0;
                         }
                         else
                         {
-                            recv_data_toggle(menu->serial);
                             menu->read_en = 1;
                         }
                     else
@@ -137,10 +158,22 @@ void *serial_thread_loop(void *vargp)
             else if(opt == OPT_EXIT)
             {
                 if(serial->is_open == 1)
+                {
+                    if(menu->read_en == 1)
+                        recv_data_toggle(menu->serial);
+
                     serial_close(serial);
+                }
+                LOG("Saving dump in the file dump.json\n");
+                FILE *fp = fopen("dump.json", "w+");
+                fprintf(fp, "%s", json_dumps(root, 0));
+                fclose(fp);
+
+                json_decref(root);
+                json_decref(usb_data_array);
+
                 menu->menu_kill = 1;
                 menu->block_menu = 0;
-                fclose(fp);
                 break;
             }
 
@@ -150,34 +183,39 @@ void *serial_thread_loop(void *vargp)
 
         if(menu->read_en == 1)
         {
-            serial_delay(serial, 2);
+            bytes_read = 0;
+            json_t *packet_data_array = json_array();
 
-            if(serial_read(serial, 2, buf_info) == 2)
+            if((bytes_read = serial_read(serial, 2, (char *)buf_info)) != 2)
             {
-                TxCMD = ((uint8_t)buf_info[0]&0xFC)>>2;
-                data_len = ((uint16_t)buf_info[0]&0x03)<<8 | (uint16_t)buf_info[1];
-                
-
-                buf_data = (char *)calloc(data_len, sizeof(char));
-                serial_delay(serial, data_len);
-
-                if(serial_read(serial, data_len, buf_data) == data_len)
-                {
-                    fprintf(fp, "Data_len: %d, RxCMD: "BYTE_TO_BINARY_PATTERN, data_len, BYTE_TO_BINARY(TxCMD));
-
-                    if(data_len > 0)
-                    {
-                        fprintf(fp, " PID: "BYTE_TO_BINARY_PATTERN"\n", BYTE_TO_BINARY(buf_data[0]));
-
-                        for(int j=1; j<data_len; j++)
-                            fprintf(fp, "\t\t%d - 0x%x\n", j, buf_data[j] & 0xff);
-                    }
-                    else
-                        fprintf(fp, "\n");
-                }
+                LOG_E("Fatal error. Out of sync. Reset FPGA and try again.\n");
+                menu->menu_kill = 1;
+                break;
             }
-            fprintf(fp, "\n");
-            free(buf_data);
+            usb_data.TxCMD = 0x3F & (((uint8_t)buf_info[0]&0xFC)>>2);
+            usb_data.data_len = 0x3FF & (((uint16_t)buf_info[0]&0x03)<<8 | (uint16_t)buf_info[1]);
+
+            serial_delay(serial, usb_data.data_len-1);
+
+            buf_data = (uint8_t *)calloc(usb_data.data_len, sizeof(uint8_t));
+            usb_data.data = buf_data;
+            if(usb_data.data_len > 1024)
+                LOG("%d bytes - Out Of Sync.\n");
+            if((bytes_read = serial_read(serial, usb_data.data_len, (char *)buf_data)) != usb_data.data_len)
+            {
+                LOG_E("Fatal error. Out of sync. Reset FPGA and try again.\n");
+                menu->menu_kill = 1;
+                break;
+            }
+
+            for(int i=0; i<usb_data.data_len; ++i)
+            {
+                json_array_append(packet_data_array, json_integer(usb_data.data[i]));
+            }
+            json_array_append(usb_data_array, json_pack("{sisiso}", "TxCMD",   usb_data.TxCMD,
+                                                                    "DataLen", usb_data.data_len,
+                                                                    "data",    packet_data_array));
+            total_packages++;
         }
         else
             usleep(1000);

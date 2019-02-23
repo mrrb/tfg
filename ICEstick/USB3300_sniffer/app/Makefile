@@ -1,12 +1,12 @@
 CC := clang
 # CC := gcc
 
-# CFLAGS := -std=c17
-CFLAGS := -Wall -Wextra -Wundef -std=gnu17
-CFLAGS += `pkg-config --cflags ncurses libserialport json-c`
+CFLAGS := -std=c17
+CFLAGS += -Wall -Wextra -Wundef -std=gnu17
+CFLAGS += `pkg-config --cflags libserialport jansson`
 
 LFLAGS := -lm
-LFLAGS += `pkg-config --libs libserialport ncurses json-c`
+LFLAGS += `pkg-config --libs libserialport jansson`
 LFLAGS += -lpthread
 
 BUILD_DIR := ./build
