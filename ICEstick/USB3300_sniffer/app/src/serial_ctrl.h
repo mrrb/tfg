@@ -39,6 +39,8 @@ struct _raw_usb_data_s
     uint16_t data_len;
 
     uint8_t *data;
+
+    uint8_t packet_ok;
 };
 typedef struct _raw_usb_data_s raw_usb_data_t;
 
@@ -52,8 +54,8 @@ enum serial_ctrl_err
 
     SCTRL_CONFIG_WHILE_OPEN,
     SCTRL_OPERATION_WHILE_CLOSE,
-    SCTRL_CLOSE_WHILE_CLOSE,
-    SCTRL_OPEN_WHILE_OPEN,
+    SCTRL_ALREADY_CLOSE,
+    SCTRL_ALREADY_OPEN,
 };
 typedef enum serial_ctrl_err sctrl_err_t;
 
