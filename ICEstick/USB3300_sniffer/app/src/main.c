@@ -43,7 +43,8 @@ int main(int argc, char const *argv[])
         LOG_E("Could not init serial port! Error code %d.\n", err);
         return 1;
     }
-    serial_set_blocking(serial, 1); // Non blocking serial read/write
+    serial_set_blocking(serial, 1); // Blocking serial read/write
+    serial_set_timeout(serial, 0); // Blocking serial timeout
 
 
     /* ## MENU CONFIG ## */
@@ -55,7 +56,6 @@ int main(int argc, char const *argv[])
 
     /* ## THREAD CONFIG ## */
     pthread_t menu_thread_id, serial_ctrl_thread_id;
-
     pthread_create(&menu_thread_id, NULL, menu_thread_loop, (void *)menu); /* Menu Thread */
     pthread_create(&serial_ctrl_thread_id, NULL, serial_thread_loop, (void *)menu); /* Serial Control Thread */
 
@@ -63,6 +63,7 @@ int main(int argc, char const *argv[])
     pthread_join(serial_ctrl_thread_id, NULL);
 
     /* ## END ## */
-    LOG("\nBye!\n");
+    LOG("\nMario Rubio. 2019.\n");
+    LOG("Bye!\n");
     return 0;
 }
