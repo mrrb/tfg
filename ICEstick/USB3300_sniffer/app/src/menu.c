@@ -13,7 +13,7 @@
 // Function that asks for a number in any base from STDIN, checks if It is in a valid range
 // (from min_val to max_val) and return it.
 // The placeholder value is shown at the beginning of the line.
-int usr_num_input(char *placeholder, int min_val, int max_val, int base)
+int usr_num_input(const char *placeholder, int min_val, int max_val, int base)
 {
     char *end, buf[USR_IN_SIZE_MAX];
     int num;
@@ -44,7 +44,7 @@ int usr_num_input(char *placeholder, int min_val, int max_val, int base)
 
 // Function that asks for a string and stores it in the parameter usr_input.
 // The placeholder value is shown at the beginning of the line.
-void usr_input(char *placeholder, char *usr_input)
+void usr_input(const char *placeholder, char *usr_input)
 {
     LOG("%s> ", placeholder);
     fgets(usr_input, USR_IN_SIZE_MAX, stdin);
@@ -118,7 +118,7 @@ void print_port_config_menu(menu_t *menu)
 
     menu->block_menu = 1;
     while(menu->block_menu == 1)
-        usleep(500000);
+        usleep(50000);
 }
 
 void print_toggle_port_menu(menu_t *menu)
@@ -138,7 +138,7 @@ void print_toggle_port_menu(menu_t *menu)
 
     menu->block_menu = 1;
     while(menu->block_menu == 1)
-        usleep(500000);
+        usleep(50000);
 }
 
 void print_reg_read_menu(menu_t *menu)
@@ -177,7 +177,7 @@ void print_reg_read_menu(menu_t *menu)
 
     menu->block_menu = 1;
     while(menu->block_menu == 1)
-        usleep(500000);
+        usleep(50000);
 }
 
 void print_reg_write_menu(menu_t *menu)
@@ -230,7 +230,7 @@ void print_reg_write_menu(menu_t *menu)
 
     menu->block_menu = 1;
     while(menu->block_menu == 1)
-        usleep(500000);
+        usleep(50000);
 }
 
 void print_recv_toggle_menu(menu_t *menu)
@@ -241,13 +241,12 @@ void print_recv_toggle_menu(menu_t *menu)
         return;
     }
 
-
     menu->opt = OPT_RECV_TOGGLE;
     LOG("Switching the status of the Receiver...\n");
 
     menu->block_menu = 1;
     while(menu->block_menu == 1)
-        usleep(500000);
+        usleep(50000);
 }
 
 void print_exit_menu(menu_t *menu)
@@ -256,7 +255,7 @@ void print_exit_menu(menu_t *menu)
 
     menu->block_menu = 1;
     while(menu->block_menu == 1)
-        usleep(500000);
+        usleep(50000);
 }
 
 void print_main_menu(menu_t *menu)

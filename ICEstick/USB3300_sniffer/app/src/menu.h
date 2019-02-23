@@ -29,7 +29,7 @@ struct _menu_s
 };
 typedef struct _menu_s menu_t;
 
-enum opt_values
+enum _opt_values_e
 {
     OPT_IDLE,
     OPT_CONFIG_PORT,
@@ -40,7 +40,36 @@ enum opt_values
     OPT_RECV_TOGGLE,
     OPT_EXIT
 };
-typedef enum opt_values opt_values_t;
+typedef enum _opt_values_e opt_values_t;
+
+// enum _menu_item_type_e
+// {
+//     MENU_ITEM_SUBMENU,
+//     MENU_ITEM_NUM,
+//     MENU_ITEM_TXT,
+// };
+// typedef enum _menu_item_type_e menu_item_type_t;
+
+// struct _menu_num_s
+// {
+//     int num_min;
+//     int num_max;
+//     int num_base;
+// };
+// typedef struct _menu_num_s menu_num_t;
+
+// struct _menu_item_s
+// {
+//     menu_item_type_t type;
+
+//     menu_item_t *submenu;
+
+//     menu_num_t *num_property;
+
+//     char *select_placeholder;
+//     char *input_placeholder;
+// };
+// typedef struct _menu_item_s menu_item_t;
 
 // Functions
 void menu_init(menu_t *menu_controls, serial_t *serial);
