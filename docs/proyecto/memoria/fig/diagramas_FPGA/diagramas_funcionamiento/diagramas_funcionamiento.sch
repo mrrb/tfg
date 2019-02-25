@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A2 23386 16535
 encoding utf-8
-Sheet 1 3
+Sheet 1 9
 Title ""
 Date ""
 Rev ""
@@ -19,10 +19,10 @@ L modulos:btn_debouncer U?
 U 1 1 5C65BF8A
 P 9100 4250
 F 0 "U?" H 9500 4850 50  0001 C CNN
-F 1 "btn_debouncer" H 9100 4700 79  0000 C CNN
+F 1 "btn_debouncer" H 9100 4700 79  0001 C CNN
 F 2 "" H 9100 4300 50  0001 C CNN
 F 3 "" H 9100 4300 50  0001 C CNN
-F 4 "btn1" H 9100 4200 50  0000 C CNN "name"
+F 4 "btn1" H 9100 4850 50  0000 C CNN "name"
 	1    9100 4250
 	1    0    0    -1  
 $EndComp
@@ -31,10 +31,10 @@ L modulos:btn_debouncer U?
 U 1 1 5C65DD06
 P 9100 5000
 F 0 "U?" H 9500 5600 50  0001 C CNN
-F 1 "btn_debouncer" H 9100 5450 79  0000 C CNN
+F 1 "btn_debouncer" H 9100 5450 79  0001 C CNN
 F 2 "" H 9100 5050 50  0001 C CNN
 F 3 "" H 9100 5050 50  0001 C CNN
-F 4 "btn2" H 9100 4950 50  0000 C CNN "name"
+F 4 "btn2" H 9100 5600 50  0000 C CNN "name"
 	1    9100 5000
 	1    0    0    -1  
 $EndComp
@@ -43,50 +43,11 @@ L modulos:signal_trigger U?
 U 1 1 5C65DD8D
 P 11200 5000
 F 0 "U?" H 11700 5550 50  0001 C CNN
-F 1 "signal_trigger" H 11200 5500 98  0000 C CNN
+F 1 "signal_trigger" H 11200 5500 98  0001 C CNN
 F 2 "" H 10400 4850 50  0001 C CNN
 F 3 "" H 10400 4850 50  0001 C CNN
-F 4 "btn2_trigger" H 11200 4950 50  0000 C CNN "name"
+F 4 "btn2_trigger" H 11200 5650 50  0000 C CNN "name"
 	1    11200 5000
-	1    0    0    -1  
-$EndComp
-$Comp
-L modulos:clk_div U?
-U 1 1 5C65DE53
-P 17150 4700
-F 0 "U?" H 17150 5807 50  0001 C CNN
-F 1 "clk_div" H 17150 5350 118 0000 C CNN
-F 2 "" H 17550 5400 50  0001 C CNN
-F 3 "" H 17550 5400 50  0001 C CNN
-F 4 "DIVIDER = 24" H 17150 5200 50  0000 C CNN "DIVIDER"
-F 5 "clk_div_ice_m" H 17150 4650 50  0000 C CNN "name"
-	1    17150 4700
-	1    0    0    -1  
-$EndComp
-$Comp
-L modulos:clk_div U?
-U 1 1 5C65E207
-P 17150 5600
-F 0 "U?" H 17150 6707 50  0001 C CNN
-F 1 "clk_div" H 17150 6250 118 0000 C CNN
-F 2 "" H 17550 6300 50  0001 C CNN
-F 3 "" H 17550 6300 50  0001 C CNN
-F 4 "DIVIDER = 24" H 17150 6100 50  0000 C CNN "DIVIDER"
-F 5 "clk_div_ULPI_m" H 17150 5550 50  0000 C CNN "name"
-	1    17150 5600
-	1    0    0    -1  
-$EndComp
-$Comp
-L modulos:clk_div U?
-U 1 1 5C65E266
-P 8000 5950
-F 0 "U?" H 8000 7057 50  0001 C CNN
-F 1 "clk_div" H 8000 6600 118 0000 C CNN
-F 2 "" H 8400 6650 50  0001 C CNN
-F 3 "" H 8400 6650 50  0001 C CNN
-F 4 "DIVIDER = 19" H 8000 6450 50  0000 C CNN "DIVIDER"
-F 5 "clk_div_btn" H 8000 5900 50  0000 C CNN "name"
-	1    8000 5950
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -94,10 +55,10 @@ L modulos:ULPI U?
 U 1 1 5C65EC63
 P 11300 11000
 F 0 "U?" H 11800 14000 50  0001 C CNN
-F 1 "ULPI" H 11300 13950 118 0000 C CNN
+F 1 "ULPI" H 11300 13950 118 0001 C CNN
 F 2 "" H 10050 12200 50  0001 C CNN
 F 3 "" H 10050 12200 50  0001 C CNN
-F 4 "ULPI" H 11300 10950 50  0000 C CNN "name"
+F 4 "ULPI" H 11300 14150 50  0000 C CNN "name"
 	1    11300 11000
 	1    0    0    -1  
 $EndComp
@@ -106,10 +67,10 @@ L modulos:ULPI_op_stack U?
 U 1 1 5C65EDDE
 P 14300 7400
 F 0 "U?" H 14950 8500 50  0001 C CNN
-F 1 "ULPI_op_stack" H 14300 8450 118 0000 C CNN
+F 1 "ULPI_op_stack" H 14300 8450 118 0001 C CNN
 F 2 "" H 13300 7300 50  0001 C CNN
 F 3 "" H 13300 7300 50  0001 C CNN
-F 4 "ULPI_op_stack" H 14300 7350 50  0000 C CNN "name"
+F 4 "ULPI_op_stack" H 14300 8600 50  0000 C CNN "name"
 	1    14300 7400
 	1    0    0    -1  
 $EndComp
@@ -118,20 +79,20 @@ L modulos:main_controller U?
 U 1 1 5C65EF45
 P 14350 11000
 F 0 "U?" H 15050 13300 50  0001 C CNN
-F 1 "main_controller" H 14350 13250 118 0000 C CNN
+F 1 "main_controller" H 14350 13250 118 0001 C CNN
 F 2 "" H 12950 10750 50  0001 C CNN
 F 3 "" H 12950 10750 50  0001 C CNN
-F 4 "main_controller" H 14350 10950 50  0000 C CNN "name"
+F 4 "main_controller" H 14350 13400 50  0000 C CNN "name"
 	1    14350 11000
 	1    0    0    -1  
 $EndComp
-NoConn ~ 17600 4400
-NoConn ~ 17600 5300
-Text GLabel 16400 4600 0    50   UnSpc ~ 0
+NoConn ~ 17600 3800
+NoConn ~ 17600 5250
+Text GLabel 16400 4000 0    50   UnSpc ~ 0
 LED_CLK_ICE_DIV_EN
-Text GLabel 16400 5500 0    50   UnSpc ~ 0
+Text GLabel 16400 5450 0    50   UnSpc ~ 0
 LED_CLK_ULPI_DIV_EN
-NoConn ~ 8450 5650
+NoConn ~ 8450 5500
 Text GLabel 7500 5850 0    50   UnSpc ~ 0
 1
 Wire Wire Line
@@ -156,7 +117,7 @@ Text GLabel 18050 10700 2    98   Output ~ 0
 ULPI_STP
 Text GLabel 18050 10950 2    98   Output ~ 0
 ULPI_RST
-Text GLabel 18050 6650 2    98   Output ~ 0
+Text GLabel 18050 6750 2    98   Output ~ 0
 UART_Tx
 Text GLabel 7100 3550 0    98   Input ~ 0
 ULPI_clk
@@ -205,19 +166,6 @@ Text GLabel 7100 11250 0    98   BiDi ~ 0
 ULPI_DATA[7:0]
 Text Label 7450 11250 2    59   Italic 0
 [8]
-$Comp
-L modulos:UART U?
-U 1 1 5C65E310
-P 11150 7400
-F 0 "U?" H 11600 9250 50  0001 C CNN
-F 1 "UART" H 11150 9050 118 0000 C CNN
-F 2 "" H 11050 4800 50  0001 C CNN
-F 3 "" H 11050 4800 50  0001 C CNN
-F 4 "3750000bauds" H 11150 8950 50  0000 C CNN "Baudrate"
-F 5 "UART" H 11150 7350 50  0000 C CNN "name"
-	1    11150 7400
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	8550 4700 8450 4700
 Wire Wire Line
@@ -369,11 +317,7 @@ Wire Wire Line
 Wire Wire Line
 	15100 6850 15300 6850
 Wire Wire Line
-	15300 6850 15300 7600
-Wire Wire Line
-	15300 7600 10550 7600
-Wire Wire Line
-	10550 7600 10550 7100
+	15300 7750 10550 7750
 Wire Wire Line
 	15250 10900 15350 10900
 Wire Wire Line
@@ -468,24 +412,20 @@ Wire Wire Line
 	7100 4150 8550 4150
 Wire Wire Line
 	7100 4900 8550 4900
-Wire Wire Line
-	8450 5550 8450 4700
 Connection ~ 8450 4700
 Wire Wire Line
 	7850 3400 10350 3400
-Wire Wire Line
-	7550 5600 7550 3550
 Connection ~ 7550 3550
 Wire Wire Line
 	7550 3550 7850 3550
-Text Label 7550 5500 1    79   ~ 0
+Text Label 7550 5400 1    79   ~ 0
 60MHz
 Wire Wire Line
 	7100 6350 10550 6350
 Wire Wire Line
-	16400 4600 16700 4600
+	16400 4000 16700 4000
 Wire Wire Line
-	16400 5500 16700 5500
+	16400 5450 16700 5450
 Wire Wire Line
 	7100 10650 7850 10650
 Wire Wire Line
@@ -536,73 +476,39 @@ Wire Wire Line
 	16250 12150 16250 10950
 Text Label 8500 12050 2    59   Italic 0
 [8]
-Text Label 8250 11500 1    59   Italic 0
-[8]
 Text Label 12050 10650 2    59   Italic 0
 [8]
 Text Label 10500 10850 0    59   Italic 0
 [8]
-Text GLabel 18050 5350 2    98   Output ~ 0
+Text GLabel 18050 5600 2    98   Output ~ 0
 IO_LEDs[0](clk_div_ice)
-Text GLabel 18050 5550 2    98   Output ~ 0
+Text GLabel 18050 5800 2    98   Output ~ 0
 IO_LEDs[1](clk_div_ULPI)
-Text GLabel 18050 5750 2    98   Output ~ 0
+Text GLabel 18050 6000 2    98   Output ~ 0
 IO_LEDs[2](rst)
 Connection ~ 13400 3550
 Wire Wire Line
 	11750 6250 11950 6250
 Wire Wire Line
 	11950 6250 11950 6000
-Text GLabel 18050 5950 2    98   Output ~ 0
+Text GLabel 18050 6200 2    98   Output ~ 0
 IO_LEDs[3](ULPI_DIR)
-Text GLabel 18050 6150 2    98   Output ~ 0
+Text GLabel 18050 6400 2    98   Output ~ 0
 IO_LEDs[4](btn2_debounce)
 Wire Wire Line
-	17850 4300 17600 4300
-Wire Wire Line
-	17750 5200 17600 5200
-Wire Wire Line
-	16600 3250 16600 4350
-Wire Wire Line
-	16600 4350 16700 4350
+	16600 3250 16600 3750
 Wire Wire Line
 	10250 3250 16600 3250
 Wire Wire Line
-	16500 3400 16500 5250
-Wire Wire Line
-	16500 5250 16700 5250
+	16500 3400 16500 5200
 Wire Wire Line
 	13300 3400 16500 3400
 Wire Wire Line
-	18050 5550 17750 5550
-Wire Wire Line
-	17750 5550 17750 5200
-Wire Wire Line
-	17850 4300 17850 5350
-Wire Wire Line
-	17850 5350 18050 5350
-Wire Wire Line
-	18050 5750 15450 5750
-Wire Wire Line
-	15450 5750 15450 3550
-Wire Wire Line
 	13400 3550 15450 3550
-Wire Wire Line
-	15250 6150 15250 3850
-Wire Wire Line
-	15250 6150 18050 6150
 Wire Wire Line
 	11950 6000 15150 6000
 Wire Wire Line
-	15150 6000 15150 6650
-Wire Wire Line
-	15150 6650 18050 6650
-Wire Wire Line
 	15250 3850 9950 3850
-Wire Wire Line
-	18050 5950 15350 5950
-Wire Wire Line
-	15350 5950 15350 3700
 Wire Wire Line
 	15350 3700 9850 3700
 Wire Wire Line
@@ -666,9 +572,144 @@ Wire Notes Line
 Wire Notes Line
 	7200 12400 7200 3000
 $Sheet
-S 1900 1900 2450 750 
+S 1650 4100 1300 250 
+U 5C7403C0
+F0 "ULPI_op_stack" 59
+F1 "ULPI_op_stack.sch" 59
+$EndSheet
+Text Notes 7200 2950 0    118  ~ 0
+FPGA ICE40HX1K
+$Sheet
+S 1650 4600 1300 250 
+U 5C74AFC3
+F0 "ULPI" 79
+F1 "ULPI.sch" 79
+$EndSheet
+$Sheet
+S 1650 3650 1300 250 
 U 5C6B3D33
 F0 "UART" 59
 F1 "UART.sch" 59
 $EndSheet
+$Comp
+L modulos:clk_div U
+U 1 1 5C65E207
+P 17150 5550
+F 0 "U" H 17150 6657 50  0001 C CNN
+F 1 "clk_div" H 17150 6200 118 0001 C CNN
+F 2 "" H 17550 6250 50  0001 C CNN
+F 3 "" H 17550 6250 50  0001 C CNN
+F 4 "clk_div_ULPI_m" H 17150 6350 50  0000 C CNN "name"
+	1    17150 5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L modulos:clk_div U?
+U 1 1 5C65DE53
+P 17150 4100
+F 0 "U?" H 17150 5207 50  0001 C CNN
+F 1 "clk_div" H 17150 4750 118 0001 C CNN
+F 2 "" H 17550 4800 50  0001 C CNN
+F 3 "" H 17550 4800 50  0001 C CNN
+F 4 "clk_div_ice_m" H 17150 4900 50  0000 C CNN "name"
+	1    17150 4100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	16700 3750 16600 3750
+Wire Wire Line
+	16700 5200 16500 5200
+Wire Wire Line
+	18050 6750 15150 6750
+Wire Wire Line
+	15150 6000 15150 6750
+Wire Wire Line
+	17600 3700 17800 3700
+Wire Wire Line
+	17600 5150 17700 5150
+Wire Wire Line
+	15250 6400 18050 6400
+Wire Wire Line
+	15250 4000 15250 6400
+Wire Wire Line
+	17150 4500 17150 4600
+Wire Wire Line
+	17150 4600 16600 4600
+Wire Wire Line
+	16600 4600 16600 6050
+Wire Wire Line
+	16600 6050 17150 6050
+Wire Wire Line
+	17150 6050 17150 5950
+Wire Wire Line
+	15350 3850 15350 6300
+Wire Wire Line
+	15450 3700 15450 6200
+Wire Wire Line
+	15350 6300 17800 6300
+Wire Wire Line
+	17800 6300 17800 6200
+Wire Wire Line
+	17800 6200 18050 6200
+Wire Wire Line
+	15450 6200 17700 6200
+Wire Wire Line
+	17700 6200 17700 6000
+Wire Wire Line
+	17700 6000 18050 6000
+Wire Wire Line
+	17700 5800 18050 5800
+Wire Wire Line
+	17700 5150 17700 5800
+Wire Wire Line
+	17800 5600 18050 5600
+Wire Wire Line
+	17800 3700 17800 5600
+Text GLabel 16450 6050 0    59   UnSpc ~ 0
+24
+Wire Wire Line
+	16600 6050 16450 6050
+Connection ~ 16600 6050
+$Comp
+L modulos:UART U?
+U 1 1 5C65E310
+P 11150 7400
+F 0 "U?" H 11600 9250 50  0001 C CNN
+F 1 "UART" H 11150 9050 118 0001 C CNN
+F 2 "" H 11050 4800 50  0001 C CNN
+F 3 "" H 11050 4800 50  0001 C CNN
+F 4 "UART" H 11150 9150 50  0000 C CNN "name"
+	1    11150 7400
+	1    0    0    -1  
+$EndComp
+Text GLabel 11300 7650 2    59   UnSpc ~ 0
+3750000
+Wire Wire Line
+	11150 7650 11300 7650
+Wire Wire Line
+	10550 7100 10550 7750
+Wire Wire Line
+	15300 6850 15300 7750
+Wire Wire Line
+	7550 5450 7550 3550
+Wire Wire Line
+	8450 5400 8450 4700
+$Comp
+L modulos:clk_div U?
+U 1 1 5C65E266
+P 8000 5800
+F 0 "U?" H 8000 6907 50  0001 C CNN
+F 1 "clk_div" H 8000 6450 118 0001 C CNN
+F 2 "" H 8400 6500 50  0001 C CNN
+F 3 "" H 8400 6500 50  0001 C CNN
+F 4 "clk_div_btn" H 8000 6600 50  0000 C CNN "name"
+	1    8000 5800
+	1    0    0    -1  
+$EndComp
+Text GLabel 8100 6250 2    59   UnSpc ~ 0
+19
+Wire Wire Line
+	8000 6200 8000 6250
+Wire Wire Line
+	8000 6250 8100 6250
 $EndSCHEMATC

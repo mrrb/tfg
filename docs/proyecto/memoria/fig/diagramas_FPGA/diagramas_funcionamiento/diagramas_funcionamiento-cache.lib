@@ -25,16 +25,103 @@ X ~ 7 0 200 150 D 40 40 2 1 I I
 ENDDRAW
 ENDDEF
 #
+# 74xx_74LS04
+#
+DEF 74xx_74LS04 U 0 40 Y Y 7 L N
+F0 "U" 0 50 50 H V C CNN
+F1 "74xx_74LS04" 0 -50 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ DIP?14*
+$ENDFPLIST
+DRAW
+S -200 300 200 -300 7 1 10 f
+P 4 1 0 10 -150 150 -150 -150 150 0 -150 150 f
+P 4 2 0 10 -150 150 -150 -150 150 0 -150 150 f
+P 4 3 0 10 -150 150 -150 -150 150 0 -150 150 f
+P 4 4 0 10 -150 150 -150 -150 150 0 -150 150 f
+P 4 5 0 10 -150 150 -150 -150 150 0 -150 150 f
+P 4 6 0 10 -150 150 -150 -150 150 0 -150 150 f
+X ~ 1 -300 0 150 R 50 50 1 0 I
+X ~ 2 300 0 150 L 50 50 1 0 O I
+X ~ 3 -300 0 150 R 50 50 2 0 I
+X ~ 4 300 0 150 L 50 50 2 0 O I
+X ~ 5 -300 0 150 R 50 50 3 0 I
+X ~ 6 300 0 150 L 50 50 3 0 O I
+X ~ 8 300 0 150 L 50 50 4 0 O I
+X ~ 9 -300 0 150 R 50 50 4 0 I
+X ~ 10 300 0 150 L 50 50 5 0 O I
+X ~ 11 -300 0 150 R 50 50 5 0 I
+X ~ 12 300 0 150 L 50 50 6 0 O I
+X ~ 13 -300 0 150 R 50 50 6 0 I
+X VCC 14 0 500 200 D 50 50 7 0 W
+X GND 7 0 -500 200 U 50 50 7 0 W
+ENDDRAW
+ENDDEF
+#
+# modulos_FIFO_BRAM_SYNC
+#
+DEF ~modulos_FIFO_BRAM_SYNC U 0 40 Y Y 1 F N
+F0 "U" 250 1300 59 H I C CNN
+F1 "modulos_FIFO_BRAM_SYNC" 0 1700 79 H I C CNN
+F2 "" 0 0 59 H I C CNN
+F3 "" 0 0 59 H I C CNN
+F4 "8bits" 0 1400 59 H I C CNN "DATA_WIDTH"
+F5 "1BRAM" 0 1300 59 H I C CNN "FIFO_SIZE_ML"
+F6 "Almost_full >= 90%" 0 1500 39 H I C CNN "ALMOST_FULL"
+F7 "Almost_empty <= 10%" 0 1600 39 H I C CNN "ALMOST_EMPTY"
+DRAW
+T 0 0 1050 79 0 0 0 FIFO_BRAM_SYNC Normal 0 C C
+S 500 -600 -500 1150 0 1 0 f
+X ALMOST_EMPTY ~ 300 -700 100 U 50 50 1 1 P X
+X ALMOST_FULL ~ 100 -700 100 U 50 50 1 1 P X
+X clk ~ -600 800 100 R 50 50 1 1 I C
+X DATA_WIDTH ~ -300 -700 100 U 50 50 1 1 P X
+X FIFO_SIZE_ML ~ -100 -700 100 U 50 50 1 1 P X
+X rd_almost_empty ~ 600 100 100 L 50 50 1 1 O
+X rd_DATA ~ 600 300 100 L 50 50 1 1 O
+X rd_empty ~ 600 200 100 L 50 50 1 1 O
+X rd_en ~ -600 150 100 R 50 50 1 1 I
+X rst ~ -600 900 100 R 50 50 1 1 I
+X wr_almost_full ~ 600 450 100 L 50 50 1 1 O
+X wr_data ~ -600 650 100 R 50 50 1 1 I
+X wr_dv ~ -600 500 100 R 50 50 1 1 I
+X wr_full ~ 600 550 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_MUX_3_1
+#
+DEF ~modulos_MUX_3_1 U 0 40 Y Y 1 F N
+F0 "U" 0 -250 98 H I C CNN
+F1 "modulos_MUX_3_1" 0 -100 98 H I C CNN
+F2 "" 0 0 98 H I C CNN
+F3 "" 0 0 98 H I C CNN
+DRAW
+T 0 0 100 79 0 0 0 MUX Normal 0 C C
+S -250 0 250 700 0 0 0 f
+X A ~ -350 400 100 R 50 50 1 1 I
+X B ~ -350 300 100 R 50 50 1 1 I
+X C ~ -350 200 100 R 50 50 1 1 I
+X out ~ 350 300 100 L 50 50 1 1 O
+X sel_A ~ -100 800 100 D 50 50 1 1 I
+X sel_B ~ 0 800 100 D 50 50 1 1 I
+X sel_C ~ 100 800 100 D 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
 # modulos_UART
 #
-DEF modulos_UART U 0 40 Y Y 1 F N
+DEF ~modulos_UART U 0 40 Y Y 1 F N
 F0 "U" 450 1850 50 H I C CNN
-F1 "modulos_UART" 0 1650 118 H V C CNN
+F1 "modulos_UART" 0 1900 118 H I C CNN
 F2 "" -100 -2600 50 H I C CNN
 F3 "" -100 -2600 50 H I C CNN
-F4 "115200bauds" 0 1500 50 H V C CNN "Baudrate"
 DRAW
-S -500 0 500 1750 0 1 0 f
+T 0 0 1600 118 0 0 0 UART Normal 0 C C
+S -500 -150 500 1700 0 1 0 f
+X BAUDS ~ 0 -250 100 U 50 50 1 1 I X
 X clk ~ -600 1350 100 R 50 50 1 1 I C
 X clk_Rx ~ 600 1050 100 L 50 50 1 1 O
 X clk_Tx ~ 600 950 100 L 50 50 1 1 O
@@ -53,14 +140,60 @@ X Tx_FULL ~ 600 350 100 L 50 50 1 1 O
 ENDDRAW
 ENDDEF
 #
+# modulos_UART_Rx
+#
+DEF ~modulos_UART_Rx U 0 40 Y Y 1 F N
+F0 "U" 0 1600 59 H I C CNN
+F1 "modulos_UART_Rx" 0 1450 59 H I C CNN
+F2 "" -950 -300 59 H I C CNN
+F3 "" -950 -300 59 H I C CNN
+DRAW
+T 0 0 1300 79 0 0 0 UART_Rx Normal 0 C C
+S 300 0 -300 1400 0 0 0 f
+X BAUDS ~ 0 -100 100 U 50 50 1 1 O X
+X clk ~ -400 1050 100 R 50 50 1 1 I C
+X clk_Rx ~ 400 1100 100 L 50 50 1 1 O C
+X NrD ~ 400 600 100 L 50 50 1 1 O
+X NxT ~ -400 500 100 R 50 50 1 1 I
+X O_DATA ~ 400 750 100 L 50 50 1 1 O
+X rst ~ -400 1150 100 R 50 50 1 1 I
+X Rx ~ -400 900 100 R 50 50 1 1 I
+X Rx_EMPTY ~ 400 400 100 L 50 50 1 1 O
+X Rx_FULL ~ 400 500 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_UART_Tx
+#
+DEF ~modulos_UART_Tx U 0 40 Y Y 1 F N
+F0 "U" 0 1550 98 H I C CNN
+F1 "modulos_UART_Tx" 0 1400 98 H I C CNN
+F2 "" 0 -100 98 H I C CNN
+F3 "" 0 -100 98 H I C CNN
+DRAW
+T 0 0 1200 79 0 1 0 UART_Tx Normal 0 C C
+S 400 0 -400 1300 1 0 0 f
+X BAUDS ~ 0 -100 100 U 50 50 1 1 O X
+X clk ~ -500 950 100 R 50 50 1 1 I C
+X clk_Tx ~ 500 1000 100 L 50 50 1 1 O C
+X I_DATA ~ -500 650 100 R 50 50 1 1 O
+X rst ~ -500 1050 100 R 50 50 1 1 I
+X send_data ~ -500 450 100 R 50 50 1 1 I
+X TiP ~ 500 500 100 L 50 50 1 1 O
+X Tx ~ 500 800 100 L 50 50 1 1 I
+X Tx_FULL ~ 500 400 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
 # modulos_ULPI
 #
-DEF modulos_ULPI U 0 40 Y Y 1 F N
+DEF ~modulos_ULPI U 0 40 Y Y 1 F N
 F0 "U" 500 3000 50 H I C CNN
-F1 "modulos_ULPI" 0 2950 118 H V C CNN
+F1 "modulos_ULPI" 250 3400 118 H I C CNN
 F2 "" -1250 1200 50 H I C CNN
 F3 "" -1250 1200 50 H I C CNN
 DRAW
+T 0 0 2950 118 0 0 0 ULPI Normal 0 C C
 S -650 0 600 3100 0 1 0 f
 X ADDR ~ -750 2150 100 R 50 50 1 1 I
 X busy ~ 700 2350 100 L 50 50 1 1 O
@@ -96,14 +229,100 @@ X USB_INFO_DATA ~ 700 950 100 L 50 50 1 1 O
 ENDDRAW
 ENDDEF
 #
+# modulos_ULPI_RECV
+#
+DEF ~modulos_ULPI_RECV U 0 40 Y Y 1 F N
+F0 "U" 0 2550 79 H I C CNN
+F1 "modulos_ULPI_RECV" 0 2450 79 H I C CNN
+F2 "" 800 1100 79 H I C CNN
+F3 "" 800 1100 79 H I C CNN
+DRAW
+T 0 0 2300 118 0 0 0 ULPI_RECV Normal 0 C C
+S -600 0 600 2400 0 0 0 f
+X busy ~ 700 1900 100 L 50 50 1 1 O
+X clk_ULPI ~ -700 2050 100 R 50 50 1 1 I C
+X DATA_buff_empty ~ 700 700 100 L 50 50 1 1 O
+X DATA_buff_full ~ 700 800 100 L 50 50 1 1 O
+X DATA_I ~ -700 100 100 R 50 50 1 1 I
+X DATA_O ~ 700 300 100 L 50 50 1 1 O
+X DATA_re ~ -700 750 100 R 50 50 1 1 I
+X DIR ~ -700 300 100 R 50 50 1 1 I
+X INFO_buff_empty ~ 700 500 100 L 50 50 1 1 O
+X INFO_buff_full ~ 700 600 100 L 50 50 1 1 O
+X INFO_re ~ -700 650 100 R 50 50 1 1 I
+X NXT ~ -700 200 100 R 50 50 1 1 I
+X ReadAllow ~ -700 1900 100 R 50 50 1 1 I
+X rst ~ -700 2150 100 R 50 50 1 1 I
+X RxActive ~ 700 1450 100 L 50 50 1 1 O
+X RxCMD ~ 700 1750 100 L 50 50 1 1 O
+X RxError ~ 700 1350 100 L 50 50 1 1 O
+X RxHostDisconnect ~ 700 1250 100 L 50 50 1 1 O
+X RxID ~ 700 1150 100 L 50 50 1 1 O
+X RxLineState ~ 700 1650 100 L 50 50 1 1 O
+X RxVbusState ~ 700 1550 100 L 50 50 1 1 O
+X STP ~ 700 200 100 L 50 50 1 1 O
+X USB_DATA ~ 700 1000 100 L 50 50 1 1 O
+X USB_INFO_DATA ~ 700 900 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_ULPI_REG_READ
+#
+DEF ~modulos_ULPI_REG_READ U 0 40 Y Y 1 F N
+F0 "U" 0 1250 79 H I C CNN
+F1 "modulos_ULPI_REG_READ" 0 1150 79 H I C CNN
+F2 "" 50 -100 79 H I C CNN
+F3 "" 50 -100 79 H I C CNN
+DRAW
+T 0 0 1000 59 0 1 0 ULPI_REG_READ Normal 0 C C
+S -350 0 350 1100 1 0 0 f
+X ADDR ~ -450 450 100 R 50 50 1 1 I
+X busy ~ 450 600 100 L 50 50 1 1 O
+X clk_ULPI ~ -450 750 100 R 50 50 1 1 I C
+X DATA_I ~ -450 100 100 R 50 50 1 1 I
+X DATA_O ~ 450 250 100 L 50 50 1 1 O
+X DIR ~ -450 300 100 R 50 50 1 1 I
+X NXT ~ -450 200 100 R 50 50 1 1 I
+X PrR ~ -450 600 100 R 50 50 1 1 I
+X REG_VAL ~ 450 450 100 L 50 50 1 1 O
+X rst ~ -450 850 100 R 50 50 1 1 I
+X STP ~ 450 150 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_ULPI_REG_WRITE
+#
+DEF ~modulos_ULPI_REG_WRITE U 0 40 Y Y 1 F N
+F0 "U" 0 1300 79 H I C CNN
+F1 "modulos_ULPI_REG_WRITE" 0 1300 79 H I C CNN
+F2 "" 0 1300 79 H I C CNN
+F3 "" 0 1300 79 H I C CNN
+DRAW
+T 0 0 1100 59 0 0 0 ULPI_REG_WRITE Normal 0 C C
+S -400 0 400 1200 0 0 0 f
+X ADDR ~ -500 550 100 R 50 50 1 1 I
+X busy ~ 500 700 100 L 50 50 1 1 O
+X clk_ULPI ~ -500 850 100 R 50 50 1 1 I C
+X DATA_I ~ -500 100 100 R 50 50 1 1 I
+X DATA_O ~ 500 250 100 L 50 50 1 1 O
+X DIR ~ -500 300 100 R 50 50 1 1 I
+X NXT ~ -500 200 100 R 50 50 1 1 I
+X PrW ~ -500 700 100 R 50 50 1 1 I
+X REG_VAL ~ -500 450 100 R 50 50 1 1 I
+X rst ~ -500 950 100 R 50 50 1 1 I
+X STP ~ 500 150 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
 # modulos_ULPI_op_stack
 #
-DEF modulos_ULPI_op_stack U 0 40 Y Y 1 F N
+DEF ~modulos_ULPI_op_stack U 0 40 Y Y 1 F N
 F0 "U" 650 1100 50 H I C CNN
-F1 "modulos_ULPI_op_stack" 0 1050 118 H V C CNN
+F1 "modulos_ULPI_op_stack" 0 1300 118 H I C CNN
 F2 "" -1000 -100 50 H I C CNN
 F3 "" -1000 -100 50 H I C CNN
 DRAW
+T 0 0 1050 118 0 0 0 ULPI_op_stack Normal 0 C C
 S 700 0 -700 1150 0 1 0 f
 X clk ~ -800 800 100 R 50 50 1 1 I C
 X op_stack_empty ~ 800 100 100 L 50 50 1 1 O
@@ -117,14 +336,64 @@ X UART_Rx_EMPTY ~ -800 500 100 R 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
+# modulos_and2
+#
+DEF ~modulos_and2 U 0 40 Y Y 1 F N
+F0 "U" 0 400 59 H I C CNN
+F1 "modulos_and2" 0 350 59 H I C CNN
+F2 "" 0 0 59 H I C CNN
+F3 "" 0 0 59 H I C CNN
+DRAW
+A 50 150 150 -899 899 1 1 10 f 50 0 50 300
+P 4 1 1 10 50 300 -100 300 -100 0 50 0 f
+X ~ ~ -250 50 150 R 50 50 1 1 I
+X ~ ~ -250 250 150 R 50 50 1 1 I
+X ~ ~ 350 150 150 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_and2_neg1
+#
+DEF ~modulos_and2_neg1 U 0 40 Y Y 1 F N
+F0 "U" 0 450 59 H I C CNN
+F1 "modulos_and2_neg1" -50 350 59 H I C CNN
+F2 "" 0 0 59 H I C CNN
+F3 "" 0 0 59 H I C CNN
+DRAW
+A 0 150 150 -899 899 1 1 10 f 0 0 0 300
+P 4 1 1 10 0 300 -150 300 -150 0 0 0 f
+X ~ ~ -300 50 150 R 50 50 1 1 I I
+X ~ ~ -300 250 150 R 50 50 1 1 I
+X ~ ~ 300 150 150 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_and3_neg1
+#
+DEF ~modulos_and3_neg1 U 0 40 Y Y 1 F N
+F0 "U" 0 550 98 H I C CNN
+F1 "modulos_and3_neg1" 0 400 98 H I C CNN
+F2 "" -50 0 98 H I C CNN
+F3 "" -50 0 98 H I C CNN
+DRAW
+A 0 150 150 -899 899 1 1 10 f 0 0 0 300
+P 4 1 1 10 0 300 -150 300 -150 0 0 0 f
+X ~ ~ -300 50 150 R 50 50 1 1 I I
+X ~ ~ -300 150 150 R 50 50 1 1 I
+X ~ ~ -300 250 150 R 50 50 1 1 I
+X ~ ~ 300 150 150 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
 # modulos_btn_debouncer
 #
-DEF modulos_btn_debouncer U 0 40 Y Y 1 F N
+DEF ~modulos_btn_debouncer U 0 40 Y Y 1 F N
 F0 "U" 400 600 50 H I C CNN
-F1 "modulos_btn_debouncer" 0 450 79 H V C CNN
+F1 "modulos_btn_debouncer" 750 750 79 H I C CNN
 F2 "" 0 50 50 H I C CNN
 F3 "" 0 50 50 H I C CNN
 DRAW
+T 0 0 450 79 0 0 0 btn_debouncer Normal 0 C C
 S 450 0 -450 550 0 1 0 f
 X btn_in ~ -550 100 100 R 50 50 1 1 I
 X btn_out ~ 550 100 100 L 50 50 1 1 O
@@ -147,31 +416,51 @@ X ~ ~ 250 100 100 L 50 50 1 1 O C
 ENDDRAW
 ENDDEF
 #
+# modulos_clk_baud_pulse
+#
+DEF ~modulos_clk_baud_pulse U 0 40 Y Y 1 F N
+F0 "U" -50 1250 98 H I C CNN
+F1 "modulos_clk_baud_pulse" 0 1150 98 H I C CNN
+F2 "" 0 0 98 H I C CNN
+F3 "" 0 0 98 H I C CNN
+DRAW
+T 0 0 950 59 0 0 0 clk_baud_pulse Normal 0 C C
+S -350 0 350 1050 0 0 0 f
+X clk_in ~ -450 800 100 R 50 50 1 1 I C
+X clk_pulse ~ 450 800 100 L 50 50 1 1 O C
+X COUNTER_VAL ~ -100 -100 100 U 50 50 1 1 I X
+X enable ~ -450 650 100 R 50 50 1 1 I
+X PULSE_DELAY ~ 100 -100 100 U 50 50 1 1 I X
+ENDDRAW
+ENDDEF
+#
 # modulos_clk_div
 #
-DEF modulos_clk_div U 0 40 Y Y 1 F N
+DEF ~modulos_clk_div U 0 40 Y Y 1 F N
 F0 "U" 300 800 50 H I C CNN
-F1 "modulos_clk_div" 0 650 118 H V C CNN
+F1 "modulos_clk_div" 0 950 118 H I C CNN
 F2 "" 400 700 50 H I C CNN
 F3 "" 400 700 50 H I C CNN
-F4 "DIVIDER = 4" 0 550 50 H V C CNN "DIVIDER"
 DRAW
-S -350 0 350 750 0 1 0 f
+T 0 0 650 118 0 0 0 clk_div Normal 0 C C
+S -350 -300 350 750 0 1 0 f
 X clk_in ~ -450 350 100 R 50 50 1 1 I C
 X clk_out ~ 450 400 100 L 50 50 1 1 O C
 X clk_pulse ~ 450 300 100 L 50 50 1 1 O C
+X DIVIDER ~ 0 -400 100 U 50 50 1 1 I X
 X enable ~ -450 100 100 R 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
 # modulos_main_controller
 #
-DEF modulos_main_controller U 0 40 Y Y 1 F N
+DEF ~modulos_main_controller U 0 40 Y Y 1 F N
 F0 "U" 750 2300 50 H I C CNN
-F1 "modulos_main_controller" 0 2250 118 H V C CNN
+F1 "modulos_main_controller" 100 2550 118 H I C CNN
 F2 "" -1250 -250 50 H I C CNN
 F3 "" -1250 -250 50 H I C CNN
 DRAW
+T 0 50 2250 118 0 0 0 main_controller Normal 0 C C
 S 800 0 -750 2350 0 1 0 f
 X clk ~ -850 2000 100 R 50 50 1 1 I C
 X force_send ~ -850 1900 100 R 50 50 1 1 I
@@ -197,18 +486,271 @@ X ULPI_USB_INFO_DATA ~ -850 1100 100 R 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
+# modulos_negand2
+#
+DEF ~modulos_negand2 U 0 40 Y Y 1 F N
+F0 "U" 0 550 98 H I C CNN
+F1 "modulos_negand2" 0 450 98 H I C CNN
+F2 "" -350 400 98 H I C CNN
+F3 "" -350 400 98 H I C CNN
+DRAW
+A 0 150 150 -899 899 1 1 10 f 0 0 0 300
+P 4 1 1 10 0 300 -150 300 -150 0 0 0 f
+X ~ ~ -300 50 150 R 50 50 1 1 I
+X ~ ~ -300 250 150 R 50 50 1 1 I
+X ~ ~ 300 150 150 L 50 50 1 1 O I
+ENDDRAW
+ENDDEF
+#
+# modulos_num_div
+#
+DEF ~modulos_num_div U 0 40 Y Y 1 F N
+F0 "U" 650 -150 59 H I C CNN
+F1 "modulos_num_div" 650 -250 59 H I C CNN
+F2 "" 350 -100 59 H I C CNN
+F3 "" 350 -100 59 H I C CNN
+F4 "2" 350 200 59 H V C CNN "div_val"
+DRAW
+T 0 -50 200 59 0 0 0 ÷ Normal 0 C C
+S -100 450 100 0 0 0 0 f
+X in ~ 0 -150 150 U 50 50 1 1 I X
+X out ~ 0 600 150 D 50 50 1 1 O X
+ENDDRAW
+ENDDEF
+#
+# modulos_or2
+#
+DEF ~modulos_or2 U 0 40 Y Y 1 F N
+F0 "U" 0 500 98 H I C CNN
+F1 "modulos_or2" 0 400 98 H I C CNN
+F2 "" -50 -100 98 H I C CNN
+F3 "" -50 -100 98 H I C CNN
+DRAW
+A -360 150 258 354 -354 1 1 10 N -150 300 -150 0
+A -47 98 204 150 837 1 1 10 f 150 150 -24 300
+A -47 202 204 -150 -837 1 1 10 f 150 150 -24 0
+P 2 1 1 10 -150 0 -25 0 f
+P 2 1 1 10 -150 300 -25 300 f
+P 12 1 1 -1000 -25 300 -150 300 -150 300 -140 284 -119 239 -106 191 -103 140 -109 91 -125 43 -150 0 -150 0 -25 0 f
+X ~ ~ -300 50 170 R 50 50 1 1 I
+X ~ ~ -300 250 170 R 50 50 1 1 I
+X ~ ~ 300 150 150 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_shift_register
+#
+DEF ~modulos_shift_register U 0 40 Y Y 1 F N
+F0 "U" -50 1500 98 H I C CNN
+F1 "modulos_shift_register" 0 1300 98 H I C CNN
+F2 "" 3100 300 98 H I C CNN
+F3 "" 3100 300 98 H I C CNN
+DRAW
+T 0 0 1000 69 0 1 0 shift_register Normal 0 C C
+S -350 0 350 1100 0 0 0 f
+X bit_in ~ -450 600 100 R 50 50 1 1 I
+X bit_out ~ 450 600 100 L 50 50 1 1 O
+X BITS ~ 0 -100 100 U 50 50 1 1 I
+X clk ~ -450 750 100 R 50 50 1 1 I C
+X DATA ~ 450 450 100 L 50 50 1 1 O
+X DATA_in ~ -450 450 100 R 50 50 1 1 I
+X mode ~ -450 300 100 R 50 50 1 1 I
+X rst ~ -450 850 100 R 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
 # modulos_signal_trigger
 #
-DEF modulos_signal_trigger U 0 40 Y Y 1 F N
+DEF ~modulos_signal_trigger U 0 40 Y Y 1 F N
 F0 "U" 500 550 50 H I C CNN
-F1 "modulos_signal_trigger" 0 500 98 H V C CNN
+F1 "modulos_signal_trigger" 50 900 98 H I C CNN
 F2 "" -800 -150 50 H I C CNN
 F3 "" -800 -150 50 H I C CNN
 DRAW
+T 0 0 500 98 0 0 0 signal_trigger Normal 0 C C
 S -550 0 550 600 0 1 0 f
 X clk ~ -650 300 100 R 50 50 1 1 I C
 X input_signal ~ -650 100 100 R 50 50 1 1 I
 X output_signal ~ 650 100 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_states_machine_uart_rx
+#
+DEF ~modulos_states_machine_uart_rx U 0 40 Y Y 1 F N
+F0 "U" 0 1550 59 H I C CNN
+F1 "modulos_states_machine_uart_rx" 0 1450 59 H I C CNN
+F2 "" 400 1200 59 H I C CNN
+F3 "" 400 1200 59 H I C CNN
+DRAW
+T 0 0 1200 59 0 1 0 "Module Controller" Normal 0 C C
+S 450 0 -450 1300 0 0 0 f
+X clk ~ -550 950 100 R 50 50 1 1 I C
+X clk_shift ~ -550 850 100 R 50 50 1 1 I C
+X mode ~ 550 100 100 L 50 50 1 1 O
+X rst ~ -550 1050 100 R 50 50 1 1 I
+X rx ~ -550 250 100 R 50 50 1 1 I
+X Rx_s_IDLE ~ 550 700 100 L 50 50 1 1 O
+X Rx_s_INIT ~ 550 600 100 L 50 50 1 1 O
+X Rx_s_RECV ~ 550 500 100 L 50 50 1 1 O
+X Rx_s_SAVE ~ 550 400 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_states_machine_uart_tx
+#
+DEF ~modulos_states_machine_uart_tx U 0 40 Y Y 1 F N
+F0 "U" -50 1200 98 H I C CNN
+F1 "modulos_states_machine_uart_tx" 0 1000 98 H I C CNN
+F2 "" 0 0 98 H I C CNN
+F3 "" 0 0 98 H I C CNN
+DRAW
+T 0 0 800 59 0 1 0 "Module Controller" Normal 0 C C
+S 450 0 -450 900 0 0 0 f
+X clk ~ -550 550 100 R 50 50 1 1 I C
+X clk_shift ~ -550 450 100 R 50 50 1 1 I C
+X mode ~ 600 550 150 L 50 50 1 1 O
+X rst ~ -550 650 100 R 50 50 1 1 I
+X Tx_s_IDLE ~ 550 300 100 L 50 50 1 1 O
+X Tx_s_LOAD ~ 550 200 100 L 50 50 1 1 O
+X Tx_s_TRANS ~ 550 100 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_states_machine_ulpi
+#
+DEF ~modulos_states_machine_ulpi U 0 40 Y Y 1 F N
+F0 "U" 0 1350 79 H I C CNN
+F1 "modulos_states_machine_ulpi" 0 1250 79 H I C CNN
+F2 "" -50 0 79 H I C CNN
+F3 "" -50 0 79 H I C CNN
+DRAW
+T 0 0 1050 79 0 1 0 "Module Controller" Normal 0 C C
+S -600 0 600 1150 0 0 0 f
+X clk ~ -700 800 100 R 50 50 1 1 I C
+X ctrl_PrR ~ -700 100 100 R 50 50 1 1 I
+X ctrl_PrW ~ -700 200 100 R 50 50 1 1 I
+X DIR ~ -700 600 100 R 50 50 1 1 I
+X RECV_busy ~ -700 300 100 R 50 50 1 1 I
+X RR_busy ~ -700 400 100 R 50 50 1 1 I
+X rst ~ -700 900 100 R 50 50 1 1 I
+X RW_busy ~ -700 500 100 R 50 50 1 1 I
+X status ~ 700 850 100 L 50 50 1 1 O
+X ULPI_s_IDLE ~ 700 450 100 L 50 50 1 1 O
+X ULPI_s_RECV ~ 700 150 100 L 50 50 1 1 O
+X ULPI_s_REG_READ ~ 700 250 100 L 50 50 1 1 O
+X ULPI_s_REG_WRITE ~ 700 350 100 L 50 50 1 1 O
+X ULPI_s_START ~ 700 550 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_states_machine_ulpi_op_stack
+#
+DEF ~modulos_states_machine_ulpi_op_stack U 0 40 Y Y 1 F N
+F0 "U" 0 1350 118 H I C CNN
+F1 "modulos_states_machine_ulpi_op_stack" -50 1200 118 H I C CNN
+F2 "" 100 0 118 H I C CNN
+F3 "" 100 0 118 H I C CNN
+DRAW
+T 0 0 950 79 0 0 0 "Module Controller" Normal 0 C C
+S 600 0 -600 1050 0 1 0 f
+X clk ~ -700 700 100 R 50 50 1 1 I C
+X rst ~ -700 800 100 R 50 50 1 1 I
+X serial_msg_r ~ 700 500 100 L 50 50 1 1 O
+X SERIAL_s_IDLE ~ 700 300 100 L 50 50 1 1 O
+X SERIAL_s_PUSH ~ 700 100 100 L 50 50 1 1 O
+X SERIAL_s_READ ~ 700 200 100 L 50 50 1 1 O
+X UART_DATA ~ -700 550 100 R 50 50 1 1 I
+X UART_Rx_EMPTY ~ -700 450 100 R 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
+# modulos_states_machine_ulpi_recv
+#
+DEF ~modulos_states_machine_ulpi_recv U 0 40 Y Y 1 F N
+F0 "U" 0 2850 59 H I C CNN
+F1 "modulos_states_machine_ulpi_recv" 0 2850 59 H I C CNN
+F2 "" 0 2850 59 H I C CNN
+F3 "" 0 2850 59 H I C CNN
+DRAW
+T 0 0 2650 79 0 0 0 "Module controller" Normal 0 C C
+S -600 0 650 2750 1 1 0 f
+X clk_ULPI ~ -700 2350 100 R 50 50 1 1 I C
+X ctrl_DATA ~ -700 2050 100 R 50 50 1 1 I
+X ctrl_RxCMD ~ -700 1950 100 R 50 50 1 1 I
+X DATA_dv_r ~ 750 800 100 L 50 50 1 1 O
+X DATA_in ~ -700 100 100 R 50 50 1 1 I
+X DATA_out ~ 750 250 100 L 50 50 1 1 O
+X DIR ~ -700 300 100 R 50 50 1 1 I
+X INFO_dv_r ~ 750 700 100 L 50 50 1 1 O
+X NXT ~ -700 200 100 R 50 50 1 1 I
+X ReadAllow ~ -700 2200 100 R 50 50 1 1 I
+X rst ~ -700 2450 100 R 50 50 1 1 I
+X RxActive ~ 750 1500 100 L 50 50 1 1 O
+X RxCMD ~ 750 1800 100 L 50 50 1 1 O
+X RxError ~ 750 1400 100 L 50 50 1 1 O
+X RxHostDisconnect ~ 750 1300 100 L 50 50 1 1 O
+X RxID ~ 750 1200 100 L 50 50 1 1 O
+X RxLineState ~ 750 1700 100 L 50 50 1 1 O
+X RxVbusState ~ 750 1600 100 L 50 50 1 1 O
+X STP ~ 750 150 100 L 50 50 1 1 O
+X ULPI_RECV_s_IDLE ~ 750 1050 100 L 50 50 1 1 O
+X ULPI_RECV_s_READ ~ 750 950 100 L 50 50 1 1 O
+X USB_DATA_r ~ 750 550 100 L 50 50 1 1 O
+X USB_INFO_r ~ 750 450 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_states_machine_ulpi_reg_read
+#
+DEF ~modulos_states_machine_ulpi_reg_read U 0 40 Y Y 1 F N
+F0 "U" 0 2100 59 H I C CNN
+F1 "modulos_states_machine_ulpi_reg_read" 0 1850 59 H I C CNN
+F2 "" -750 1550 59 H I C CNN
+F3 "" -750 1550 59 H I C CNN
+DRAW
+T 0 0 1650 79 0 1 0 "Module controller" Normal 0 C C
+S -600 0 650 1750 1 1 0 f
+X ADDR ~ -700 1050 100 R 50 50 1 1 I
+X clk_ULPI ~ -700 1350 100 R 50 50 1 1 I C
+X DATA_in ~ -700 100 100 R 50 50 1 1 I
+X DATA_out ~ 750 200 100 L 50 50 1 1 O
+X NXT ~ -700 200 100 R 50 50 1 1 I
+X PrR ~ -700 1200 100 R 50 50 1 1 I
+X REG_VAL ~ 750 350 100 L 50 50 1 1 O
+X rst ~ -700 1450 100 R 50 50 1 1 I
+X STP ~ 750 100 100 L 50 50 1 1 O
+X ULPI_RR_s_IDLE ~ 750 900 100 L 50 50 1 1 O
+X ULPI_RR_s_READ ~ 750 600 100 L 50 50 1 1 O
+X ULPI_RR_s_TXCMD ~ 750 800 100 L 50 50 1 1 O
+X ULPI_RR_s_WAIT1 ~ 750 700 100 L 50 50 1 1 O
+X ULPI_RR_s_WAIT2 ~ 750 500 100 L 50 50 1 1 O
+ENDDRAW
+ENDDEF
+#
+# modulos_states_machine_ulpi_reg_write
+#
+DEF ~modulos_states_machine_ulpi_reg_write U 0 40 Y Y 1 F N
+F0 "U" 0 1800 59 H I C CNN
+F1 "modulos_states_machine_ulpi_reg_write" -50 1700 59 H I C CNN
+F2 "" 0 0 59 H I C CNN
+F3 "" 0 0 59 H I C CNN
+DRAW
+T 0 -50 1500 79 0 1 0 "Module controller" Normal 0 C C
+S -650 0 600 1600 1 1 0 f
+X ADDR ~ -750 900 100 R 50 50 1 1 I
+X clk_ULPI ~ -750 1200 100 R 50 50 1 1 I C
+X DATA_in ~ -750 100 100 R 50 50 1 1 I
+X DATA_out ~ 700 200 100 L 50 50 1 1 O
+X NXT ~ -750 200 100 R 50 50 1 1 I
+X PrW ~ -750 1050 100 R 50 50 1 1 I
+X REG_VAL ~ -750 800 100 R 50 50 1 1 I
+X rst ~ -750 1300 100 R 50 50 1 1 I
+X STP ~ 700 100 100 L 50 50 1 1 O
+X ULPI_RW_s_DATA ~ 700 450 100 L 50 50 1 1 O
+X ULPI_RW_s_IDLE ~ 700 650 100 L 50 50 1 1 O
+X ULPI_RW_s_STOP ~ 700 350 100 L 50 50 1 1 O
+X ULPI_RW_s_TXCMD ~ 700 550 100 L 50 50 1 1 O
 ENDDRAW
 ENDDEF
 #
