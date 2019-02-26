@@ -56,6 +56,7 @@
            %  edge/.append style={->, black, thick, shorten <=2pt, shorten >=2pt},
            %
            trs/.style={->, black, thick, shorten <=2pt, shorten >=2pt},
+           startSty/.style={->, black},
            infoNode/.style={rectangle, draw},
            %
            >=stealth,

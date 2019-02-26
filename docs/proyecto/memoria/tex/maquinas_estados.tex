@@ -193,7 +193,7 @@
         \newcommand{\fsmInfoSep}{2.5};
         \newcommand{\nuSpc}{\ensuremath{\,}}
 
-        \node[state, initial, accepting, minimum width={width("MAIN\_IDLE")+.75cm}] (IDLE) {MAIN\_IDLE};
+        \node[state, accepting, minimum width={width("MAIN\_IDLE")+.75cm}] (IDLE) {MAIN\_IDLE};
 
         \node[state] at ($(IDLE)+(\fsmBaseAng+0:5)$) (RECVT) {MAIN\_RECV\_TOGGLE};
 
@@ -209,6 +209,11 @@
         \node[state] at ($(RECV)+(0,-3.75)$) (RECVS1) {MAIN\_RECV\_SEND1};
         \node[state] at ($(RECVS1)+(4.25,0)$) (RECVWAIT) {MAIN\_RECV\_WAIT};
         \node[state] at ($(RECVWAIT)+(0,+3.75)$) (RECVS2) {MAIN\_RECV\_SEND2};
+
+        % Alternative initial arrow with custom entry angle
+        \node[] at ($(IDLE)+(\fsmBaseAng+150:2.5)$) (altStart) {};
+        \draw[startSty] (altStart) edge[] node[]{} (IDLE);
+
 
         \matrix [row sep={0.3cm,between borders},
                  column sep={0.5cm,between borders},
@@ -303,7 +308,7 @@
             
             (RREAD) edge[] node[left]{1} (RWAIT)
             
-            (RWRITE) edge[] node[left]{1} (RWAIT)
+            (RWRITE) edge[] node[below]{1} (RWAIT)
 
             (RWAIT) edge[] node[sloped, above]{!ULPI\_busy} (IDLE)
             (RWAIT) edge[out={\fsmBaseAng+210+15}, in={\fsmBaseAng+210-15}, loop] node[below=0.15]{ULPI\_busy} (RWAIT)
