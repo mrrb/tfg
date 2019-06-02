@@ -18,6 +18,7 @@
  *  - UART_Tx_FULL. Signal that indicates that the UART transmission buffer is full.
  *
  * Outputs:
+ *  - toggle_status. Signal that indicates if the system is sendign data to the PC.
  *  - op_stack_pull. Signal that makes the operation stack gets the next operation.
  *  - ULPI_DATA_re. Signal that makes the ULPI_DATA buffer gets the next stored value.
  *  - ULPI_INFO_re. Signal that makes the ULPI_INFO buffer gets the next stored value.
@@ -57,6 +58,7 @@ module main_controller (
                         input  wire rst,                       // Reset signal
                         input  wire clk,                       // Reference clock input
                         input  wire force_send,                // Send an arbitrary value
+                        output wire toggle_status,             // Signal that indicates the toggle status
 
                         // Op stack
                         input  wire [15:0] op_stack_msg,       // Next operation stored in the op_buffer
@@ -150,6 +152,8 @@ module main_controller (
 
     assign ULPI_INFO_re = MAIN_s_RECV; // #OUTPUT
     assign ULPI_DATA_re = MAIN_s_RECV_SEND2 && !UART_Tx_FULL; // #OUTPUT
+
+    assign toggle_status = toggle_r; // #OUTPUT
     // End of TOP Regs and wires
 
     // TOP States
