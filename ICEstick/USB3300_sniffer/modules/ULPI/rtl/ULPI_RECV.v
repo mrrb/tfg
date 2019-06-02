@@ -145,13 +145,13 @@ module ULPI_RECV (
     always @(negedge clk_ULPI `ULPI_RECV_ASYNC_RESET) begin
         if(!rst) INFO_dv_r <= 0;
         else if(ULPI_RECV_s_READ && !(ctrl_DATA || ctrl_RxCMD) && DATA_COUNTER > 0)
-            INFO_dv_r <= 1;
+             INFO_dv_r <= 1;
         else INFO_dv_r <= 0;
     end
 
     // DATA buffer
     FIFO_BRAM_SYNC_CUSTOM #(.DATA_WIDTH(`FIFO_BRAM_8),
-                            .FIFO_SIZE_ML(4))
+                            .FIFO_SIZE_ML(8))
                 DATA_BUFF  (
                             // System signals
                             .rst(rst),
@@ -180,7 +180,7 @@ module ULPI_RECV (
 
     // INFO buffer
     FIFO_BRAM_SYNC_CUSTOM #(.DATA_WIDTH(`FIFO_BRAM_16),
-                            .FIFO_SIZE_ML(2))
+                            .FIFO_SIZE_ML(4))
                 INFO_BUFF  (
                             // System signals
                             .rst(rst),
