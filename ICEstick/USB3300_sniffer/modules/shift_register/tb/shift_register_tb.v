@@ -40,6 +40,12 @@ module shift_register_tb ();
         $dumpfile("./sim/shift_register_tb.vcd");
         $dumpvars();
 
+        #1 DATA_IN = 8'h00; mode = 2'b11;
+        #1 mode = 2'b10; bit_in = 1'b1;
+        #4 bit_in = 1'b0;
+        #2 bit_in = 1'b1;
+        #4 bit_in = 1'b0; mode = 2'b00;
+
         #1 DATA_IN = 8'hFA; mode = 2'b11;
         #1 mode = 2'b01;
         #12

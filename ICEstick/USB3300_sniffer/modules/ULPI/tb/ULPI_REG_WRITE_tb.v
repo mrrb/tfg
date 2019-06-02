@@ -59,7 +59,7 @@ module ULPI_REG_WRITE_tb ();
         // Test 0 (AN 19.17)
         #0.2 PrW = 1;
         #0.2 PrW = 0;
-        #0.1 NXT = 1;
+        #0.2 NXT = 1;
         #0.4 NXT = 0;
 
         #0.4
