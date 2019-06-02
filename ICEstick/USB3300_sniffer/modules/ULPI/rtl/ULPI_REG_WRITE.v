@@ -121,11 +121,11 @@ module ULPI_REG_WRITE (
                     else    ULPI_RW_state_r <= ULPI_RW_IDLE;
                 end
                 ULPI_RW_TXCMD: begin
-                    if(NXT_r) ULPI_RW_state_r <= ULPI_RW_DATA;
+                    if(NXT) ULPI_RW_state_r <= ULPI_RW_DATA;
                     else      ULPI_RW_state_r <= ULPI_RW_TXCMD;
                 end
                 ULPI_RW_DATA: begin
-                    if(NXT_r) ULPI_RW_state_r <= ULPI_RW_STOP;
+                    if(NXT) ULPI_RW_state_r <= ULPI_RW_STOP;
                     else      ULPI_RW_state_r <= ULPI_RW_DATA;
                 end
                 ULPI_RW_STOP: begin
@@ -183,15 +183,32 @@ module ULPI_REG_WRITE (
     //     end
     // end
 
-    // Outputs [2, output change on NEGEDGE]
-    always @(negedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
-        if(!rst)                 DATA_O_buff <= 0;
-        else if(ULPI_RW_s_TXCMD) DATA_O_buff <= {CMD_HEADER, ADDR_r};
-        else if(ULPI_RW_s_DATA)  DATA_O_buff <= REG_VAL_r;
-        else                     DATA_O_buff <= 0;
+    // // Outputs [2, output change on NEGEDGE]
+    // always @(negedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
+    //     if(!rst)                 DATA_O_buff <= 0;
+    //     else if(ULPI_RW_s_TXCMD) DATA_O_buff <= {CMD_HEADER, ADDR_r};
+    //     else if(ULPI_RW_s_DATA)  DATA_O_buff <= REG_VAL_r;
+    //     else                     DATA_O_buff <= 0;
+    // end
+
+    // always @(negedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
+    //     if(!rst)                STP_buff <= 1'b0;
+    //     else if(ULPI_RW_s_STOP) STP_buff <= 1'b1;
+    //     else                    STP_buff <= 1'b0;
+    // end
+    // /// End of ULPI_RW controller
+
+    // Outputs [3]
+    always @(posedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
+        if(!rst)                        DATA_O_buff <= 0;
+        else if(ULPI_RW_s_IDLE && PrW)  DATA_O_buff <= {CMD_HEADER, ADDR};
+        else if(ULPI_RW_s_TXCMD && NXT) DATA_O_buff <= REG_VAL;
+        else if(ULPI_RW_s_TXCMD)        DATA_O_buff <= DATA_O_buff;
+        else if(ULPI_RW_s_DATA)         DATA_O_buff <= DATA_O_buff;
+        else                            DATA_O_buff <= 0;
     end
 
-    always @(negedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
+    always @(posedge clk_ULPI `ULPI_RW_ASYNC_RESET) begin
         if(!rst)                STP_buff <= 1'b0;
         else if(ULPI_RW_s_STOP) STP_buff <= 1'b1;
         else                    STP_buff <= 1'b0;
