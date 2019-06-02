@@ -1,0 +1,3 @@
+src/*.o
+# build
+dump.json
