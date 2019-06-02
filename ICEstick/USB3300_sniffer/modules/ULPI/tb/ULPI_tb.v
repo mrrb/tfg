@@ -104,11 +104,11 @@ module ULPI_tb ();
         REG_VAL_W = 8'hAF;
         #0.2 PrW = 1;
         #0.2 PrW = 0;
-        #0.1 NXT = 1;
+        #0.2 NXT = 1;
         #0.4 NXT = 0;
 
         sim_chk = 1;
-        #0.9 sim_chk = 0;
+        #1 sim_chk = 0;
 
         // Test 2 - Read (AN 19.17)
         PrR = 1; ADDR = 6'h16;
@@ -155,7 +155,7 @@ module ULPI_tb ();
         #0.2 INFO_re = 0;
              $display("USB_INFO_DATA = %b; RxCMD = %b; LEN = %b", USB_INFO_DATA, USB_INFO_DATA[15:10], USB_INFO_DATA[9:0]);
         DATA_re = 1;
-        #(0.2*USB_INFO_DATA[9:0]);
+        #(0.2*6);
         DATA_re = 0;
 
         #1 $finish;
