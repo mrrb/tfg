@@ -163,10 +163,6 @@
                       );
     /// End of ULPI reciver submodule init
 
-    /// ULPI REG/READ stack
-    
-    /// End of ULPI REG/READ stack
-
     /// ULPI master controller
     // Regs and wires
     reg [2:0]ULPI_state_r = 0; // Register that stores the current ULPI_RR state
