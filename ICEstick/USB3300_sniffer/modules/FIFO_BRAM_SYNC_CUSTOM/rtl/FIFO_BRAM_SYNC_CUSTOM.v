@@ -128,8 +128,10 @@ module FIFO_BRAM_SYNC_CUSTOM #(
     assign wr_full  = (FIFO_size == BRAM_SIZE) ? 1'b1 : 1'b0; // Full flag
     assign rd_empty = (FIFO_size == 0)         ? 1'b1 : 1'b0; // Empty flag
 
-    assign wr_almost_full  = (FIFO_size >= ALMOST_FULL_VAL)  ? 1'b1 : 1'b0; // Almost full flat
-    assign rd_almost_empty = (FIFO_size <= ALMOST_EMPTY_VAL) ? 1'b1 : 1'b0; // Almost empty flag
+    // assign wr_almost_full  = (FIFO_size >= ALMOST_FULL_VAL)  ? 1'b1 : 1'b0; // Almost full flag
+    // assign rd_almost_empty = (FIFO_size <= ALMOST_EMPTY_VAL) ? 1'b1 : 1'b0; // Almost empty flag
+    assign wr_almost_full  = wr_full; // Almost full flag
+    assign rd_almost_empty = rd_empty; // Almost empty flag
     /// End of Assigns
 
     /// Controller
