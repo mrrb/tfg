@@ -1,0 +1,29 @@
+reg ULPI_NXT_e1_r = 0;
+reg ULPI_NXT_e2_r = 0;
+always @(posedge clk_ctrl) begin
+    if(!rst)          ULPI_NXT_e1_r <= 0;
+    else if(ULPI_NXT) ULPI_NXT_e1_r <= 1;        
+    else              ULPI_NXT_e1_r <= 0;        
+end
+always @(negedge clk_ctrl) begin
+    if(!rst)          ULPI_NXT_e2_r <= 0;
+    else if(ULPI_NXT) ULPI_NXT_e2_r <= 1;        
+    else              ULPI_NXT_e2_r <= 0;        
+end
+wire ULPI_NXT_f;
+assign ULPI_NXT_f = ULPI_NXT_e1_r || ULPI_NXT_e2_r;
+
+reg ULPI_DIR_e1_r = 0;
+reg ULPI_DIR_e2_r = 0;
+always @(posedge clk_ctrl) begin
+    if(!rst)          ULPI_DIR_e1_r <= 0;
+    else if(ULPI_DIR) ULPI_DIR_e1_r <= 1;        
+    else              ULPI_DIR_e1_r <= 0;        
+end
+always @(negedge clk_ctrl) begin
+    if(!rst)          ULPI_DIR_e2_r <= 0;
+    else if(ULPI_DIR) ULPI_DIR_e2_r <= 1;        
+    else              ULPI_DIR_e2_r <= 0;        
+end
+wire ULPI_DIR_f;
+assign ULPI_DIR_f = ULPI_DIR_e1_r || ULPI_DIR_e2_r;
