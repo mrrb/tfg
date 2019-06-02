@@ -43,7 +43,7 @@ UART_NXT
 Text GLabel 4400 4400 0    98   Input ~ 0
 op_stack_pull
 Text GLabel 7350 4100 2    98   Output ~ 0
-op_stack_msg
+op_stack_msg[15:0]
 Text GLabel 7350 4350 2    98   Output ~ 0
 op_stack_empty
 Text Notes 4550 1300 0    118  ~ 0
