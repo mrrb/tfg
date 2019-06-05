@@ -111,6 +111,12 @@ En la figura~\ref{fig:ULPI_RECV} se puede apreciar la comunicación básica exis
 
 
 %* Comprobar
+\section{Implementación de un sistema que gestione el envío de datos}
+Diseño e implementación de un módulo en lenguaje Verilog, que gestione el envío al PC de los datos capturados. Además, sería interesante añadir una memoria intermedia en la que almacenar los datos antes de su envío, aminorando posibles perdidas.
+
+
+
+%* Comprobar
 \section{Implementación de un sistema que gestione los comandos entrantes}
 Diseño e implementación de un módulo en lenguaje Verilog, que ante cualquier petición realizada por el usuario por el puerto serie anterior, deberá ser capaz de procesarla, obteniendo sus diversas partes (por ejemplo, dirección y datos en una petición de escritura de registro) y las almacenará temporalmente hasta que se puedan ejecutar.
 
@@ -125,7 +131,6 @@ Una vez todos los módulos anteriores estén finalizados, es necesaria una sincr
 %* Comprobar
 \section{Creación de una aplicación de control}
 Tras la finalización de la parte \emph{hardware}, es necesaria una aplicación, que conectándose por medio del puerto serie anteriormente implementado, sea capaz de en primer lugar enviar los diversos comandos necesarios para el correcto funcionamiento del sistema, y en segundo lugar, reciba los datos capturados de interés.
-Su implementación ser a través de un lengua
 
 Debe ser como mínimo capaz de realizar las siguientes tareas.
 \begin{itemize}
@@ -136,8 +141,14 @@ Debe ser como mínimo capaz de realizar las siguientes tareas.
 
 
 
-%!
-\section{Limitaciones \emph{hardware}}
+% \section{Limitaciones en su ...}
+% A la hora de desarrollar todos los objetivos anteriores, hay que tener presente todas aquellas limitaciones, principalmente los impuestos por la FPGA.
+
+% \begin{itemize}
+%     \item Existencia de unicamente 16 bloques de RAM de $4Kbits$ cada uno.
+%     \item 
+% \end{itemize}
+
 
 % \chapter{Objetivos}
 % \label{ch:objetivos-plantilla}
