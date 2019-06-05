@@ -1,0 +1,52 @@
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[auto]
+        % Config
+        \tikzFlow
+        \newcommand{\saveDis}{\tikzFlowSep+1.25cm};
+        \newcommand{\saveAng}{60};
+
+        % Place nodes
+        \node [flowStart] (wait) {Espera de un ciclo};
+        \node [flowDecision, below of=wait] (newData) {Existen datos en el puerto serie?};
+        \node [flowDecision, below of=newData] (nByte) {¿Primer byte del mensaje?};
+        \node [flowBase] at ($ (nByte)+(-90-\saveAng:\saveDis) $) (save1) {Serial\_msg\_r[15:8] = Byte recibido};
+        \node [flowBase] at ($ (nByte)+(-90+\saveAng:\saveDis) $) (save2) {Serial\_msg\_r[7:0] = Byte recibido};
+        \node [flowBase, below of=save1] (incNByte) {Se incrementa el contador de bytes};
+        \node [flowBase, below of=save2] (saveMsg) {Se almacena el mensaje completo};
+        \node [flowBase, below of=saveMsg] (rstNByte) {Se reinicia el contador de bytes};
+        
+        \node [flowHide] at ($ (wait)+(3.5,0) $) (anchor1) {};
+
+        % Draw edges
+        \path [flowLine] (wait) -- (newData);
+
+        \path [flowLine] (newData) -- node [right, xshift=-1.2cm] {Sí} (nByte);
+        \path [flowLine] (newData.east) -| node [above, xshift=-1cm, yshift=-0.15cm] {No} (anchor1.center);
+
+        \path [flowLine] (save1) -- (incNByte);
+        \path [flowLine] (save2) -- (saveMsg);
+        \path [flowLine] (saveMsg) -- (rstNByte);
+
+        \path [flowLine] (rstNByte.east) -| +(1,0)  |- (wait.east);
+        \path [flowLine] (incNByte.west) -| +(-1,0) |- (wait.west);
+        
+        
+        \path [flowLine] (nByte.west) -| node [above, xshift=+0.5cm, yshift=-0.15cm] {Sí} (save1.north);
+        \path [flowLine] (nByte.east) -| node [above, xshift=-0.5cm, yshift=-0.15cm] {No} (save2.north);
+
+        % \path [line] (espera) -- coordinate[midway](m1) (contrato);
+        % \path [line] (contrato) -- node [near start] {Sí} (alta);
+        % \path [line] (alta) -- coordinate[midway](m2) (fechaInicio);
+        % \path [line] (fechaInicio) -- node [near start] {Sí} (permisos);
+        % \path [line] (permisos) -- coordinate[midway](m3) (fechaFin);
+        
+        % \path [line] (contrato.east) --node [above] {No}  +(1,0) |- (cliente);
+        % \path [line] (fechaInicio.east) --node [above] {No}  +(1,0) |- (m2);
+        % \path [line] (fechaFin.east) -- node [above] {No}  +(1,0) |- (m3);
+        % \path [line] (fechaFin.west) -| node [above right] {Sí} (revocacion.south);
+        % \path [line] (revocacion.north) |- (cliente.west);
+    \end{tikzpicture}
+    \caption{Diagrama de actuación}
+    \label{fig:flujo}
+\end{figure}
