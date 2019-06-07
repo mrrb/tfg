@@ -1,0 +1,57 @@
+\begin{tikzpicture}[auto]
+    % Config
+    \tikzFlow
+
+    % Place nodes
+    \node [flowStart] (idle) {Reposo};
+    
+    \node [flowDecision, below of=idle] (allow) {Se está usando algún otro módulo ULPI?};
+
+    \node [flowDecision, below of=allow] (DIR1) {DIR y NXT están a nivel alto?};
+    
+    \node [flowBase] at ($ (DIR1)+(-4,0) $) (init) {Inicio del contador de $bytes$};
+    
+    \node [flowDecision, below of=DIR1] (DIR2) {DIR sigue a nivel alto?};
+    
+    \node [flowBase] at ($ (DIR2)+(4.1,0) $) (save) {Almacenar en memoria TxdCMD y el numero de $bytes$ leídos};
+
+    \node [flowBase, below of=DIR2] (read) {Leer datos ULPI};
+
+    \node [flowDecision, below of=read] (NXT) {NXT está a nivel alto?};
+    
+    \node [flowBase] at ($ (NXT)+(-4,-2) $) (saveTxcmd) {Actualizar valor interno de TxdCMD con el valor leido};
+
+    \node [flowBase] at ($ (NXT)+(4,-2) $) (saveByte) {Guardar en la memoria de datos USB el valor leido};
+
+    \node [flowBase, below of=saveByte] (increase) {Incrementar contador de $bytes$};
+
+    \node [flowBase] at ($ (DIR2)+(-4,0) $) (wait) {Esperar a siguiente ciclo};
+    
+    % Draw edges
+    \path [flowLine] (idle) -- (allow);
+    
+    \node [flowHide] at ($ (allow.east)+(1,0) $) (anchor1) {};
+    \path [flowLine] (allow.east) node [above, xshift=0.35cm] {Sí} -- (anchor1.center);
+    \path [flowLine] (allow) -- node [right, xshift=-1.1cm] {No} (DIR1);
+    \path [flowLine] (save.north) |- (anchor1.center);
+    
+    \path [flowLine] (DIR1.east) node [above, xshift=0.35cm] {No} -| +(1,0) |- (idle.east);
+    \path [flowLine] (DIR1.west) node [above, xshift=-0.2cm] {Sí} -- (init);
+
+    \path [flowLine] (DIR2.east) node [above, xshift=0.2cm] {No} -- (save.west);
+    \path [flowLine] (DIR2) node [right, xshift=-1.1cm, yshift=-1.1cm] {Sí} -- (read);
+    
+    \path [flowLine] (init) -- (wait);
+    \path [flowLine] (read) -- (NXT);
+    
+    \path [flowLine] (NXT.east) node [above, xshift=0.35cm] {Sí} -| (saveByte.north);
+    \path [flowLine] (NXT.west) node [above, xshift=-0.35cm] {No} -| (saveTxcmd.north);
+    
+    \path [flowLine] (saveByte) -- (increase);
+    
+    \path [flowLine] (wait.east) -- (DIR2.west);
+
+    \node [flowHide] at ($ (increase)+(-4,0) $) (anchor3) {};
+    \path [flowLine] (increase.west) -| +(-9,0) |- (wait.west);
+    \path [flowLine] (saveTxcmd.east) -| (anchor3.center);
+\end{tikzpicture}

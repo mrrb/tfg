@@ -1,0 +1,46 @@
+\begin{tikzpicture}[auto]
+    % Config
+    \tikzFlow
+
+    % Place nodes
+    \node [flowStart] (idle) {Reposo};
+    
+    \node [flowDecision] at ($ (idle)+(-3,-3) $) (readData) {Se desea leer un registro?};
+    
+    \node [flowBase, below of=readData] (init) {Preparación de dirección};
+    
+    \node [flowBase, below of=init] (TxD) {Envío de TxD CMD de lectura};
+    
+    \node [flowDecision, below of=TxD] (NXTon) {Señal NXT activa?};
+    
+    \node [flowBase] at ($ (idle)+(3,-2) $) (wait1) {Primer ciclo de espera};
+    
+    \node [flowBase, below of=wait1] (DATA) {Lectura de datos};
+    
+    \node [flowBase, below of=DATA] (wait2) {Segundo ciclo de espera};   
+    
+    \node [flowBase, below of=wait2] (save) {Almacenaje del dato leído};
+
+    \node [flowBase, below of=save] (reset) {Reinicio de las variables de control};
+
+
+    % Draw edges
+    \path [flowLine] (idle) -| (readData.north);
+    \path [flowLine] (init) -- (TxD);
+    \path [flowLine] (TxD) -- (NXTon);
+    
+    \node [flowHide] at ($ (idle)+(0,1) $) (anchor1) {};
+    \path [flowLine] (readData) -- node [right, xshift=-1.2cm] {Sí} (init);
+    \path [flowLine] (readData.west) -- +(-0.5,0) |- node [right, xshift=-1.1cm, yshift=-1.2cm] {No} (anchor1.center);
+    
+    \node [flowHide] at ($ (NXTon)+(0,1.2) $) (anchor2) {};
+    \path [flowLine] (NXTon.east) node [above, xshift=0.75cm] {Sí} -| +(1.5, 0) |- (wait1);
+    \path [flowLine] (NXTon.west) -- +(-0.5,0) |- node [left, xshift=1.75cm, yshift=-0.55cm] {No} (anchor2.center);
+
+    \path [flowLine] (wait1) -- (DATA);
+    \path [flowLine] (DATA) -- (wait2);
+    \path [flowLine] (wait2) -- (save);
+    \path [flowLine] (save) -- (reset);
+
+    \path [flowLine] (reset.east) -| +(1,0) |- ($ (idle)+(0,1) $) -- (idle.north);
+\end{tikzpicture}

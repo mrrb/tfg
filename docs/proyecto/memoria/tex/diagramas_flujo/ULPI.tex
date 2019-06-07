@@ -1,0 +1,46 @@
+\begin{tikzpicture}[auto]
+    % Config
+    \tikzFlow
+
+    % Place nodes
+    \node [flowStart] (start) {Inicio};
+    
+    \node [flowDecision, below of=start] (init) {El integrado USB3300 ha inicializado el bus ULPI?};
+
+    \node [flowBase, below of=init] (idle) {Reposo};
+    
+    \node [flowDecision, below of=idle] (recv) {El módulo de recepción USB está ocupado?};
+    
+    \node [flowDecision] at ($ (recv)+(-4,-2.5) $) (PrW) {Se quiere escribir un registro?};
+    
+    \node [flowDecision, below of=PrW] (PrR) {Se quiere leer un registro?};
+    
+    \node [flowBase] at ($ (PrW)+(9,0) $) (writeWait) {Esperar a finalización de escritura de registro (señal dada por ULPI\_REG\_WRITE)};
+
+    \node [flowBase] at ($ (PrR)+(9,0) $) (readWait) {Esperar a finalización de lectura de registro (señal dada por ULPI\_REG\_READ)};
+
+    \node [flowBase] at ($ (recv)+(5,0) $) (recvWait) {Esperar a finalización de captura USB (señal dada por ULPI\_RECV)};
+    
+    % Draw edges
+    \path [flowLine] (start) -- (init);
+    
+    \path [flowLine] (init.east) node [above, xshift=0.35cm] {No} -| +(1,0) |- (start.east);
+    \path [flowLine] (init) -- node [right, xshift=-1.1cm] {Sí} (idle);
+    
+    \path [flowLine] (idle) -- (recv);
+    
+    \path [flowLine] (recv.west) node [above, xshift=-0.35cm] {No} -| (PrW.north);
+    \path [flowLine] (recv.east) node [above, xshift=0.35cm] {Sí} -- (recvWait);
+
+    \path [flowLine] (PrW.east) node [above, xshift=0.35cm] {Sí} -- (writeWait.west);
+    \path [flowLine] (PrW.south) -- node [right, xshift=-1.1cm] {No} (PrR.north);
+
+    \path [flowLine] (PrR.east) node [above, xshift=0.35cm] {Sí} -- (readWait.west);
+    \path [flowLine] (PrR.west) node [above, xshift=-0.35cm] {No} -| +(-1,0) |- (idle.west);
+
+    \node [flowHide] at ($ (recvWait.east)+(1,0) $) (anchor1) {};
+    \node [flowHide] at ($ (writeWait.east)+(1,0) $) (anchor2) {};
+    \path [flowLine] (readWait.east) -| +(1,0) |- (idle.east);
+    \path [flowLine] (writeWait.east) -- (anchor2.center);
+    \path [flowLine] (recvWait.east) -- (anchor1.center);
+\end{tikzpicture}

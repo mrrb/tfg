@@ -1,0 +1,37 @@
+\begin{tikzpicture}[auto]
+    % Config
+    \tikzFlow
+
+    % Place nodes
+    \node [flowStart] (idle) {Reposo};
+    
+    \node [flowDecision, below of=idle] (newData) {Existen datos a enviar?};
+
+    \node [flowBase, below of=newData] (reset) {Reinicio del contador de $bits$};
+    
+    \node [flowStart, below of=reset] (load) {Carga de datos a enviar en el registro de desplazamiento};
+    
+    \node [flowStart, below of=load] (sendBit) {Se envía un bit, y se desplaza el registro};
+    
+    \node [flowDecision, below of=sendBit] (done) {Se han enviado los 10 bits del mensaje?};
+    
+    \node [flowBase] at ($ (done)+(4.2,0) $) (wait) {Se espera un pulso del reloj de baudios};
+
+    \node [flowBase] at ($ (sendBit)+(4.2,0) $) (increase) {Incremento del contador de $bits$ enviados};
+
+    % Draw edges
+    \path [flowLine] (idle) -- (newData);
+    \path [flowLine] (reset) -- (load);
+    \path [flowLine] (load) -- (sendBit);
+    \path [flowLine] (sendBit) -- (done);
+
+    \node [flowHide] at ($ (idle)+(3.5,0) $) (anchor1) {};
+    \path [flowLine] (newData.east) -| node [above, xshift=-1.2cm] {No} (anchor1.center);
+    \path [flowLine] (newData) -- node [right, xshift=-1.2cm] {Sí} (reset);
+    
+    \path [flowLine] (wait) -- (increase);
+    \path [flowLine] (increase) -- (sendBit);
+    
+    \path [flowLine] (done.south) node [right, xshift=-1.2cm, yshift=-0.3cm] {Sí} |- +(6.6,-1) |- (idle.east);
+    \path [flowLine] (done.east) -- node [above, xshift=0cm] {No} (wait.west);
+\end{tikzpicture}

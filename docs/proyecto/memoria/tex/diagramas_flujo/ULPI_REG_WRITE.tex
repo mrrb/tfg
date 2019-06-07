@@ -1,0 +1,46 @@
+\begin{tikzpicture}[auto]
+    % Config
+    \tikzFlow
+
+    % Place nodes
+    \node [flowStart] (idle) {Reposo};
+    
+    \node [flowDecision] at ($ (idle)+(-3,-2) $) (writeData) {Se desea escribir un registro?};
+    
+    \node [flowBase, below of=writeData] (init) {Preparación de dirección y datos};
+    
+    \node [flowBase, below of=init] (TxD) {Envío de TxD CMD de escritura};
+    
+    \node [flowDecision, below of=TxD] (NXTon1) {Señal NXT activa?};
+    
+    \node [flowBase] at ($ (idle)+(3,-2) $) (DATA) {Envío de los datos a almacenar};
+    
+    \node [flowDecision, below of=DATA] (NXTon2) {Señal NXT activa?};
+    
+    \node [flowBase, below of=NXTon2] (stop) {Activación de la señal de parada};
+    
+    \node [flowBase, below of=stop] (reset) {Reinicio de las variables de control};
+
+
+    % Draw edges
+    \path [flowLine] (idle) -| (writeData.north);
+    \path [flowLine] (init) -- (TxD);
+    \path [flowLine] (TxD) -- (NXTon1);
+    
+    \node [flowHide] at ($ (idle)+(0,1) $) (anchor1) {};
+    \path [flowLine] (writeData) -- node [right, xshift=-1.2cm] {Sí} (init);
+    \path [flowLine] (writeData.west) -- +(-0.5,0) |- node [right, xshift=-1.1cm, yshift=-1.2cm] {No} (anchor1.center);
+    
+    \node [flowHide] at ($ (NXTon1)+(0,1.2) $) (anchor2) {};
+    \path [flowLine] (NXTon1.east) node [above, xshift=0.75cm] {Sí} -| +(1.5, 0) |- (DATA);
+    \path [flowLine] (NXTon1.west) -- +(-0.5,0) |- node [left, xshift=1.75cm, yshift=-0.55cm] {No} (anchor2.center);
+
+    \path [flowLine] (DATA) -- (NXTon2);
+    \path [flowLine] (stop) -- (reset);
+    
+    \node [flowHide] at ($ (NXTon2)+(0,1.2) $) (anchor3) {};
+    \path [flowLine] (NXTon2) -- node [right, xshift=-1.2cm] {Sí} (stop);
+    \path [flowLine] (NXTon2.west) -- +(-0.5,0) |- node [right, xshift=-1.1cm, yshift=-0.7cm] {No} (anchor3.center);
+
+    \path [flowLine] (reset.east) -| +(1,0) |- ($ (idle)+(0,1) $) -- (idle.north);
+\end{tikzpicture}
