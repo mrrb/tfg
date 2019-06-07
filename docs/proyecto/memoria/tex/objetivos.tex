@@ -5,10 +5,16 @@
 Bajo la premisa de realizar un analizador USB \emph{hardware}, el presente Trabajo Fin de Grado se ha descompuesto en varios objetivos parciales, estos siguen siempre una metodología SMART, es decir, deben ser Simples, Medibles, Acordados, Realista y Temporizados.
 
 %* Comprobar
+\section{Selección de componentes \emph{hardware}}
+Debido a la flexibilidad que supone utilizar una FPGA\cite{monmasson2007fpga}, se propone diseñar el sistema de captura a partir de una. Por otra parte, ya que existen circuitos especializados en procesar capas física USB, es de gran interés incluir uno de ellos\footnote{La idea de utilizar un integrado especializado, se obtiene del sistema \emph{USB Sniffer} planteado por \emph{Ultra-Embedded}, nombrado en el capitulo~\ref{ch:antecedentes} de antecedentes.}, pudiendo reducir en cierta medida errores futuros.
+
+Se deben buscar por tanto, todos aquellos componentes necesarios para elaborar el sistema de captura, y seguidamente, elegir como se conexionan mutuamente.
+
+%* Comprobar
 \section{Implementación de memoria \emph{FIFO}}
 Diseño e implementación de un módulo en lenguaje Verilog que actúe como memoria \emph{FIFO}. Este será capaz de almacenar información de tal manera que el primer $bit$ introducido sea el primero en ser recuperado.
 
-Debido a que la FPGA a utilizar dispone de varios bloques de RAM específicos, se utilizarán varios de estos para no depender unicamente de registros, consiguiendo una mayor capacidad de almacenamiento, con un circuito lo mayor optimizado posible.
+Dado que la FPGA a utilizar dispone de varios bloques de RAM específicos, se utilizarán varios de estos para no depender unicamente de registros, consiguiendo una mayor capacidad de almacenamiento, con un circuito lo mayor optimizado posible.
 
 La gran mayoría los módulos a diseñar dependen en gran medida de este tipo de memoria, por lo que es esencial disponer de ella en el la mayor brevedad posible, a su vez, y debido a su gran utilidad, la velocidad máxima a la que puede funcionar el sistema en su conjunto está dada por su velocidad de escritura/lectura de datos.
 
@@ -70,7 +76,7 @@ Diseño e implementación de un sistema en lenguaje Verilog capaz de comunicarse
 
 Todas las características y casos del protocolo ULPI están completamente definidas tanto en la hoja de especificaciones del propio protocolo\cite{ulpi-specs} como en la hoja de características del circuito integrado USB3300\cite{microchip:usb3300}. Hay que destacar que el bus consta de una señal de reloj a $60MHz$ a la que se referencia el resto de señales (\emph{CLK}), 8 señales de datos bidireccionales paralelos (\emph{DATA}), una señal de control de dirección (\emph{DIR}) y dos señales extra de control (\emph{STP} y \emph{NXT}).
 
-Debido a que unicamente queremos obtener de forma pasiva los datos USB, de los cuatro posibles modos de funcionamiento ULPI, escritura de registros, lectura de registros, recepción de datos USB y envío de datos USB, solo es interesante diseñar los tres primeros, por lo que este objetivo se puede dividir en las siguientes partes.
+Puesto que unicamente queremos obtener de forma pasiva los datos USB, de los cuatro posibles modos de funcionamiento ULPI, escritura de registros, lectura de registros, recepción de datos USB y envío de datos USB, solo es interesante diseñar los tres primeros, por lo que este objetivo se puede dividir en las siguientes partes.
 
 %* Comprobar
 \subsection{Diseño de un módulo de escritura de registros ULPI}
