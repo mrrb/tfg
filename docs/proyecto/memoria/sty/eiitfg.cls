@@ -154,6 +154,7 @@
            flowDelay/.style={flowBase},
            flowEnd/.style={flowStart, ellipse},
            flowLine/.style={draw, -latex'},
+           flowLineNA/.style={draw, -},
            flowHide/.style={inner sep=0pt},
           %  flowPathTxt/.style={right, anchor=west, xshift=-1.2cm},
           %  flowSmallDist/.append style={node distance=0.75cm},
