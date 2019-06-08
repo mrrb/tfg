@@ -15,7 +15,7 @@ Para garantizarlo, estos procedimientos deben de ser comunes en todos los módul
 En primer lugar, tras requerir la utilización de un módulo que logre una función específica, se analiza la posibilidad de reutilizar uno o varios módulos anteriormente realizados, evitando así un derroche innecesario de tiempo y recursos.
 
 %* Comprobar
-Seguidamente, se estudia la complejidad del módulo a desarrollar, dividiendolo, si fuera necesario, en varios submódulos con funciones más concretas que disminuyan el grado de dificultad general en su elaboración, permitiendo a su vez una mayor reutilización futura de código.
+Seguidamente, se estudia la complejidad del módulo a desarrollar, dividiéndolo, si fuera necesario, en varios submódulos con funciones más concretas que disminuyan el grado de dificultad general en su elaboración, permitiendo a su vez una mayor reutilización futura de código.
 
 %* Comprobar
 Estando definida ya su distribución, se realiza un pequeño esquema sobre el que partir, que de forma gráfica muestre sus diversas partes y relaciones, junto a este, si fuera necesario, se dibuja otro que muestre las etapas de la máquina de estados, pudiendo a continuación empezar con la programación del mismo.
@@ -30,22 +30,22 @@ Cada módulo dispone de un estilo común, distribuido de la siguiente forma:
         label=src:metodologia-verilog-cabecera]
 /*
  * <Nombre del modulo> module
- * <Descripcion del modulo>
+ * <Descripción del modulo>
  *
  * Parameters:
- *  - <Nombre del parametro>. <Descripcion del parametro>
+ *  - <Nombre del parámetro>. <Descripción del parámetro>
  *  - etc ..
  *
  * Inputs:
- *  - <Nombre de la entrada>. <Descripcion de la entrada>
+ *  - <Nombre de la entrada>. <Descripción de la entrada>
  *  - etc ..
  *
  * Outputs:
- *  - <Nombre de la salida>. <Descripcion de la salida>
+ *  - <Nombre de la salida>. <Descripción de la salida>
  *  - etc ..
  *
  * States:
- *  - <Nombre del estado>. <Descripcion del estado>
+ *  - <Nombre del estado>. <Descripción del estado>
  *  - etc ..
  */
     \end{lstlisting}
@@ -65,7 +65,7 @@ Cada módulo dispone de un estilo común, distribuido de la siguiente forma:
     \end{lstlisting}
         
     %* Comprobar
-    \item{\textbf{Incorporación de módulos necearios (listado~\ref{src:metodologia-verilog-include-modules}).}} \\
+    \item{\textbf{Incorporación de módulos necesarios (listado~\ref{src:metodologia-verilog-include-modules}).}} \\
     Suele ser habitual, que el módulo que se está desarrollando haga uso de otros, los cuales son incorporar en este momento.
     \begin{lstlisting}[language=Verilog,
         caption={Ejemplo de incorporación de módulos.},
@@ -87,9 +87,9 @@ module nombre_modulo
      )
      (
       // <Nombre del primer grupo de entradas/salidas>
-      input  wire nombre_entrada_1, // <breve descripcion>
+      input  wire nombre_entrada_1, // <breve descripción>
         // etc ..
-      output wire nombre_salida_1,  // <breve descripcion>
+      output wire nombre_salida_1,  // <breve descripción>
         // etc ..
      );
     \end{lstlisting}
@@ -100,7 +100,7 @@ module nombre_modulo
     \begin{lstlisting}[language=Verilog,
         caption={Ejemplo inicialización de módulos.},
         label=src:metodologia-verilog-mod-init]
-// Ejemplo inicializando el modulo clk\_baud\_pulse, que tiene dos parametros, una entrada y dos salidas
+// Ejemplo inicializando el modulo clk\_baud\_pulse, que tiene dos parámetros, una entrada y dos salidas
 clk_baud_pulse #(
                  .COUNTER_VAL(BAUDS),
                  .PULSE_DELAY(BAUDS/2)
@@ -226,6 +226,53 @@ En la figura~\ref{fig:ej-gtkwave} se muestra el resultado gráfico de una simula
     \caption{Ejemplo del resultado de una simulación en \emph{GTKWave}.}
     \label{fig:ej-gtkwave}
 \end{figure}
+
+
+
+%* Comprobar
+\section{Herramientas de utilizadas}
+A parte de la metodología implementada, valida para cualquier sistema a diseñar que utilice lenguaje Verilog, es necesario el uso de herramientas especificas según la FPGA usada.
+
+Particularmente para el presente proyecto, en el que usa una FPGA iCE40HX1k del fabricante \emph{Lattice}, se han utilizado las siguientes herramientas, todas ellas bajo la filosofía de código libre
+
+\begin{itemize}
+    %* Comprobar
+    \item \textbf{\emph{Yosys}.} Herramienta de síntesis\cite{wolf2016yosys} para Verilog. Provee una colección de algoritmos básicos para varios tipos de aplicaciones, lo que permite poder procesar la gran mayoría de diseños que se planteen. Igualmente, incluye soporte especifico para la familia de FPGAs iCE40 de \emph{Lattice}.
+
+    Es además una herramienta de código libre bajo licencia ISC\footnote{Licencia compatible GPL, con términos similares a los definidos por una licencia MIT. Véase \url{https://www.isc.org/licenses/}.}, con gran capacidad de expansión a la hora de realizar pases de sintetizado por medio de módulos en lenguaje C++.
+    
+    %* Comprobar
+    \item \textbf{\emph{Nextpnr}.} Herramienta de posicionado y encaminamiento (\emph{Place-And-Route}) de los diversos bloques lógicos internos de la FPGA, con soporte a las familias de FPGAs iCE40 y ECP5 de \emph{Lattice}. A parte de una interfaz de lineas de comandos, posee una interfaz gráfica (véase figura~\ref{fig:gui_nextpnr}) donde observar con detalle la posición de los bloques utilizados y sus uniones.
+    
+    \begin{figure}[htb]
+        \centering
+        \includegraphics[width=135mm]{otro/gui_nextpnr.png}
+        \caption{Interfaz gráfica de la herramienta \emph{Nextpnr}.}
+        \label{fig:gui_nextpnr}
+    \end{figure}
+
+    %* Comprobar
+    \item \textbf{\emph{IceStorm tools}.} El proyecto \emph{IceStorm} tiene la finalidad de hacer ingeniería inversa y documentar el flujo de bits usado por las FPGAs iCE40 de \emph{Lattice}, y han creado varias utilidades, que entre otras, permiten crear un binario compatible o programar la FPGA.   
+\end{itemize}
+
+%* Comprobar
+\section{Automatización de tareas}
+Debido a la repetitividad de ciertas tareas durante el proceso de desarrollo, se ha creado un archivo \emph{Makefile}\footnote{Archivo que gracias a la herramienta \emph{Make} disponible en sistemas \emph{unix-like}, gestiona dependencias y automatiza tareas.}, que de forma rápida ejecute varias acciones.
+
+Entre otras, hay que destacar las siguientes tareas incluidas.
+%* Comprobar
+\begin{itemize}
+    \item \textbf{\emph{synt}.} Realiza la síntesis del sistema a partir de la herramienta \emph{Yosys}.
+    \item \textbf{\emph{pnr}.} Gracias a la herramienta \emph{Nextpnr}, hace la tarea de posicionado y encaminamiento (\emph{Place-And-Route}) de la síntesis anterior.
+    \item \textbf{\emph{pnr\_gui}.} Realiza la misma tarea que \emph{pnr}, pero muestra una interfaz gráfica donde ver el resultado.
+    \item \textbf{\emph{pack}.} A partir del resultado de \emph{pnr}, genera un archivo binario listo para ser programado en la memoria de la FPGA.
+    \item \textbf{\emph{prog}.} Envía el archivo binario generado a la memoria de la FGPA.
+    \item \textbf{\emph{timing}.} Realiza un pequeño análisis temporal para comprobar la velocidad máxima del sistema.
+    \item \textbf{\emph{plot}.} Genera una representación gráfica de todos los bloques y uniones del código Verilog.
+    \item \textbf{\emph{sim}.} Realiza la simulación del sistema por medio de la herramienta \emph{iverilog}.
+    \item \textbf{\emph{gtk}.} Muestra en la aplicación \emph{GTKWave} el resultado de la simulación.
+\end{itemize}
+
 
 
 %* Comprobar
