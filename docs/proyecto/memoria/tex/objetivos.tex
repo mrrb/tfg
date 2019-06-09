@@ -2,13 +2,13 @@
 \label{ch:objetivos}
 
 %* Comprobar
-Bajo la premisa de realizar un analizador USB \emph{hardware}, el presente Trabajo Fin de Grado se ha descompuesto en varios objetivos parciales, estos siguen siempre una metodología SMART, es decir, deben ser Simples, Medibles, Acordados, Realista y Temporizados.
+Bajo la premisa de realizar un \textbf{analizador USB \emph{hardware} de bajo coste} con herramientas y utilidades de código libre, el presente Trabajo Fin de Grado se ha descompuesto en varios objetivos parciales, estos siguen siempre una metodología SMART, es decir, deben ser Simples, Medibles, Acordados, Realista y Temporizados.
 
 %* Comprobar
 \section{Selección de componentes \emph{hardware}}
-Debido a la flexibilidad que supone utilizar una FPGA\cite{monmasson2007fpga}, se propone diseñar el sistema de captura a partir de una. Por otra parte, ya que existen circuitos especializados en procesar capas física USB, es de gran interés incluir uno de ellos\footnote{La idea de utilizar un integrado especializado, se obtiene del sistema \emph{USB Sniffer} planteado por \emph{Ultra-Embedded}, nombrado en el capitulo~\ref{ch:antecedentes} de antecedentes.}, pudiendo reducir en cierta medida errores futuros.
+Debido a la flexibilidad que supone utilizar una FPGA\cite{monmasson2007fpga}, se propone diseñar el sistema de captura a partir de una. Por otra parte, ya que existen circuitos especializados en procesar capas física USB, es de gran interés incluir uno de ellos\footnote{La idea de utilizar un integrado especializado, se obtiene del sistema \emph{USB Sniffer} planteado por \emph{Ultra-Embedded}, nombrado en el capitulo~\ref{ch:antecedentes} de antecedentes.}, pudiendo abstraer de esa forma ciertas partes de la comunicación USB de poco interés, y reduciendo en cierta medidas posibles errores de sincronización.
 
-Se deben buscar por tanto, todos aquellos componentes necesarios para elaborar el sistema de captura, y seguidamente, elegir como se conexionan mutuamente.
+Se deben buscar por tanto, todos aquellos componentes necesarios, de la forma más económica posible, para elaborar el sistema de captura. Seguidamente, se ha de elegir como se conexionan mutuamente.
 
 %* Comprobar
 \section{Implementación de memoria \emph{FIFO}}
@@ -16,7 +16,7 @@ Diseño e implementación de un módulo en lenguaje Verilog que actúe como memo
 
 Dado que la FPGA a utilizar dispone de varios bloques de RAM específicos, se utilizarán varios de estos para no depender unicamente de registros, consiguiendo una mayor capacidad de almacenamiento, con un circuito lo mayor optimizado posible.
 
-La gran mayoría los módulos a diseñar dependen en gran medida de este tipo de memoria, por lo que es esencial disponer de ella en el la mayor brevedad posible, a su vez, y debido a su gran utilidad, la velocidad máxima a la que puede funcionar el sistema en su conjunto está dada por su velocidad de escritura/lectura de datos.
+La gran mayoría los módulos a diseñar dependen en gran medida de este tipo de memoria, por lo que es esencial disponer de ella en el la mayor brevedad posible, a su vez, y debido a su gran utilidad, la velocidad\cite{rose1993architecture} máxima a la que puede funcionar el sistema en su conjunto está dada por su velocidad de escritura/lectura de datos.
 
 En la figura~\ref{fig:FIFO_info} se muestra un esquema del resultado esperado.
 
@@ -31,7 +31,7 @@ En la figura~\ref{fig:FIFO_info} se muestra un esquema del resultado esperado.
 
 %* Comprobar
 \section{Implementación de un sistema de comunicación serie}
-Diseño e implementación de un sistema en lenguaje Verilog que sea capaz de comunicarse bidireccionalmente usando un puerto serie simple\cite{design-uart-vhdl}, pudiendo conectarse a él por medio del circuito integrado FTDI FT2232HL \footnote{Circuito encargado de convertir una conexión \emph{USB High Speed} a dos protocolos configurables distintos. En el caso de la placa de desarrollo \emph{IceStick}, se utiliza un canal para programar la memoria \emph{Flash} SPI utilizada por la FPGA, y otro para proporcionar una comunicación UART hacia el equipo.} (disponible en la placa de desarrollo \emph{IceStick}\cite{icestickmanual}), o utilizando un equipo externo compatible.
+Diseño e implementación de un sistema en lenguaje Verilog que sea capaz de comunicarse bidireccionalmente usando un puerto serie simple\cite{design-uart-vhdl}, pudiendo conectarse a él por medio del circuito integrado FTDI FT2232HL\footnote{Circuito encargado de convertir una conexión \emph{USB High Speed} a dos protocolos configurables distintos. En el caso de la placa de desarrollo \emph{IceStick}, se utiliza un canal para programar la memoria \emph{Flash} SPI utilizada por la FPGA, y otro para proporcionar una comunicación UART hacia el equipo.} (disponible en la placa de desarrollo \emph{IceStick}\cite{icestickmanual}), o utilizando un equipo externo compatible.
 
 Por dicho puerto, la FPGA transmitirá tanto la trama USB capturada como información del bus, y recibirá los comandos que debe seguir.
 
@@ -45,28 +45,14 @@ En la figura~\ref{fig:serie_esquema} se muestra una señal típica serie, esta e
 \end{figure}
 
 A su vez, este objetivo se puede descomponer en varios subobjetivos.
-%* Comprobar
-\subsection{Diseño de un registro de desplazamiento universal}
-\label{ssct:registro_desplazamiento}
-Submódulo capaz de desplazar tanto a izquierda como a derecha la información almacenada, y que a su vez, permita una carga/lectura en paralelo.
-La finalidad de este submódulo es poder convertir datos de serie a paralelo o de paralelo a serie, cuando ocurra una recepción o transmisión respectivamente.
-
-En la figura~\ref{fig:shift_ejemplo} se ejemplifica, mostrando sus señales, el funcionamiento de un registro de desplazamiento, en está ocasión, hacia la derecha.
-
-\begin{figure}[htb]
-    \centering
-    \includegraphics[height=45mm]{esquemas/shift_register.eps}
-    \caption{Ejemplo de funcionamiento de un registro de desplazamiento hacia la derecha.}
-    \label{fig:shift_ejemplo}
-\end{figure}
 
 %* Comprobar
 \subsection{Diseño de un módulo de emisión serie}
-Submódulo capaz de controlar los datos almacenados en una memoria \emph{FIFO}, para posteriormente transmitirlos por el puerto serie usando el registro de desplazamiento anterior (subsección~\ref{ssct:registro_desplazamiento}).
+Módulo capaz de controlar los datos almacenados en una memoria \emph{FIFO}, para posteriormente transmitirlos por el puerto serie.
 
 %* Comprobar
 \subsection{Diseño de un módulo de recepción serie}
-Submódulo capaz almacenar en una memoria \emph{FIFO} los datos paralelizados capturados en el puerto serie.
+Módulo capaz almacenar en una memoria \emph{FIFO} los datos paralelizados capturados en el puerto serie.
 
 
 
@@ -80,7 +66,7 @@ Puesto que unicamente queremos obtener de forma pasiva los datos USB, de los cua
 
 %* Comprobar
 \subsection{Diseño de un módulo de escritura de registros ULPI}
-Submódulo capaz de generar y procesar las señales ULPI necesarias para almacenar un valor arbitrario de $8~bits$, en un registro del integrado conectado por ULPI.
+Módulo capaz de generar y procesar las señales ULPI necesarias para almacenar un valor arbitrario de $8~bits$, en un registro del integrado conectado por ULPI.
 
 En la figura~\ref{fig:ULPI_REG_WRITE} se puede apreciar la comunicación básica usada para realizar dicha escritura.
 \begin{figure}[hbt]
@@ -92,7 +78,7 @@ En la figura~\ref{fig:ULPI_REG_WRITE} se puede apreciar la comunicación básica
 
 %* Comprobar
 \subsection{Diseño de un módulo de lectura de registros ULPI}
-Submódulo capaz de generar y procesar las señales ULPI necesarias para obtener un valor almacenado en un registro arbitrario del integrado conectado por ULPI.
+Módulo capaz de generar y procesar las señales ULPI necesarias para obtener un valor almacenado en un registro arbitrario del integrado conectado por ULPI.
 
 En la figura~\ref{fig:ULPI_REG_READ} se puede apreciar la comunicación básica usada para realizar dicha lectura.
 \begin{figure}[hbt]
@@ -104,9 +90,7 @@ En la figura~\ref{fig:ULPI_REG_READ} se puede apreciar la comunicación básica 
 
 %* Comprobar
 \subsection{Diseño de un módulo de captación USB}
-Submódulo que ante la llegada de datos USB, sea capaz de procesar las señales ULPI para obtener y clasificar la trama transmitida.
-
-En la figura~\ref{fig:ULPI_RECV} se puede apreciar la comunicación básica existente durante la lectura de datos.
+Módulo que ante la llegada de datos USB, sea capaz de procesar las señales ULPI para obtener y clasificar la trama transmitida. En la figura~\ref{fig:ULPI_RECV} se puede apreciar la comunicación básica existente durante la lectura de datos.
 \begin{figure}[hbt]
     \centering
     \includegraphics[width=90mm]{datasheets/USB3300_RECV.eps}
@@ -128,9 +112,9 @@ Diseño e implementación de un módulo en lenguaje Verilog, que ante cualquier 
 
 
 
-%* Comprobar
-\section{Implementación de un sistema que gestione todos los módulos}
-Una vez todos los módulos anteriores estén finalizados, es necesaria una sincronización entre todos ellos que permita obtener el resultado deseado. Por ello, se diseñará un módulo que envíe las señales de control pertinentes al resto de módulos dependiendo de las diversas entradas o registros internos de control.
+% %* Comprobar
+% \section{Implementación de un sistema que gestione todos los módulos}
+% Una vez todos los módulos anteriores estén finalizados, es necesaria una sincronización entre todos ellos que permita obtener el resultado deseado. Por ello, se diseñará un módulo que envíe las señales de control pertinentes al resto de módulos dependiendo de las diversas entradas o registros internos de control.
 
 
 
