@@ -1,0 +1,60 @@
+\begin{tikzpicture}[auto]
+    % Config
+    \tikzFlow
+
+    % Place nodes
+    \node [flowStart] (idle) {Reposo};
+
+    \node [flowDecision] at ($ (idle)+(5,-3) $) (newMsg) {Ha llegado un nuevo comando?};
+
+    \node [flowDecision, below of=newMsg] (msgToggle) {El comando es de activación de envío de datos?};
+
+    \node [flowDecision, below of=msgToggle] (msgSend) {El comando es de envío valor leído?};
+
+    \node [flowDecision, below of=msgSend] (msgWrite) {El comando es de escritura de registro?};
+    
+    \node [flowDecision, below of=msgWrite] (msgRead) {El comando es de lectura de registro?};
+
+    \node [flowDecision] at ($ (idle)+(0,-3) $) (newUSB) {Hay datos USB disponibles para enviar al PC?};
+
+
+    \node [flowDecision] at ($ (idle)+(-5,-3) $) (push) {Se ha pulsado el botón de prueba?};
+    \node [flowBase, below of=push] (testByte) {Envío de un $byte$ de prueba};
+
+
+
+
+
+    % \node [flowStart] (idle) {Reposo};
+    
+    % \node [flowDecision, below of=idle] (rxLow) {Entrada del puerto serie a nivel bajo?};
+    
+    % \node [flowBase, below of=rxLow] (init) {Reinicio del contador de $bits$};
+    
+    % \node [flowBase, below of=init] (read) {Se guarda $bit$ entrante en el registro de desplazamiento};
+
+    % \node [flowDecision, below of=read] (10bitsDone) {Se han leído los $10~bits$ del mensaje?};
+    
+    % \node [flowBase] at ($ (read)+(4.1,0) $) (increase) {Incremento del contador de $bits$};
+
+    % \node [flowBase] at ($ (10bitsDone)+(4.1,0) $) (wait) {Se espera un pulso del reloj de baudios};
+
+    % \node [flowBase, below of=10bitsDone] (save) {Se almacena el byte en memoria};
+
+    % % % Draw edges
+    % \path [flowLine] (idle) -- (rxLow);
+    % \path [flowLine] (rxLow) -- (init);
+    % \path [flowLine] (init) -- (read);
+    % \path [flowLine] (read) -- (10bitsDone);
+    % \path [flowLine] (increase) -- (read);
+    
+    % \node [flowHide] at ($ (idle)+(3.5,0) $) (anchor1) {};
+    % \path [flowLine] (rxLow) -- node [right, xshift=-1.2cm] {Sí} (init);
+    % \path [flowLine] (rxLow.east) -| node [above, xshift=-1.2cm] {No} (anchor1.center);
+    
+    % \path [flowLine] (save.east) -| +(4.5,0) |- (idle.east);
+    
+    % \path [flowLine] (wait) -- (increase);
+    % \path [flowLine] (10bitsDone.east) node [above, xshift=0.2cm] {No} -- (wait);
+    % \path [flowLine] (10bitsDone) -- node [right, xshift=-1.2cm] {Sí} (save);
+\end{tikzpicture}
