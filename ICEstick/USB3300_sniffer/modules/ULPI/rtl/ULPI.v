@@ -4,7 +4,51 @@
  * This module lets the FPGA communicate with a ULPI compliant device (in this case, the USB3300 ic).
  *
  * In this module are instantiated all the required submodules:
- *  - 
+ *  - ULPI_REG_WRITE.
+ *  - ULPI_REG_READ.
+ *  - ULPI_RECV.
+ *
+ * Inputs:
+ *  - rst. Synchronous/Asynchronous reset signal [Active LOW].
+ *  - clk_ice. iCEstick 12MHz clock.
+ *  - clk_ULPI. PHY external clock at 60MHz.
+ *  - PrW. Perform register Write [Active HIGH].
+ *  - PrR. Perform register Read [Active HIGH].
+ *  - ADDR. PHY address where the value will be write/read.
+ *  - REG_VAL_W. Value that is going to be stored in the PHY register.
+ *  - DATA_re. Signal to get a new byte from the captured data.
+ *  - INFO_re. Signal to get a new packet info.
+ *  - DIR. ULPI DIR (DIRection) signal.
+ *  - NXT. ULPI NXT (NeXT) signal.
+ *  - DATA_in. ULPI input DATA signals [PHY => LINK].
+ *
+ * Outputs:
+ *  - status. Current status of the module (IDLE, RR, RW, RECV).
+ *  - busy. Signal that indicates that system is busy.
+ *  - REG_VAL_R. The register value obtained from the PHY.
+ *  - RxCMD. Current status of the bus.
+ *  - RxLineState. 
+ *  - RxVbusState. 
+ *  - RxActive. 
+ *  - RxError. 
+ *  - RxHostDisconnect. 
+ *  - RxID. 
+ *  - USB_DATA. Captured data.
+ *  - USB_INFO_DATA. Info about the captured data.
+ *  - DATA_buff_full. The buffer where the captured data is stored is full.
+ *  - DATA_buff_empty. The buffer where the captured datais stored is empty.
+ *  - INFO_buff_full. The buffer where the captured info is stored is full.
+ *  - INFO_buff_empty. The buffer where the captured info is stored is empty.
+ *  - DATA_out. ULPI output DATA signals [LINK => PHY].
+ *  - STP. ULPI STP (SToP) signal.
+ *  - U_RST. USB3300 reset signal.
+ *
+ * States:
+ *  - ULPI_START. 
+ *  - ULPI_IDLE. 
+ *  - ULPI_RECV. 
+ *  - ULPI_REG_WRITE. 
+ *  - ULPI_REG_READ. 
  *
  */
 
