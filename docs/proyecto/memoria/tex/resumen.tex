@@ -1,9 +1,39 @@
 \begin{resumen}
-Aquí va el resumen en español. Entre 1000 y 1500 palabras (ver Anexo TFG-08). 
 
-\warning{Escribe el resumen en estilo periodístico, desde lo más general a lo más específico.  Desde lo más importante a lo menos importante.  Esto último será especialmente útil cuando tengas que rellenar los \emph{Datos del TFG} en Campus Virtual.  En el formulario solo te permiten añadir un máximo de 600 palabras.  Si el resumen está en formato periodístico bastará con seleccionar los primeros párrafos.}
+El objetivo del presente Trabajo Fin de Grado, consiste en el desarrollo e implementación de un sistema \emph{hardware} capaz de obtener, y posteriormente almacenar, tramas de bus \emph{USB} (Del inglés, \emph{Universal Serial Bus}, o en castellano, Bus Serie Universal). Se busca a su vez, que dicho sistema sea lo más económico posible, utilizando únicamente herramientas y utilidades de código libre.
+
+Para su desarrollo, y tras un estudio previo del estado del arte en cuanto a sistemas de captación y análisis tanto \emph{hardware} como software, se ha utilizado en primer lugar una placa de evaluación que incluye el circuito integrado especializado \emph{USB3300}, encargado de la propia capa física del bus. Esta placa también incluye dos conectores hembra USB, uno de tipo A y el otro de tipo mini-B, a los cuales se conectan ambos extremo del bus a analizar.
+
+Seguidamente, se ha usado la placa de desarrollo \emph{iCEstick}, que entre otros componentes, incluye una \emph{FPGA iCE40HX1k} de la compañía \emph{Lattice} y un conversor de USB a puerto serie \emph{FTDI FT2232HL}. Dicha placa, tiene la función de comunicarse tanto con el integrado anterior encargado de la capa física, como con el equipo de control, siendo este un PC.
+
+A partir de este punto, el desarrollo del sistema se ramifica en dos grupos diferenciados, el primero encargado de todo lo referente a la FPGA, y el segundo encargado del software de control. Para su realización se sigue un procedimiento ágil basado en \emph{Scrum}, que lo divide en iteraciones de varias semanas denominadas \emph{sprints}.
+
+Para el primer grupo, se define previamente una serie de metodologías con las que poder desarrollar de forma efectiva, limpia y segura los diversos módulos necesarios. De esta forma, se consigue programar en lenguaje descriptor de \emph{hardware} Verilog varios módulos con funcionalidades muy diversas, entre los que se encuentra:
+\begin{itemize}
+    \item \textbf{Módulo de comunicación serie.} Cuya función es la de procesar y generar señales, de entrada y salida respectivamente, que permitan una comunicación serie con el PC.
+    \item \textbf{Módulo de comunicación ULPI.} Cuya función, igual que en el caso anterior, es la de procesar y generar señales, pero en este caso para el bus ULPI generado por el integrado USB3300, tal como dicta su especificación. Gracias a este módulo, el sistema es capaz por un lado de escribir y leer registros, y por otro, de obtener los datos USB.
+    \item \textbf{Módulo de almacenaje FIFO.} Cuya función es la de generar una memoria \emph{FIFO} (\emph{First-In First-Out}) a partir de los bloques de RAM internos disponibles en la FPGA. La peculiaridad de esta memoria es la forma en la que almacenan y vuelcan los datos, siendo el primer dato en ser almacenado el primero en ser devuelto.
+    \item \textbf{Módulo de control general.} Cuya función es la unir y gestionar todos los módulos implicados, permitiendo un funcionamiento sincronizado entre todos ellos.
+\end{itemize}
+Todos ellos, han soportado varias simulaciones con las que asegurar su correcto funcionamiento antes de su despliegue en el sistema final. \\
+Junto con los anteriores módulo, se desarrolla un protocolo simple con el que poder comandar el sistema. Este protocolo esta formado por 2 bytes, en los que se incluyen el comando a realizar, una dirección de 6 bits, y un byte de datos. \\
+Hay que comentar también el diseño e impresión de una pequeña base en 3D, donde situar todos los componentes de forma segura.
+
+El segundo grupo, aun teniendo una menor dificultad respecto al primero, es esencial para poder ver los resultados obtenidos. Para controlar la totalidad del sistema se ha creado una aplicación en lenguaje C, que por medio de un simple menú permita la interacción entre la FPGA y el usuario. Este menú permite por un lado configurar y abrir el puerto al que está conectado la FPGA, y por otro, permite enviar los comandos necesarios para hacer funcionar al sistema, siendo estos de escritura de registros, lectura de registros y activación/desactivación del envío de datos al PC. \\
+Esta aplicación también se encarga de almacenar de forma estructurada dichos datos en un archivo formato \emph{JSON}, que posteriormente puede ser estudiado. Secundariamente, y tras la finalización de todo lo anterior, se ha creado una pequeña utilidad, que convierte el fichero \emph{JSON} a \emph{PCAP}, lo que permite ser visualizado en el programa \emph{Wireshark}.
+
+Hay que destacar que todo el sistema en su conjunto ha costado aproximadamente menos de 45\$ (aproximadamente 40\texteuro), precio muy por debajo de cualquier otro método de captura comercial.
+
+Para finalizar, hay que comentar varios aspectos a incluir o mejorar.
+\begin{itemize}
+    \item Mejorar el método de transmisión hacia el PC, para aumentar su velocidad de transferencia, y evitar posibles perdidas de datos. Por ejemplo, se puede prescindir del puerto serie, y utilizar otro protocolo soportado por el integrado FTDI, que permita una mayor tasa de transferencia.
+    \item Incorporar memoria RAM externa, que aumente significativamente la cantidad de datos que puede almacenar temporalmente el sistema.
+    \item Crear un disector para \emph{Wireshark}, que sea capaz de dar más información sobre los datos capturados.
+\end{itemize}
+
 \end{resumen}
 
+
 \begin{abstract}
-Write here the abstract in english. It must be between 1000 and 1500 words long (see Anexo TFG-08).
+    \noWord[Abstract. 1000-1500 words]
 \end{abstract}
