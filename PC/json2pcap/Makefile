@@ -12,7 +12,7 @@ LFLAGS += `pkg-config --libs jansson`
 BUILD_DIR := ./build
 SRC_DIR   := ./src
 
-OUT_NAME := json2pcap.run
+OUT_NAME := capture-json2pcap
 
 SRC_NAMES = json2pcap
 SRC_MAIN  = main
@@ -39,6 +39,11 @@ $(BUILD_DIR)/$(OUT_NAME): $(SRC_OBJTS)
 
 build: $(BUILD_DIR)/$(OUT_NAME)
 
+install: build
+	cp ./build/$(OUT_NAME) /usr/bin/$(OUT_NAME)
+
+uninstall:
+	rm -f /usr/bin/$(OUT_NAME)
 
 clean:
 	rm -fdr $(BUILD_DIR)/
@@ -46,5 +51,5 @@ clean:
 
 ###
 
-.PHONY: all build clean run
+.PHONY: all build clean run install uninstall
 # .SILENT:

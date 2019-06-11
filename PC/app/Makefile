@@ -12,7 +12,7 @@ LFLAGS += -lpthread
 BUILD_DIR := ./build
 SRC_DIR   := ./src
 
-MAIN_OUT_NAME := serial.run
+MAIN_OUT_NAME := FPGA-usb-capture
 TEST_OUT_NAME := test.run
 
 SRC_NAMES     = serial_ctrl menu thread_functions
@@ -57,6 +57,11 @@ $(BUILD_DIR)/$(OUT_NAME): $(SRC_OBJTS)
 
 build: $(BUILD_DIR)/$(OUT_NAME)
 
+install: build
+	cp ./build/$(OUT_NAME) /usr/bin/$(OUT_NAME)
+
+uninstall:
+	rm -f /usr/bin/$(OUT_NAME)
 
 clean:
 	rm -fdr $(BUILD_DIR)/
@@ -64,5 +69,5 @@ clean:
 
 ###
 
-.PHONY: all build clean run
+.PHONY: all build clean run install uninstall
 # .SILENT:
