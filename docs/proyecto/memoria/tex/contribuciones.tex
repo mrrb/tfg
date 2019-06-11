@@ -1,28 +1,28 @@
 \chapter{Contribuciones}
 \label{ch:contribuciones}
 
-%* Comprobar
+%* Listo
 Durante el proceso de diseño del sistema de la FPGA, y ante la necesidad de crear módulos o bloques funcionales de utilidad en lenguaje Verilog\cite{stuartsutherland2001}, se siguen una serie de procedimientos definidos desde un comienzo. Gracias a su uso, a parte de establecer unos mínimos requerimientos de calidad, se obtienen con mayor eficiencia los resultados buscados, permitiendo a su vez una alta legibilidad del código, y una buena capacidad de modificación y reutilización.
 
 Para garantizarlo, estos procedimientos deben de ser comunes en todos los módulos, e invariables a lo largo del proyecto.
 
 
 
-%* Comprobar
+%* Listo
 \section{Etapas de diseño de un módulo}
 \label{ch:contribuciones:etapas}
-%* Comprobar
+%* Listo
 En primer lugar, tras requerir la utilización de un módulo que logre una función específica, se analiza la posibilidad de reutilizar uno o varios módulos anteriormente realizados, evitando así un derroche innecesario de tiempo y recursos.
 
-%* Comprobar
+%* Listo
 Seguidamente, se estudia la complejidad del módulo a desarrollar, dividiéndolo, si fuera necesario, en varios submódulos con funciones más concretas que disminuyan el grado de dificultad general en su elaboración, permitiendo a su vez una mayor reutilización futura de código.
 
-%* Comprobar
+%* Listo
 Estando definida ya su distribución, se realiza un pequeño esquema sobre el que partir, que de forma gráfica muestre sus diversas partes y relaciones, junto a este, si fuera necesario, se dibuja otro que muestre las etapas de la máquina de estados, pudiendo a continuación empezar con la programación del mismo.
 
 Cada módulo dispone de un estilo común, distribuido de la siguiente forma:
 \begin{enumerate}
-    %* Comprobar
+    %* Listo
     \item{\textbf{Comentario de cabecera.}} \\
     Tal como se muestra en el listado~\ref{src:metodologia-verilog-cabecera}, se nombra al módulo, incluyendo una descripción breve de sus funciones. Además, se enumeran y explican todas las entradas, salidas, parámetros y estados de los que está formado.
     \begin{lstlisting}[language=Verilog,
@@ -50,7 +50,7 @@ Cada módulo dispone de un estilo común, distribuido de la siguiente forma:
  */
     \end{lstlisting}
 
-    %* Comprobar
+    %* Listo
     \item{\textbf{Control de reinicio síncrono/asíncrono (listado~\ref{src:metodologia-verilog-sync}).}} \\
     Se trata de un pequeño bloque que controla la forma de funcionamiento de los reinicios. Si en el archivo principal se define la constante \emph{ASYNC\_RESET}, entonces todos los reinicios serán asíncronos, en caso contrario, serán síncronos a la señal de reloj (\emph{clk}).
     \begin{lstlisting}[language=Verilog,
@@ -64,7 +64,7 @@ Cada módulo dispone de un estilo común, distribuido de la siguiente forma:
 `endif
     \end{lstlisting}
         
-    %* Comprobar
+    %* Listo
     \item{\textbf{Incorporación de módulos necesarios (listado~\ref{src:metodologia-verilog-include-modules}).}} \\
     Suele ser habitual, que el módulo que se está desarrollando haga uso de otros, los cuales son incorporar en este momento.
     \begin{lstlisting}[language=Verilog,
@@ -74,7 +74,7 @@ Cada módulo dispone de un estilo común, distribuido de la siguiente forma:
 \\ etc ..
     \end{lstlisting}
         
-    %* Comprobar
+    %* Listo
     \item{\textbf{Creación del módulo (listado~\ref{src:metodologia-verilog-create}).}} \\
     Se define el módulo, agrupando las entradas y salidas según características similares, posicionando en primer lugar las entradas, seguido de las salidas.
     \begin{lstlisting}[language=Verilog,
@@ -94,7 +94,7 @@ module nombre_modulo
      );
     \end{lstlisting}
     
-    %* Comprobar
+    %* Listo
     \item{\textbf{Inicialización de módulos necesarios (listado~\ref{src:metodologia-verilog-mod-init}).}} \\
     Todos los módulos incorporados previamente necesitan ser inicializados, relacionando sus entradas/salidas con el resto de señales del módulo.
     \begin{lstlisting}[language=Verilog,
@@ -112,7 +112,7 @@ clk_baud_pulse #(
                 );
     \end{lstlisting}
     
-    %* Comprobar
+    %* Listo
     \item{\textbf{Creación de los registros de control (listado~\ref{src:metodologia-verilog-regs}).}} \\
     Se crean todos los registros encargados de controlar el módulo o almacenar las variables.
     \begin{lstlisting}[language=Verilog,
@@ -124,7 +124,7 @@ reg [3:0]X_counter_r = 4'b0; // Register that counts ...
 reg [7:0]DATA_buff   = 8'b0; // Buffer where ...
     \end{lstlisting}
 
-    %* Comprobar
+    %* Listo
     \item{\textbf{Creación de \textit{flags} o señales de control (listado~\ref{src:metodologia-verilog-flags}).}} \\
     Para poder identificar con facilidad si el sistema se encuentra en un estado concreto, se crean estas señales, cuyo valor será \textit{1} cuando la máquina de estados esté en dicho estado, y \textit{0} en caso contrario.
     \begin{lstlisting}[language=Verilog,
@@ -135,7 +135,7 @@ wire X_s_IDLE; // HIGH if X\_state\_r == X\_IDLE, else LOW
 wire X_s_RUN;  // HIGH if X\_state\_r == X\_RUN,  else LOW
     \end{lstlisting}
 
-    %* Comprobar
+    %* Listo
     \item{\textbf{Asignación de valores de salida y señales internas (listado~\ref{src:metodologia-verilog-asignacion}).}} \\
     Se asignan los valores que tomarán los diversos \emph{wires}, tanto de uso interno, como de salida, estos pueden relacionarse con registros, salidas de módulos ya inicializados u otros \emph{wires}. Además, al final de cada asignación, se comenta cual va a ser su uso, por ejemplo, una asignación de salida o control.
     \begin{lstlisting}[language=Verilog,
@@ -149,7 +149,7 @@ assign nombre_salida_1 = DATA_buff[2]; // \#OUTPUT
     \end{lstlisting}
     
 
-    %* Comprobar 
+    %* Listo 
     \item{\textbf{Enumeración de estados (listado~\ref{src:metodologia-verilog-estados}).}} \\
     Se crean tantos parámetros locales como estados tenga el módulo, cada uno con un valor identificativo único.
     \begin{lstlisting}[language=Verilog,
@@ -161,7 +161,7 @@ localparam X_RUN  = 1'b1;
     \end{lstlisting}
     
 
-    %* Comprobar
+    %* Listo
     \item{\textbf{Máquina de estados (listado~\ref{src:metodologia-verilog-fst}).}} \\
     Se fijan y distribuyen los diversos caminos que puede tomar el sistema. Para ello se realiza una máquina de estados \emph{Mealy}\cite{mealy1955method}, es decir, los nuevos estados dependen de las entradas y del propio estado actual. Un pequeño ejemplo de una máquina de estados se muestra en el listado \ref{src:metodologia-verilog-fst}
     \begin{lstlisting}[language=Verilog,
@@ -184,7 +184,7 @@ always @(posedge clk `X_ASYNC_RESET) begin
 end
     \end{lstlisting}
 
-    %* Comprobar
+    %* Listo
     \item{\textbf{Actualización de registros (listado~\ref{src:metodologia-verilog-act-regs}).}} \\
     Por último, se actualizan los valores de los registros del módulo, teniendo en cuenta que se trata de una máquina de estados \emph{Mealy}\cite{barkalov2005design}.
     \begin{lstlisting}[language=Verilog,
@@ -206,16 +206,16 @@ end
 
 
 
-%* Comprobar
+%* Listo
 \section{Pruebas y simulaciones}
 \label{ch:contribuciones:pruebas}
-%* Comprobar
+%* Listo
 Para asegurar el correcto funcionamiento de cada módulo, estos deben superar varias pruebas que comprueben cada una de sus funcionalidades. En caso de superar todas ellas satisfactoriamente, el módulo estaría listo para ser usado en la síntesis de la FPGA, en caso contrario, tendría que volver a la fase de desarrollo, en la que buscar y solventar los fallos, utilizando los resultados de las simulaciones realizadas.
 
-%* Comprobar
+%* Listo
 Estás pruebas hacen uso de las herramientas de código abierto \emph{Icarus Verilog}\footnote{Véase su repositorio: \url{https://github.com/steveicarus/iverilog}} (abreviado \emph{iverilog}), encargada de simular el propio código de \emph{Verilog}, y el visor de ondas \emph{GTKWave}\cite{gtkwave2019}, permitiendo generar y mostrar gráficamente todas las señales del circuito en cualquier instante de tiempo.
 
-%* Comprobar
+%* Listo
 Para llevar a cabo dicha simulación, \emph{Iverilog} tiene como entrada un archivo en lenguaje \emph{Verilog} en el que se inicializa el propio módulo a analizar, y seguidamente, en ese mismo archivo, se van variando las entradas al módulo según su instante de tiempo. Posteriormente, y tras obtener el archivo con el resultado de la simulación, se abre en \emph{GTKWave} y se compara el resultado generado en el módulo, respecto al esperado.
 
 En la figura~\ref{fig:ej-gtkwave} se muestra el resultado gráfico de una simulación de ejemplo.
@@ -229,20 +229,20 @@ En la figura~\ref{fig:ej-gtkwave} se muestra el resultado gráfico de una simula
 
 
 
-%* Comprobar
+%* Listo
 \section{Herramientas de utilizadas}
 A parte de la metodología implementada, valida para cualquier sistema a diseñar que utilice lenguaje Verilog, es necesario el uso de herramientas especificas según la FPGA usada.
 
 Particularmente para el presente proyecto, en el que usa una FPGA iCE40HX1k del fabricante \emph{Lattice}, se han utilizado las siguientes herramientas, todas ellas bajo la filosofía de código libre
 
 \begin{itemize}
-    %* Comprobar
-    \item \textbf{\emph{Yosys}.} Herramienta de síntesis\cite{wolf2016yosys} para Verilog. Provee una colección de algoritmos básicos para varios tipos de aplicaciones, lo que permite poder procesar la gran mayoría de diseños que se planteen. Igualmente, incluye soporte especifico para la familia de FPGAs iCE40 de \emph{Lattice}.
+    %* Listo
+    \item \textbf{\emph{Yosys}\footnote{Página web del proyecto: \url{http://www.clifford.at/yosys/}}.} Herramienta de síntesis\cite{wolf2016yosys} para Verilog. Provee una colección de algoritmos básicos para varios tipos de aplicaciones, lo que permite poder procesar la gran mayoría de diseños que se planteen. Igualmente, incluye soporte especifico para la familia de FPGAs iCE40 de \emph{Lattice}.
 
     Es además una herramienta de código libre bajo licencia ISC\footnote{Licencia compatible GPL, con términos similares a los definidos por una licencia MIT. Véase \url{https://www.isc.org/licenses/}.}, con gran capacidad de expansión a la hora de realizar pases de sintetizado por medio de módulos en lenguaje C++.
     
-    %* Comprobar
-    \item \textbf{\emph{Nextpnr}.} Herramienta de posicionado y encaminamiento (\emph{Place-And-Route}) de los diversos bloques lógicos internos de la FPGA, con soporte a las familias de FPGAs iCE40 y ECP5 de \emph{Lattice}. A parte de una interfaz de lineas de comandos, posee una interfaz gráfica (véase figura~\ref{fig:gui_nextpnr}) donde observar con detalle la posición de los bloques utilizados y sus uniones.
+    %* Listo
+    \item \textbf{\emph{Nextpnr}\footnote{Repositorio del proyecto: \url{https://github.com/YosysHQ/nextpnr}}.} Herramienta de posicionado y encaminamiento (\emph{Place-And-Route}) de los diversos bloques lógicos internos de la FPGA, con soporte a las familias de FPGAs iCE40 y ECP5 de \emph{Lattice}. A parte de una interfaz de lineas de comandos, posee una interfaz gráfica (véase figura~\ref{fig:gui_nextpnr}) donde observar con detalle la posición de los bloques utilizados y sus uniones.
     
     \begin{figure}[htb]
         \centering
@@ -251,16 +251,16 @@ Particularmente para el presente proyecto, en el que usa una FPGA iCE40HX1k del 
         \label{fig:gui_nextpnr}
     \end{figure}
 
-    %* Comprobar
-    \item \textbf{\emph{IceStorm tools}.} El proyecto \emph{IceStorm} tiene la finalidad de hacer ingeniería inversa y documentar el flujo de bits usado por las FPGAs iCE40 de \emph{Lattice}, y han creado varias utilidades, que entre otras, permiten crear un binario compatible o programar la FPGA.   
+    %* Listo
+    \item \textbf{\emph{IceStorm tools}\footnote{Página web del proyecto: \url{http://www.clifford.at/icestorm/}}.} El proyecto \emph{IceStorm} tiene la finalidad de hacer ingeniería inversa y documentar el flujo de bits usado por las FPGAs iCE40 de \emph{Lattice}, y han creado varias utilidades, que entre otras, permiten crear un binario compatible, o programar la FPGA.   
 \end{itemize}
 
-%* Comprobar
+%* Listo
 \section{Automatización de tareas}
 Debido a la repetitividad de ciertas tareas durante el proceso de desarrollo, se ha creado un archivo \emph{Makefile}\footnote{Archivo que gracias a la herramienta \emph{Make} disponible en sistemas \emph{unix-like}, gestiona dependencias y automatiza tareas.}, que de forma rápida ejecute varias acciones.
 
 Entre otras, hay que destacar las siguientes tareas incluidas.
-%* Comprobar
+%* Listo
 \begin{itemize}
     \item \textbf{\emph{synt}.} Realiza la síntesis del sistema a partir de la herramienta \emph{Yosys}.
     \item \textbf{\emph{pnr}.} Gracias a la herramienta \emph{Nextpnr}, hace la tarea de posicionado y encaminamiento (\emph{Place-And-Route}) de la síntesis anterior.
@@ -275,7 +275,7 @@ Entre otras, hay que destacar las siguientes tareas incluidas.
 
 
 
-%* Comprobar
+%* Listo
 \section{Distribución de archivos}
 \label{ch:contribuciones:archivos}
 Todo el código fuente utilizado por el sistema de la FPGA sigue una estructura concreta, reflejada en la figura~\ref{fig:tree-fpga}.
