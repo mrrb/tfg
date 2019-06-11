@@ -1,16 +1,16 @@
 \chapter{Objetivos}
 \label{ch:objetivos}
 
-%* Comprobar
+%* Listo
 Bajo la premisa de realizar un \textbf{analizador USB \emph{hardware} de bajo coste} con herramientas y utilidades de código libre, el presente Trabajo Fin de Grado se ha descompuesto en varios objetivos parciales, estos siguen siempre una metodología SMART, es decir, deben ser Simples, Medibles, Acordados, Realista y Temporizados.
 
-%* Comprobar
+%* Listo
 \section{Selección de componentes \emph{hardware}}
 Debido a la flexibilidad que supone utilizar una FPGA\cite{monmasson2007fpga}, se propone diseñar el sistema de captura a partir de una. Por otra parte, ya que existen circuitos especializados en procesar capas física USB, es de gran interés incluir uno de ellos\footnote{La idea de utilizar un integrado especializado, se obtiene del sistema \emph{USB Sniffer} planteado por \emph{Ultra-Embedded}, nombrado en el capitulo~\ref{ch:antecedentes} de antecedentes.}, pudiendo abstraer de esa forma ciertas partes de la comunicación USB de poco interés, y reduciendo en cierta medidas posibles errores de sincronización.
 
 Se deben buscar por tanto, todos aquellos componentes necesarios, de la forma más económica posible, para elaborar el sistema de captura. Seguidamente, se ha de elegir como se conexionan mutuamente.
 
-%* Comprobar
+%* Listo
 \section{Implementación de memoria \emph{FIFO}}
 Diseño e implementación de un módulo en lenguaje Verilog que actúe como memoria \emph{FIFO}. Este será capaz de almacenar información de tal manera que el primer $bit$ introducido sea el primero en ser recuperado.
 
@@ -29,7 +29,7 @@ En la figura~\ref{fig:FIFO_info} se muestra un esquema del resultado esperado.
 
 
 
-%* Comprobar
+%* Listo
 \section{Implementación de un sistema de comunicación serie}
 Diseño e implementación de un sistema en lenguaje Verilog que sea capaz de comunicarse bidireccionalmente usando un puerto serie simple\cite{design-uart-vhdl}, pudiendo conectarse a él por medio del circuito integrado FTDI FT2232HL\footnote{Circuito encargado de convertir una conexión \emph{USB High Speed} a dos protocolos configurables distintos. En el caso de la placa de desarrollo \emph{IceStick}, se utiliza un canal para programar la memoria \emph{Flash} SPI utilizada por la FPGA, y otro para proporcionar una comunicación UART hacia el equipo.} (disponible en la placa de desarrollo \emph{IceStick}\cite{icestickmanual}), o utilizando un equipo externo compatible.
 
@@ -46,17 +46,17 @@ En la figura~\ref{fig:serie_esquema} se muestra una señal típica serie, esta e
 
 A su vez, este objetivo se puede descomponer en varios subobjetivos.
 
-%* Comprobar
+%* Listo
 \subsection{Diseño de un módulo de emisión serie}
 Módulo capaz de controlar los datos almacenados en una memoria \emph{FIFO}, para posteriormente transmitirlos por el puerto serie.
 
-%* Comprobar
+%* Listo
 \subsection{Diseño de un módulo de recepción serie}
 Módulo capaz almacenar en una memoria \emph{FIFO} los datos paralelizados capturados en el puerto serie.
 
 
 
-%* Comprobar
+%* Listo
 \section{Implementación de un sistema que procese el protocolo ULPI}
 Diseño e implementación de un sistema en lenguaje Verilog capaz de comunicarse con otros dispositivos compatibles con el protocolo ULPI (\emph{UTMI+ Low Pin Interface}), siendo en este caso, el integrado USB3300 de \emph{Microchip}, encargado de la capa física USB.
 
@@ -64,7 +64,7 @@ Todas las características y casos del protocolo ULPI están completamente defin
 
 Puesto que unicamente queremos obtener de forma pasiva los datos USB, de los cuatro posibles modos de funcionamiento ULPI, escritura de registros, lectura de registros, recepción de datos USB y envío de datos USB, solo es interesante diseñar los tres primeros, por lo que este objetivo se puede dividir en las siguientes partes.
 
-%* Comprobar
+%* Listo
 \subsection{Diseño de un módulo de escritura de registros ULPI}
 Módulo capaz de generar y procesar las señales ULPI necesarias para almacenar un valor arbitrario de $8~bits$, en un registro del integrado conectado por ULPI.
 
@@ -76,7 +76,7 @@ En la figura~\ref{fig:ULPI_REG_WRITE} se puede apreciar la comunicación básica
     \label{fig:ULPI_REG_WRITE}
 \end{figure}
 
-%* Comprobar
+%* Listo
 \subsection{Diseño de un módulo de lectura de registros ULPI}
 Módulo capaz de generar y procesar las señales ULPI necesarias para obtener un valor almacenado en un registro arbitrario del integrado conectado por ULPI.
 
@@ -88,7 +88,7 @@ En la figura~\ref{fig:ULPI_REG_READ} se puede apreciar la comunicación básica 
     \label{fig:ULPI_REG_READ}
 \end{figure}
 
-%* Comprobar
+%* Listo
 \subsection{Diseño de un módulo de captación USB}
 Módulo que ante la llegada de datos USB, sea capaz de procesar las señales ULPI para obtener y clasificar la trama transmitida. En la figura~\ref{fig:ULPI_RECV} se puede apreciar la comunicación básica existente durante la lectura de datos.
 \begin{figure}[hbt]
@@ -100,25 +100,25 @@ Módulo que ante la llegada de datos USB, sea capaz de procesar las señales ULP
 
 
 
-%* Comprobar
+%* Listo
 \section{Implementación de un sistema que gestione el envío de datos}
 Diseño e implementación de un módulo en lenguaje Verilog, que gestione el envío al PC de los datos capturados. Además, sería interesante añadir una memoria intermedia en la que almacenar los datos antes de su envío, aminorando posibles perdidas.
 
 
 
-%* Comprobar
+%* Listo
 \section{Implementación de un sistema que gestione los comandos entrantes}
 Diseño e implementación de un módulo en lenguaje Verilog, que ante cualquier petición realizada por el usuario por el puerto serie anterior, deberá ser capaz de procesarla, obteniendo sus diversas partes (por ejemplo, dirección y datos en una petición de escritura de registro) y las almacenará temporalmente hasta que se puedan ejecutar.
 
 
 
-% %* Comprobar
+% %* Listo
 % \section{Implementación de un sistema que gestione todos los módulos}
 % Una vez todos los módulos anteriores estén finalizados, es necesaria una sincronización entre todos ellos que permita obtener el resultado deseado. Por ello, se diseñará un módulo que envíe las señales de control pertinentes al resto de módulos dependiendo de las diversas entradas o registros internos de control.
 
 
 
-%* Comprobar
+%* Listo
 \section{Creación de una aplicación de control}
 Tras la finalización de la parte \emph{hardware}, es necesaria una aplicación, que conectándose por medio del puerto serie anteriormente implementado, sea capaz de en primer lugar enviar los diversos comandos necesarios para el correcto funcionamiento del sistema, y en segundo lugar, reciba los datos capturados de interés.
 
