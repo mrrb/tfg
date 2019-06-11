@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Fri May 31 13:57:29 2019
+[*] Tue Jun 11 10:44:48 2019
 [*]
 [dumpfile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/sim/top_tb.vcd"
-[dumpfile_mtime] "Fri May 31 13:57:04 2019"
-[dumpfile_size] 155391
+[dumpfile_mtime] "Tue Jun 11 10:23:23 2019"
+[dumpfile_size] 149968
 [savefile] "/home/mra/Pc_Sync/TFG/GIT/tfg/ICEstick/USB3300_sniffer/top.gtkw"
 [timestart] 0
 [size] 1920 1026
 [pos] -1 -1
-*-10.940125 17826 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-10.940125 16303 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top_tb.
 [treeopen] top_tb.USB3300_sniffer_mut.
 [treeopen] top_tb.USB3300_sniffer_mut.ULPI_op_stack.
@@ -17,8 +17,9 @@
 [signals_width] 209
 [sst_expanded] 1
 [sst_vpaned_height] 235
-@28
+@29
 top_tb.USB3300_sniffer_mut.rst
+@28
 top_tb.USB3300_sniffer_mut.clk_ice
 top_tb.USB3300_sniffer_mut.clk_ULPI
 @200
@@ -179,7 +180,6 @@ top_tb.USB3300_sniffer_mut.ULPI_RST
 top_tb.USB3300_sniffer_mut.ULPI_STP
 @200
 -
-@201
 -Operation buffer
 @28
 top_tb.USB3300_sniffer_mut.ULPI_op_stack.op_stack_pull
