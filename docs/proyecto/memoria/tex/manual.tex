@@ -1,30 +1,41 @@
 \chapter{Manual de instalación y utilización}
 \label{ch:manual}
+%* Comprobar
+En el presente anexo, se detallan los procedimientos a seguir para la instalación y utilización del sistema bajo un sistema Linux.
 
-En el presente anexo, se detallan los procedimientos a seguir para la instl
+%* Comprobar
+\section{Requisitos \emph{software} previos}
+Antes de poder generar un archivo binario compatible con la FPGA \emph{Lattice iCE40HX1K}, es necesario instalar las aplicaciones encargadas de su creación.
 
-\section{Requisitos previos}
-Para la correcta creación de un archivo binario compatible con la FPGA \emph{Lattice iCE40HX1K}
+\subsubsection{Dependencidas de las aplicaciones}
+Previo a la instalación de dichas aplicaciones, hay que instalar también sus dependencias. A continuación se dan la lista de paquetes a instalar según tres sistemas operativos Linux distintos.
 
-\begin{verbatim}
+\begin{itemize}
+    \item \textbf{Para una instalación en \emph{Ubuntu}} \\
+    \begin{verbatim}
 $ sudo apt-get install build-essential clang bison flex libreadline-dev \
                        gawk tcl-dev libffi-dev git mercurial graphviz   \
                        xdot pkg-config python python3 libftdi-dev       \
                        qt5-default python3-dev libboost-all-dev cmake}
-\end{verbatim}
-\begin{verbatim}
+    \end{verbatim}
+
+    \item \textbf{Para una instalación en \emph{Fedora}} \\
+    \begin{verbatim}
 $ sudo dnf install make automake gcc gcc-c++ kernel-devel clang bison            \
                    flex readline-devel gawk tcl-devel libffi-devel git mercurial \
                    graphviz python-xdot pkgconfig python python3 libftdi-devel   \
                    qt5-devel python3-devel boost-devel boost-python3-devel
-\end{verbatim}
-\begin{verbatim}
+    \end{verbatim}
+
+    \item \textbf{Para una instalación en \emph{ArchLinux}} \\
+    \begin{verbatim}
 $ sudo pacman -S base-devel clang boost-libs python qt5-base boost \
                  cmake eigen git trellis libffi tcl xdot mercurial \
                  graphviz libftdi-compat 
-\end{verbatim}
+    \end{verbatim}
+\end{itemize}
 
-\subsection{Instalación de las herramientas \emph{IceStorm}}
+\subsubsection{Instalación de las herramientas \emph{IceStorm}}
 Se procede a instalar las herramientas y bases de datos del proyecto \emph{IceStorm} (\emph{icepack}, \emph{icebox}, \emph{iceprog}, \emph{icetime} y bases de datos de las diversas FPGAs).
 
 \begin{lstlisting}[language=bash]
@@ -34,8 +45,7 @@ $ make -j$(nproc)
 $ sudo make install
 \end{lstlisting}
 
-
-\subsection{Instalación de \emph{NextPNR}}
+\subsubsection{Instalación de \emph{NextPNR}}
 Se procede a instalar la herramienta de posicionado y encaminamiento (\emph{Place-And-Route}) \emph{NextPNR}.
 
 \begin{lstlisting}[language=bash]
@@ -46,9 +56,8 @@ $ make -j$(nproc)
 $ sudo make install
 \end{lstlisting}
 
-
-\subsection{Instalación de \emph{Yosys}}
-Se procede a instalar la herramienta de sínstesis del lenguaje Verilog \emph{Yosys}.
+\subsubsection{Instalación de \emph{Yosys}}
+Se procede a instalar la herramienta de síntesis del lenguaje Verilog \emph{Yosys}.
 
 \begin{lstlisting}[language=bash]
 $ git clone https://github.com/cliffordwolf/yosys.git yosys
@@ -56,3 +65,82 @@ $ cd yosys
 $ make -j$(nproc)
 $ sudo make install
 \end{lstlisting}
+% \begin{verbatim}
+% $ git clone https://github.com/cliffordwolf/yosys.git yosys
+% $ cd yosys
+% $ make -j$(nproc)
+% $ sudo make install
+% \end{verbatim}
+
+\subsubsection{Permisos de subida}
+Si se desea subir el archivo binario generado sin utilizar permisos administrativos del sistema, se ha de ejecutar el siguiente comando.
+\begin{lstlisting}[language=bash]
+$ sudo sh -c 'echo "ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", MODE="0660", GROUP="plugdev", TAG+="uaccess"" > /etc/udev/rules.d/53-lattice-ftdi.rules'
+\end{lstlisting}
+
+
+%* Comprobar
+\section{Descarga del repositorio}
+Para poder utilizar el sistema, hay que descargar en primer lugar los datos del repositorio.
+\begin{lstlisting}[language=bash]
+$ git clone https://github.com/mario-mra/tfg.git analizador_usb
+$ cd analizador_usb
+\end{lstlisting}
+A partir de este momento, todas las operaciones a realizar estarán referencias al directorio del repositorio: \emph{.\textbackslash analizador\_usb}.
+
+
+%* Comprobar
+\section{Generación y programación del archivo binario}
+Los archivos a utilizar para la generación del binario están situados en la carpeta \emph{./ICEstick/USB3300\_sniffer}. Una vez situados en esa carpeta, y si todos los requisitos están instalados, ya sería posible realizar la generación y posterior programación del archivo binario.
+
+\begin{lstlisting}[language=bash]
+$ cd ./ICEstick/USB3300_sniffer
+$ make pnr
+$ make prog
+$ cd ../../
+\end{lstlisting}
+
+
+%* Comprobar
+\section{Instalación de las aplicaciones de control}
+Las aplicaciones creadas están situadas en la carpeta \emph{./PC/}. Previamente a su ejecución hay que compilarlas e instalarlas.
+
+\subsubsection{Instalación de la aplicación de control}
+\begin{lstlisting}[language=bash]
+$ cd ./PC/app
+$ make
+$ sudo make install
+$ cd ../../
+\end{lstlisting}
+
+\subsubsection{Instalación de la aplicación de conversión \emph{JSON} a \emph{PCAP}}
+\begin{lstlisting}[language=bash]
+$ cd ./PC/json2pcap
+$ make
+$ sudo make install
+$ cd ../../
+\end{lstlisting}
+
+
+%* Comprobar
+\section{Obtención de la captura}
+Con la aplicación de control ya instalada, y el sistema conectado al PC, ya se podría comenzar la captura.
+Para evitar posibles perdidas de datos capturados, se recomienda conectar el bus USB a analizar con el sistema en funcionamiento y la señal \emph{RECV\_TOGGLE} activa.
+
+\emph{\textbf{Nota}}. La aplicación se encarga de escribir los registros ULPI necesarios para poder realizar la captura, por lo que las opciones \textbf{2 y 3} no son necesarias utilizarlas.
+
+\begin{enumerate}
+    \item Ejecutar la aplicación. \emph{\$ \textbf{FPGA-usb-capture}}.
+    \item Configurar el puerto si fuera necesario, eligiendo el dispositivo a usar. \textbf{[Opción 0]}
+    \item Abrir el puerto serie con la configuración dada. \textbf{[Opción 1]}
+    \item Empezar la recepción de datos, activando la señal \emph{RECV\_TOGGLE}. \textbf{[Opción 4]}
+    \item Conectar el dispositivo a analizar a la placa \emph{USB3300}.
+    \item Realizar todas las operaciones deseadas.
+    \item Cerrar el programa (automáticamente se apaga la señal \emph{RECV\_TOGGLE} y se cierra el puerto). \textbf{[Opción 5]}
+\end{enumerate}
+
+La captura generada se guarda automáticamente en el directorio desde el que se llama a la aplicación. Tras la captura, es recomendable almacenar dicho archivo, ya que si se vuelve a realizar una nueva, este archivo será sobrescribido.
+
+%* Comprobar
+\section{Conversión de la captura a formato \emph{PCAP}}
+Para realizar la conversión a formato \emph{PCAP}, simplemente hay que llamar a la herramienta \emph{\$ \textbf{capture-json2pcap <ruta archivo JSON>}}, indicando como parámetro la ruta del archivo \emph{JSON}. El archivo convertido, se guarda en el directorio donde se encuentra la captura original, manteniendo el mismo nombre.
