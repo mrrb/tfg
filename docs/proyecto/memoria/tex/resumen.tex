@@ -2,7 +2,9 @@
 
 El objetivo del presente Trabajo Fin de Grado, consiste en el desarrollo e implementación de un sistema \emph{hardware} capaz de obtener, y posteriormente almacenar, tramas de bus \emph{USB} (Del inglés, \emph{Universal Serial Bus}, o en castellano, Bus Serie Universal). Se busca a su vez, que dicho sistema sea lo más económico posible, utilizando únicamente herramientas y utilidades de código libre.
 
-Para su desarrollo, y tras un estudio previo del estado del arte en cuanto a sistemas de captación y análisis tanto \emph{hardware} como software, se ha utilizado en primer lugar una placa de evaluación que incluye el circuito integrado especializado \emph{USB3300}, encargado de la propia capa física del bus. Esta placa también incluye dos conectores hembra USB, uno de tipo A y el otro de tipo mini-B, a los cuales se conectan ambos extremo del bus a analizar.
+Previamente a su elaboración, se ha realizado un estudio previo del estado del arte en cuanto a sistemas de captación y análisis tanto \emph{hardware} como \emph{software}, observando el elevado precio de estos, reafirmando la necesidad de disponer un sistema de bajo coste.
+
+Para su desarrollo se ha utilizado en primer lugar una placa de evaluación que incluye el circuito integrado especializado \emph{USB3300}, encargado de la propia capa física del bus USB. Esta placa también incluye dos conectores hembra USB, uno de tipo A y el otro de tipo mini-B, a los cuales se conectan ambos extremo del bus a analizar.
 
 Seguidamente, se ha usado la placa de desarrollo \emph{iCEstick}, que entre otros componentes, incluye una \emph{FPGA iCE40HX1k} de la compañía \emph{Lattice} y un conversor de USB a puerto serie \emph{FTDI FT2232HL}. Dicha placa, tiene la función de comunicarse tanto con el integrado anterior encargado de la capa física, como con el equipo de control, siendo este un PC.
 
