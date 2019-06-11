@@ -1,11 +1,9 @@
 \chapter{Procedimiento}
 \label{ch:procedimiento}
 
-%! 
-\noWord[Añadir lo del archivo viejo. Captura Trello? Limpiar]
-
 %* Comprobar
 En el desarrollo del presente TFG se ha utilizado una metodología ágil basada en \emph{Scrum}~\cite{scrumguide}, definida por el director. El trabajo se ha dividido en iteraciones de varias semanas denominadas \emph{sprints}. Las unidades de trabajo se presentan en forma de historias de usuario (\emph{user stories}) que definen mini-proyectos de muy corta duración que aportan valor al proyecto.  Es decir, cada historia de usuario cumple o ayuda a cumplir alguno de los objetivos. Medir el valor percibido corresponde al propietario del producto (\emph{Product Owner}), que participa activamente en la planificación del proceso priorizando las unidades de trabajo.
+
 
 %* Comprobar
 \section{Diferencias con Scrum}
@@ -57,16 +55,56 @@ El proceso de desarrollo está fuertemente ligado a la herramienta \href{https:/
 Todo el proyecto ha sido gestionado desde su inicio con una herramienta de control de versiones distribuido~\cite{scottchaconbenstraub2018} en un repositorio público de GitHub, disponible en \thegitrepo. Cada vez que se completa con éxito una historia de usuario se notifica mediante un comentario en la tarjeta correspondiente. Este comentario tan solo contiene el identificador del paquete de cambios (\emph{commit}) que da por concluida la historia. La evolución del proyecto se puede consultar  en todo momento desde la propia página del repositorio.
 
 
-%!
-\section{Apredizaje previo Verilog, etc...
-Para ob \cite{obijuan:tutorial-fpga}}
+%* Comprobar
+\section{Aprendizaje de funcionamiento y utilización de FPGAs}
+Debido a la utilización de una tecnología de la cual no disponía un conocimiento previo, una fase del TFG se ha centrado en el estudio y aprendizaje de varios aspectos de las FPGAs.
 
+A grandes rasgos, una FPGA se puede considerar como una plataforma con multitud de puertas lógicas y registros biestables, todos ellos dispersos en el propio circuito integrado, y que permiten ser interconectados de forma arbitraria. Este tipo de sistemas, permiten crear en el una infinidad de diseños reprogramables de cualquier complejidad. Otra de sus grandes ventajas, es su gran nivel de paralelización, permitiendo realizar multitud de operaciones sin ningún tipo de relación entre ellas.
 
-%!
+El diseño del circuito interno se realiza mediante un lenguaje descriptor de \emph{hardware}, siendo este posteriormente convertido a un fichero binario (denominado \emph{bitstream}), que contiene toda la configuración interpretable por la FPGA, permitiendo que realice las conexiones deseadas.
+
+Para el presente caso, se ha utilizado el lenguaje descriptor \emph{Verilog}. Se ha seguido un tutorial incremental\cite{obijuan:tutorial-fpga}, en el que los diversos conceptos se han introducido paulatinamente, refinando y mejorando los anteriores.
+
+%* Comprobar
+\section{Uso de \emph{software} libre}
+Durante los cerca de 35 años que llevan existiendo las FPGAs, los fabricantes han mantenido cerrada toda información sobre el \emph{software} y las especificaciones de sus binarios \emph{bitstreams}. Lo que ha permitido que dichos fabricantes tengan un control absoluto sobre el método de diseño que se debe utilizar y los equipos compatibles. Esto ha disminuido la capacidad del desarrollador final de usar FPGAs y cerrado las puertas a nuevos.
+
+Estos últimos años, han empezado a surgir proyectos, que por medio de ingeniería inversa, han permitido poder utilizar con herramientas totalmente libres las FPGA. Un gran hito a destacar es la introducción en el año 2015 del proyecto \emph{IceStorm}, liderado por \emph{Clifford Wolf}.
+
+El uso de \emph{software} libre trae consigo los siguiente beneficios:
+\begin{itemize}
+    \item \textbf{Acceso libre al conocimiento.} Sin depender completamente del fabricante, se dispondría de un gran abanico de fuentes de información de los que poder obtener cualquier conocimiento relacionado, fomentando su estudio y mejora. Todo ello sin variar el resultado del producto.
+
+    \item \textbf{Mayor nivel de participación.} Se puede pasar de sur usuario de los productos, a participar directamente en su evolución y mejora. 
+    
+    \item \textbf{Autonomía.} Los desarrolladores pueden desarrollar sus sistemas sin la imposición de los criterios y requisitos del fabricante.
+
+    \item \textbf{Nuevas aplicaciones.} Al no depender de las previsiones del fabricante, pueden surgir multitud de nuevas aplicaciones sin ningún tipo de restricción.
+\end{itemize}
+
+%* Comprobar
 \section{Problemas encontrados durante la elaboración del proyecto}
+Durante el desarrollo del proyecto, han surgido varios problemas tanto intrínsecos como extrínsecos, los cuales han tenido que ser resueltos o mitigados de diversas formas. 
 
+\subsection{Fallos intrínsecos}
+\begin{itemize}
+    \item \textbf{Metodología inicial.} \\
+    Durante las primeras iteraciones de desarrollo de módulos, no se había definido una metodología a utilizar, lo que se supuso ineficiencias y errores continuos. Tras definir la metodología expuesta en el capitulo~\ref{ch:contribuciones} y replantear varias iteraciones, se pudo continuar sin problema alguno.
+    
+    \item \textbf{Inicialización de bloques BRAM.} \\
+    Debido un entendimiento escaso del método de Inicialización de los bloques BRAM de la FGPA, se produjeron errores al almacenar datos. Tras una lectura de la librería de referencia\cite{lattice:ice-library} del fabricante \emph{Lattice}, se pudo solucionar el problema.
+\end{itemize}
 
-\warning{Es posible detallar en este capítulo las iteraciones desarrolladas.  Otra posibilidad es comentar brevemente los problemas encontrados y en el siguiente capítulo explicar los resultados globales.}
+\subsection{Fallos extrínsecos}
+Debido al continuo desarrollo de la herramienta de sintetizado \emph{Yosys}, han surgido en varias ocasiones varios errores grabes que han obligado a pausar el proyecto, o a buscar alternativas, lo que ha supuesto un trabajo adicional no medible en los resultados finales. Hay que destacar los siguientes.
+\begin{itemize}
+    \item \textbf{Sintetizados incorrectos.} \\
+    En las primeras versiones de \emph{Yosys} usadas, en varias ocasiones, al crear el binario, este no funcionaba completamente, teniendo que probar distintas opciones de síntesis.
+
+    \item \textbf{Error con las puertas triestato.} \\
+    En una de las actualizaciones de \emph{Yosys} que fueron surgiendo a lo largo del desarrollo del TFG, a la hora de inicializar los puertos de la FPGA de forma bidireccionales, es decir, con entradas/salidas triestato, el sintetizado fallaba. Este problema se tuvo que solventar inicializando dichos puertos de forma manual.
+\end{itemize}
+
 
 % \chapter{Procedimiento}
 % \label{ch:procedimiento-plantilla}
