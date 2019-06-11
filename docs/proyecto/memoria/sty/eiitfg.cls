@@ -71,6 +71,7 @@
 \usepackage[nottoc,numbib]{tocbibind}
 \usepackage{dirtree}
 \usepackage{float} % Absolute position
+\usepackage{afterpage}
 
 \usepackage{caption}
 \captionsetup{
