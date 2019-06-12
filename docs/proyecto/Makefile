@@ -12,7 +12,7 @@ TEX_MAIN := ./$(TEX_NAME).tex
 DOT_FOLDERS := $(addprefix $(SRC_DIR)/$(FIG_DIR)/, $(DOT_FOLDERS))
 ###
 
-all: $(OUT_NAME)
+all: pdf
 
 $(OUT_NAME):
 	@cd $(SRC_DIR) && \
@@ -24,6 +24,8 @@ preview: dot_eps
 	mkdir -p $(BUILD_DIR) && \
 	latexmk -bibtex -pvc -view=pdf -lualatex -time -synctex=1 -outdir=./$(BUILD_DIR) -shell-escape $(TEX_MAIN)
 	# latexmk -pdf -pvc -view=pdf -f -new-viewer -time -synctex=1 -outdir=./$(BUILD_DIR) -shell-escape $(TEX_MAIN)
+
+pdf: $(OUT_NAME)
 
 dot_eps:
 	$(foreach i, $(DOT_FOLDERS), \
@@ -39,4 +41,4 @@ view: $(OUT_NAME)
 clean:
 	rm -fdr ./$(SRC_DIR)/$(BUILD_DIR)
 
-.PHOYNY: all clean view preview dot_eps
+.PHOYNY: all clean view preview dot_eps pdf
