@@ -2,50 +2,73 @@
 \label{ch:introduccion}
 
 %* Listo
-Durante estas dos ultimas décadas, el bus USB\cite{specification2000revision} (siglas en ingles de \emph{Universal Serial Bus} o Bus Serie Universal en español) se ha impuesto como uno de los grandes pilares de la comunicación en la informática moderna, no solo en productos de grandes masas (como dispositivos de almacenamiento o periféricos HID\cite{usb:hid}), sino también en sectores más complejos y robustos como lo son el militar o el industrial.
+Durante estas dos ultimas décadas, el bus USB\cite{specification2000revision} (\emph{Universal Serial Bus}) se ha impuesto como uno de los grandes pilares de la comunicación en la informática moderna, no solo en productos de grandes masas (como dispositivos de almacenamiento o periféricos HID\cite{usb:hid}), sino también en sectores más complejos y robustos como lo son el militar o el industrial.
 
 %* Listo
 Al ser un bus tan ampliamente utilizado, existen multitud de ocasiones en las que sería de gran interés poder disponer de los datos que circulan por él, ya sea para fines de seguridad\cite{NISSIM2017675}, control, ingeniería inversa o búsqueda y solución de problemas. Por ello, es de gran interés disponer de sistemas capaces de realizar dicha tarea de forma económica y sencilla.
 
-%! Agun comentario mas, hw? 
-
 %* Listo
 Se considera entonces la elaboración del presente proyecto, en el que se plantea un sistema de captación de tramas USB por \textit{hardware} que sea capaz como mínimo de obtener señales tanto \textit{Low Speed} como \textit{Full Speed}, todo ello a un coste bajo que pueda suplir la demanda existente, y utilizando en gran medida herramientas y utilidades de código libre.
 
-%!
+%* Listo
 \section{Organización de la memoria} 
 La organización de este documento es conforme al anexo TFG-08b\cite{tfg08b} de la Normativa Trabajo Fin de Grado de la Escuela de Ingeniería Industrial de Toledo, de la Universidad de Castilla-La Mancha, aprobada en Junta de Escuela el 23 de junio de 2016. Se descompone en los siguientes capítulos.
 
-%!
+%* Listo
 \begin{description}
-    \item[Capítulo~\ref{ch:introduccion}] Presente capitulo. Se introduce el problema a tratar.
-    \item[Capítulo~\ref{ch:antecedentes}] Se analizan los antecedentes y el estado del arte de los dispositivos de captura USB.
-    \item[Capítulo~\ref{ch:objetivos}] Se enumeran y justifican los objetivos del proyecto, estableciendo sus limites intrínsecos y extrínsecos.
-    \item[Capítulo~\ref{ch:contribuciones}] Se enumeran las principales contribuciones y aportaciones %!
-    \item[Capítulo~\ref{ch:procedimiento}] Se describe la metodología de desarrollo empleada durante la ejecución del TFG.
-    \item[Capítulo~\ref{ch:resultados}] Se describen en detalle las pruebas realizadas y los resultados obtenidos.
-    \item[Capítulo~\ref{ch:discusion-resultados}] Se discuten los resultados en relación a los objetivos del proyecto. %!
-    \item[Capítulo~\ref{ch:conclusiones}] Se recopilan las principales conclusiones del proyecto y posibles trabajos futuros.
-    \item[Anexos] Se complementa la información del cuerpo del documento con información técnica útil para reproducir los resultados, pero innecesaria para comprender en su totalidad el trabajo realizado.
+    %* Listo
+    \item[Capítulo~\ref{ch:introduccion}]
+    Presente capitulo. Se introduce el problema a tratar.
+    
+    %* Listo
+    \item[Capítulo~\ref{ch:antecedentes}]
+    Analiza los antecedentes y el estado del arte de los dispositivos de captura USB.
+    
+    %* Listo
+    \item[Capítulo~\ref{ch:objetivos}]
+    Enumera y justifica los objetivos del proyecto.
+    
+    %* Listo
+    \item[Capítulo~\ref{ch:contribuciones}]
+    Enumera las principales contribuciones y aportaciones en este TFG.
+    
+    %* Listo
+    \item[Capítulo~\ref{ch:procedimiento}]
+    Describe las directivas de desarrollo empleadas durante la ejecución del TFG.
+    
+    %* Listo
+    \item[Capítulo~\ref{ch:resultados_hw}]
+    Describe en detalle las pruebas realizadas y los resultados obtenidos de los elementos \emph{hardware} del sistema.
+    
+    %* Listo
+    \item[Capítulo~\ref{ch:resultados_sw}]
+    Describe en detalle los resultados obtenidos de los elementos \emph{software} del sistema.
+    
+    %* Listo
+    \item[Capítulo~\ref{ch:conclusiones}]
+    Recopila las principales conclusiones del proyecto y posibles trabajos futuros.
+    
+    %* Listo
+    \item[Anexo~\ref{ch:diagramas}]
+    Muestra gráficamente las relaciones entre los módulos diseñados.
+    
+    %* Listo
+    \item[Anexo~\ref{ch:maquinas-estados}]
+    Muestra los esquemas de las maquinas de estados internas de los módulos diseñados.
+    
+    %* Listo
+    \item[Anexo~\ref{ch:simulacion-final}]
+    Muestra el resultado de la simulación final del sistema.
+    
+    %* Listo
+    \item[Anexo~\ref{ch:manual}]
+    Detalla los procedimientos a seguir para la instalación y utilización del sistema.
 \end{description}
 
-% %!
-% \begin{description}
-%     \item[Capítulo~\ref{ch:introduccion}. Introducción.] Presente capitulo. Se introduce el problema a tratar.
-%     \item[Capítulo~\ref{ch:antecedentes}. Antecedentes.] Se analizan los antecedentes y el estado del arte de los dispositivos de captura USB.
-%     \item[Capítulo~\ref{ch:objetivos}. Objetivos.] Se enumeran y justifican los objetivos del proyecto, estableciendo sus limites intrínsecos y extrínsecos.
-%     \item[Capítulo~\ref{ch:contribuciones}. Contribuciones.] Se enumeran las principales contribuciones y aportaciones %!
-%     \item[Capítulo~\ref{ch:procedimiento}. Procedimientos.] Se describe la metodología de desarrollo empleada durante la ejecución del TFG.
-%     \item[Capítulo~\ref{ch:resultados}. Resultados.] Se describen en detalle las pruebas realizadas y los resultados obtenidos.
-%     \item[Capítulo~\ref{ch:discusion-resultados}. Discusión de resultados.] Se discuten los resultados en relación a los objetivos del proyecto. %!
-%     \item[Capítulo~\ref{ch:conclusiones}. Conclusiones.] Se recopilan las principales conclusiones del proyecto y posibles trabajos futuros.
-%     \item[Anexos] Se complementa la información del cuerpo del documento con información técnica útil para reproducir los resultados, pero innecesaria para comprender en su totalidad el trabajo realizado.
-% \end{description}
 
-
-%* Comprobar
+%* Listo
 \section{Repositorio de información}
-Todo el material generado durante la ejecución de este proyecto está disponible tanto en el disco adjunto, como en \thegitrepo{}. Se incluye el código \LaTeX{} del presente documento, el código fuente de los programas realizados, y todos los datos generados en la evaluación de resultados.
+Todo el material generado durante la ejecución de este proyecto está disponible tanto en el disco adjunto, como en \thegitrepo{}. Se incluye el código \LaTeX{} del presente documento, el código fuente de los programas y módulos realizados, y todos los datos generados en la evaluación de resultados.
 
 
 
