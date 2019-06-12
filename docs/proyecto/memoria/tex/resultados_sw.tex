@@ -1,13 +1,10 @@
 \chapter{Resultados \emph{software}}
 \label{ch:resultados_sw}
 
-% %* Comprobar
-% En el siguiente capitulo se van a comentar los diversos resultados obtenidos en el presente TFG, tanto los relacionados con la FPGA (\emph{hardware} usado, simulaciones y sintetizado final), como con el \emph{software} de control. Se incluyen además, varias imágenes que complementen las explicaciones del mismo.
+%* Comprobar
+Aun teniendo más importancia la parte \emph{hardware} comentada en el capitulo~\ref{ch:resultados_hw}, el sistema no sería funcional sin el \emph{software}, que utilizando los recursos creados, pueda recibir y almacenar la captura. Además, se han creado varias utilidades que han ayudado en el diseño \emph{hardware}.
 
-%!
-Aun teniendo más importancia la parte \emph{hardware} comentada en el capitulo~\ref{ch:resultados_hw}, el sistema no sería funcional sin una aplicación que utilice los recursos creados para recibir y almacenar la captura. Por eso, se ha creado una aplicación que incluye además varias opciones de configuración.
-
-%! Revisar
+%* Comprobar
 \section{Aplicaciones de apoyo}
 A medida que se ha ido desarrollando la parte \emph{hardware}, se han creado varias utilidades en lenguaje \emph{Python}, con las que realizar cálculos de forma rápida o con las que comprobar el funcionamiento de ciertas partes del sistema. Dichas aplicaciones se encuentran en el directorio \emph{.\textbackslash ICEstick\textbackslash USB3300\_sniffer\textbackslash tools\textbackslash} del repositorio. \\
 Hay que destacar las siguientes:
@@ -34,9 +31,9 @@ $ ./get_divider.py -b 12000000 9600
   10 [8.533333333333334e-05s] - [0.00010416666666666667s] - 11 [0.00017066666666666668s]          
     \end{lstlisting}
     
-    %! Revisar
+    %* Comprobar
     \item \textbf{Utilidad de generación de baudios (\emph{gen\_bauds.py}).} \\
-    Pequeña aplicación que, para los $baudios$ más comunes, genere varias definiciones de \emph{Verilog}, a usar por el módulo encargado de generar el reloj de baudios. En el listado \ref{src:utilidad_baudios_out} se muestra un ejemplo de la salida de la aplicación ante un reloj de $60MHz$.
+    Pequeña aplicación que, para los $baudios$ más comunes, genere varias definiciones en lenguaje \emph{Verilog} a usar por el módulo encargado de generar el reloj de baudios. En el listado \ref{src:utilidad_baudios_out} se muestra un ejemplo de la salida de la aplicación ante un reloj de $60MHz$.
 %     \\ \noWord[Borrar listado??? La verdad, es algo inutil ponerlo]
     \begin{lstlisting}[
         caption={Ejemplo de la utilidad de generación de baudios ante \emph{60 MHz} de entrada.},
@@ -64,12 +61,12 @@ $ ./gen_bauds.py
   `define B110    545455
     \end{lstlisting}
     
-    %! Revisar
+    %* Comprobar
     \item \textbf{Utilidad de control serie (\emph{serial\_control.py}).} \\
     Aplicación, que usando una librería encargada de controlar puertos serie, realiza varias comprobaciones del protocolo creado. Esta se puede configurar para abrir el puerto serie a cualquier velocidad, y poder enviar comandos de prueba.
 \end{enumerate}
 
-%!
+%! Revisar
 \section{Información de la aplicación}
 Tal como se ha comentado al principio de este capítulo, aun teniendo mayor carga la parte \emph{hardware}, es esencial implementar una aplicación que se comunique con la FPGA y permita su funcionamiento.
 
@@ -94,79 +91,69 @@ La aplicación se ha dividido de la siguiente manera:
         \centering
         \subfigure[Operación de escritura]{
             \includegraphics[width=100mm]{menu_app/escrituraB.png}
-            \label{fig:matriz-hw-resto:cables}
+            \label{fig:matriz-app-menu:escritura}
         }
         \subfigure[Operación de lectura]{
             \includegraphics[width=100mm]{menu_app/lecturaB.png}
-            \label{fig:matriz-hw-resto:botones}
+            \label{fig:matriz-app-menu:lectura}
         } \\
         \caption{Ejemplo de escritura de registro y su posterior lectura usando el menú de la aplicación} 
         \label{fig:matriz-app-menu}
     \end{figure}
     
-    %* Comprobar
+    %! Revisar
     \item \textbf{Hilo encargado de gestionar la comunicación con la \emph{FPGA}, así como almacenar la trama capturada.} \\
-    Este hilo maneja toda la comunicación serie entre la FPGA, ya sea para enviar comandos, o para recibir los datos USB capturados. Al finalizar el proceso de recepción de datos, es este hilo el encargado también de guardar la captura en un archivo para su posterior análisis.
+    Este hilo maneja toda la comunicación serie entre la FPGA, ya sea para enviar comandos, o para recibir los datos USB capturados. Hace uso de la librería \emph{libserialport}\footnote{Librería compatible con sistemas operativos Linux, Mac OS X, FreeBSD, Windows y Android. Página web de referencia: \url{https://sigrok.org/wiki/Libserialport}} para establecer una comunicación por el puerto serie.
+
+    Al finalizar el proceso de recepción de datos, es este hilo el encargado también de guardar la captura en un archivo para su posterior análisis.
+
+    \noWord[Añadir figura flujo del papel]
 \end{enumerate}
 
 
 %!
 \section{Información del archivo generado}
-Se ha elegido almacenar la información capturada en un archivo formato JSON\footnote{Formato de texto, que permite almacenar información de forma estructurada.}. Este archivo, posee una estructura fi
+Se ha elegido almacenar la información capturada en un archivo formato \emph{JSON}\footnote{Formato de texto, que permite almacenar información de forma estructurada.}.
+Este archivo, posee una estructura fi
 
 \begin{figure}[!hbtp]
     \centering
-    \begin{minipage}{5cm}
+    \begin{minipage}{6cm}
         \dirtree{%
-            .1 date.
-            .1 USB\_data.
-            .2 captura[0].
-            .3 TxCMD.
-            .3 DataLen.
-            .3 data.
-            .4 data[0].
-            .4 \ldots.
-            .4 data[DataLen-1].
-            .2 \ldots.
-            .2 captura[n].
+            .1 dump.json.
+            .2 date.
+            .2 USB\_data.
+            .3 captura[0].
+            .4 TxCMD.
+            .4 DataLen.
+            .4 data.
+            .5 data[0].
+            .5 \ldots.
+            .5 data[DataLen-1].
+            .3 \ldots.
+            .3 captura[n].
         }
     \end{minipage}
-    \caption{Estructura del archivo JSON donde se almacena la captura}
+    \caption{Estructura del archivo \emph{JSON} donde se almacena la captura}
     \label{fig:tree-json}
 \end{figure}
 
 %!
-\section{Conversión de JSON a PCAP}
-Para poder analizar la captura en la aplicación de analisis \emph{Wireshark}, se ha creado otra utilidad, que a partir del archivo JSON generado anteriormente lo transforma a PCAP.
+\section{Conversión de \emph{JSON} a \emph{PCAP}}
+Para poder analizar la captura en la aplicación de análisis \emph{Wireshark}, se ha creado otra utilidad, que a partir del archivo \emph{JSON} generado anteriormente lo transforma a \emph{PCAP}.
 Su uso 
 
 \begin{lstlisting}[
     caption={Ejemplo de la utilidad de generación de baudios ante \emph{60 MHz} de entrada.},
-    label=src:utilidad_baudios_out]
-$ ./gen_bauds.py
-`define B921600 66
-`define B460800 131
-`define B256000 235
-`define B230400 261
-`define B153600 391
-`define B128000 469
-`define B115200 521
-`define B57600  1042
-`define B56000  1072
-`define B38400  1563
-`define B28800  2084
-`define B19200  3125
-`define B14400  4167
-`define B9600   6250
-`define B4800   12500
-`define B2400   25000
-`define B1200   50000
-`define B600    100000
-`define B300    200000
-`define B110    545455
+    label=src:test]
 \end{lstlisting}
 
-
+\begin{figure}[!hbt]
+    \centering
+    \scalebox{0.8} {\input{diagramas_flujo/app.tex}}
+    \caption{Diagrama de funcionamiento de la aplicación}
+    \label{fig:flujo_app}
+\end{figure}
 
 
 % \chapter{Resultados}

@@ -43,11 +43,11 @@ En al figura \ref{fig:sistema_final} se muestra el resultado \emph{hardware} del
     \item \textbf{Módulo encargado de la capa física USB.} \\
     PCB que incorpora el circuito integrado \emph{USB3300\cite{icestickmanual}} del fabricante \emph{Microchip}. Este se encarga de manejar la capa física del bus USB, comunicándose con la FPGA por medio del protocolo ULPI\cite{ulpi-specs}.
 
-    En al figura~\ref{fig:USB3300_board}, se aprecia que dicha PCB incluye dos conectores USB, uno tipo A hembra, y otro tipo mini-B hembra. Sus señales de datos están interconectadas, por lo que es en este punto donde ambos extremos del bus a analizar se unen, pudiendo capturar la trama sin interrumpir la conexión debido a que, el integrado \emph{USB3300} se puede configurar para mantener sus patillas de datos en alta impedancia.
+    En al figura~\ref{fig:USB3300_board}, se aprecia que dicha PCB incluye dos conectores USB, uno tipo A hembra, y otro tipo mini-B hembra. Sus señales de datos están interconectadas, por lo que es en este punto donde ambos extremos del bus a analizar se unen, pudiendo capturar la trama sin interrumpir la conexión, debido a que el integrado \emph{USB3300} se puede configurar para mantener sus patillas de datos en alta impedancia.
 
     \begin{figure}[htbp]
         \centering
-        \includegraphics[width=50mm]{hw_final/USB3300_board_cut.jpg}
+        \includegraphics[width=40mm]{hw_final/USB3300_board_cut.jpg}
         \caption{PCB con el integrado \emph{USB3300}}
         \label{fig:USB3300_board}
     \end{figure}
@@ -153,7 +153,11 @@ Módulo que divide un reloj de entrada, tal que la frecuencia de salida sea $f_{
     \label{fig:clk_div_esquema}
 \end{figure}
 
-A partir de él se generan dos relojes, uno basado en el reloj de $12MHz$ procedente de la placa \emph{iCEstick} (señal llamada clk\_div\_ice) y otro a partir del reloj de $60MHz$ del módulo USB3300 (señal  llamada clk\_div\_ULPI). Ambos relojes se dividen 24 veces, obteniendo para el primero una frecuencia de $0.7Hz$ (periodo de $1.4s$) y $3.6Hz$ (periodo de $0.3s$) para el segundo. Su única funcionalidad es la de  comprobar el funcionamiento del sistema por medio de los LEDs integrados en la placa.
+A partir de él se generan tres relojes. Los dos primeros se basan en el reloj de $12MHz$ procedente de la placa \emph{iCEstick}, dividiéndolo por un lado 24 veces para obtener la señal \emph{clk\_div\_ice} (frecuencia de $0.7Hz$ y periodo de $1.4s$), y por otro lado 19 veces para obtener la señal \emph{clk\_debounce} (frecuencia de $22.9Hz$ y periodo de $43ms$). El tercer reloj se basa en el reloj de $60MHz$ del módulo \emph{USB3300}, y es dividido 24 para obtener la señal \emph{clk\_div\_ULPI} (frecuencia de $3.6Hz$ y periodo de $0.3s$).
+
+Los relojes \emph{clk\_div\_ice} y \emph{clk\_div\_ULPI} tienen la única funcionalidad de comprobar el funcionamiento del sistema por medio de los LEDs integrados en la placa. El reloj \emph{clk\_debounce} es usado en el módulo \emph{btn\_debouncer}, comentado más adelante.
+
+% A partir de él se generan dos relojes, uno basado en el reloj de $12MHz$ procedente de la placa \emph{iCEstick} (señal llamada clk\_div\_ice) y otro a partir del reloj de $60MHz$ del módulo USB3300 (señal  llamada clk\_div\_ULPI). Ambos relojes se dividen 24 veces, obteniendo para el primero una frecuencia de $0.7Hz$ (periodo de $1.4s$) y $3.6Hz$ (periodo de $0.3s$) para el segundo. Su única funcionalidad es la de  comprobar el funcionamiento del sistema por medio de los LEDs integrados en la placa.
 
 \begin{lstlisting}[language=Verilog,
     caption={Parámetros, entradas y salidas del módulo clk\_div.},
@@ -326,9 +330,9 @@ En la figura~\ref{fig:shift_esquema} se muestra, mostrando sus señales, el func
 \end{lstlisting}
 
 
-%* Comprobar
+%* Listo
 \subsection{Módulo de comunicación serie (\emph{UART})}
-Sistema capaz de generar y recibir señales compatibles con una comunicación bidireccional serie 8N1\footnote{8N1: $8~bits$ de datos, sin $bit$ de paridad y un $bit$ de parada}, consiguiendo una tasa de transferencia estable máxima de $3750000~bauds$. Además, tanto para la lectura coma para la escritura, se han incorporado unos \emph{buffers} basados en la memoria FIFO anterior de $512~bytes$ cada uno. En el listado~\ref{src:resultados-modulos-uart} se plasman los parámetros, entradas y salidas del módulo.
+Sistema capaz de generar y recibir señales compatibles con una comunicación bidireccional serie 8N1\footnote{8N1: $8~bits$ de datos, sin $bit$ de paridad y un $bit$ de parada}, consiguiendo una tasa de transferencia estable máxima de $3750000~bauds$. Además, tanto para la lectura coma para la escritura, se han incorporado unos \emph{buffers} basados en la memoria FIFO anterior, de $512~bytes$ cada uno. En el listado~\ref{src:resultados-modulos-uart} se plasman los parámetros, entradas y salidas del módulo.
 
 \begin{lstlisting}[language=Verilog,
     caption={Parámetros, entradas y salidas del módulo UART.},
@@ -364,39 +368,31 @@ Sistema capaz de generar y recibir señales compatibles con una comunicación bi
 
 Este módulo se ha dividido a su vez en los siguientes submódulos.
 \begin{itemize}
-    %* Comprobar
+    %* Listo
     \item \textbf{Submódulo de recepción serie (\emph{UART\_Rx}).} \\
     Está continuamente esperando a que la señal de entrada de datos serie pase de un nivel alto a otro bajo, y una vez detectada esa caída, empezar a almacenar los $bits$ que conforman la trama a la velocidad dictada por el reloj de baudios. En la figura~\ref{fig:flujo_uart_rx} se muestra su flujo de funcionamiento.
 
     \begin{figure}[!hbt]
         \centering
         \scalebox{0.85} {\input{diagramas_flujo/UART_Rx.tex}}
-        \caption{Diagrama de funcionamiento del submódulo de recepción serie}
+        \caption{Diagrama de funcionamiento del submódulo de recepción serie (\emph{UART\_Rx})}
         \label{fig:flujo_uart_rx}
     \end{figure}
     
-    %* Comprobar
+    %* Listo
     \item \textbf{Submódulo de emisión serie (\emph{UART\_Tx}).} \\
     En este caso, cuando internamente se quiera enviar un mensaje, se exportan sucesivamente los $10bits$ que conforman la trama a la velocidad dada por el reloj de baudios. En la figura~\ref{fig:flujo_uart_tx} se muestra su flujo de funcionamiento.
     \begin{figure}[!hbt]
         \centering
         \scalebox{0.85} {\input{diagramas_flujo/UART_Tx.tex}}
-        \caption{Diagrama de funcionamiento del submódulo de emisión serie}
+        \caption{Diagrama de funcionamiento del submódulo de emisión serie (\emph{UART\_Tx})}
         \label{fig:flujo_uart_tx}
     \end{figure}
 \end{itemize}
-% \newpage %!
 
-
-
-%! Figuras
+%* Comprobar
 \subsection{Módulo de comunicación ULPI}
 Sistema, que de forma síncrona al reloj de $60MHz$ generado por el integrado \emph{USB3300}, es capaz tanto de procesar como de generar señales ULPI, tal como se contempla en su especificación\cite{ulpi-specs}. En el listado~\ref{src:resultados-modulos-ulpi} se plasman los parámetros, entradas y salidas del módulo.
-
-De todos los modos de funcionamiento de dicho bus, y tal como se ha comentado en el capitulo \ref{ch:objetivos} de objetivos, se han creado unicamente submódulos encargados de leer y escribir registros, y el modo de recibir datos USB.
-
-% \newpage %!
-En la siguiente lista se nombran los diversos submódulo que lo forman, inicializados posteriormente todos ellos en un mismo archivo, siguiendo el diagrama mostrado en la figura~\ref{fig:flujo_ulpi_main}.
 
 \begin{lstlisting}[language=Verilog,
     caption={Entradas y salidas del módulo ULPI.},
@@ -414,7 +410,7 @@ En la siguiente lista se nombran los diversos submódulo que lo forman, iniciali
  *  - ADDR. Dirección de 6bits que indica donde se van a escribir/leer los datos.
  *  - REG_VAL_W. Valor a ser escrito en el registro ULPI.
  *  - DATA_re. Señal que extrae un byte de los datos de captura.
- *  - INFO_re. Señal que extrae un paquete con la información de la ultima captura.
+ *  - INFO_re. Señal que extrae un paquete con la información de la última captura.
  *  - DIR. Señal del bus ULPI (DIRection).
  *  - NXT. Señal del bus ULPI (NeXT).
  *  - DATA_in. Señal de datos de entrada del bus ULPI.
@@ -439,11 +435,14 @@ En la siguiente lista se nombran los diversos submódulo que lo forman, iniciali
  *  - DATA_out. Señal de datos de salida del bus ULPI.
  *  - STP. Señal del bus ULPI (SToP).
  *  - U_RST. Señal de reinicio del integrado USB3300.
- *
  */
 \end{lstlisting}
 
-\begin{figure}[!hbt]
+De todos los modos de funcionamiento de dicho bus, y tal como se ha comentado en el capitulo \ref{ch:objetivos} de objetivos, se han creado unicamente los submódulos encargados de leer y escribir registros, y el modo de recibir datos USB.
+
+En la siguiente lista se nombran los diversos submódulo que lo forman, inicializados posteriormente todos ellos en un mismo archivo siguiendo el diagrama mostrado en la figura~\ref{fig:flujo_ulpi_main}.
+
+\begin{figure}[hbtp]
     \centering
     \scalebox{0.8} {\input{diagramas_flujo/ULPI.tex}}
     \caption{Diagrama de funcionamiento de la unión de módulos ULPI}
@@ -454,30 +453,30 @@ En la siguiente lista se nombran los diversos submódulo que lo forman, iniciali
     %* Comprobar
     \item \textbf{Submódulo de escritura de registros (\emph{ULPI\_REG\_WRITE}).} \\
     Dándole una dirección de $6bits$ y un $byte$ de datos, este módulo genera las señales necesarias para la escritura de registros. En la figura~\ref{fig:flujo_ulpi_write} se muestra su flujo de funcionamiento.
-    \begin{figure}[!hbt]
+    \begin{figure}[hbtp]
         \centering
         \scalebox{0.8} {\input{diagramas_flujo/ULPI_REG_WRITE.tex}}
-        \caption{Diagrama de funcionamiento del submódulo de escritura de registros ULPI}
+        \caption{Diagrama de funcionamiento del submódulo de escritura de registros ULPI (\emph{ULPI\_REG\_WRITE})}
         \label{fig:flujo_ulpi_write}
     \end{figure}
     
     %* Comprobar
     \item \textbf{Submódulo de lectura de registros (\emph{ULPI\_REG\_READ}).} \\
     Dándole en esta ocasión únicamente la dirección de $6bits$, este genera las señales necesarias para que el integrado \emph{USB3300} envíe el valor del registro solicitado, valor que debe ser leído por este modulo. En la figura~\ref{fig:flujo_ulpi_read} se muestra su flujo de funcionamiento.
-    \begin{figure}[!hbt]
+    \begin{figure}[hbtp]
         \centering
         \scalebox{0.8} {\input{diagramas_flujo/ULPI_REG_READ.tex}}
-        \caption{Diagrama de funcionamiento del submódulo de lectura de registros ULPI}
+        \caption{Diagrama de funcionamiento del submódulo de lectura de registros ULPI (\emph{ULPI\_REG\_READ})}
         \label{fig:flujo_ulpi_read}
     \end{figure}
     
     %* Comprobar
     \item \textbf{Submódulo de obtención de datos USB (\emph{ULPI\_RECV}).} \\
     Cada vez que el integrado \emph{USB3300} quiera enviar una captura de datos, pone a nivel alto la señal DIR y empieza a transmitir los datos. Este módulo está continuamente esperando dicho cambio, a partir del cual obtiene, clasifica y almacena los datos entrantes. En la figura~\ref{fig:flujo_ulpi_recv} se muestra su flujo de funcionamiento.
-    \begin{figure}[!hbt]
+    \begin{figure}[hbtp]
         \centering
         \scalebox{0.8} {\input{diagramas_flujo/ULPI_RECV.tex}}
-        \caption{Diagrama de funcionamiento del submódulo de recepción USB}
+        \caption{Diagrama de funcionamiento del submódulo de recepción USB (\emph{ULPI\_RECV})}
         \label{fig:flujo_ulpi_recv}
     \end{figure}
 \end{itemize}
@@ -505,7 +504,7 @@ Siempre que se desee ejecutar un comando en el sistema de captura, el PC envía 
     \end{tabular}
 \end{table}
 
-Estos $bytes$, tras ser recibidos por el módulo de comunicación serie, son recogidos por este módulo, el cual los clasifica y almacena hasta su ejecución.
+Estos $bytes$, tras ser recibidos por el módulo de comunicación serie, son recogidos por este módulo, el cual los clasifica y almacena hasta su ejecución. En el listado~\ref{src:resultados-modulos-ulpi-op} se plasman los parámetros, entradas y salidas del módulo.
 
 \begin{lstlisting}[language=Verilog,
     caption={Entradas y salidas del módulo ULPI\_op.},
@@ -547,9 +546,17 @@ Por otro lado, como las pulsaciones del usuario tienen una duración mucho mayor
 
 %!
 \subsection{Módulo de control maestro (\emph{main\_controller})}
-Para el correcto funcionamiento del sistema, todos los módulos deben trabajar de forma coordiana, sin interferirse mutuamente. Por eso, se ha implementado este módulo, que 
-
 Los módulos anteriormente explicados, no poseen relación entre ellos, por tanto necesitan un módulo extra encargado de temporizar y distribuir que tareas deben realizar.
+
+Se han pririzados las tareas de la siguiente manera:
+\begin{enumerate}
+    \item Comando de activacion/desactivacion de envío de datos.
+    \item Comando de envio del ultimo registro leido.
+    \item Comando de escritura de registro.
+    \item Comando de lectura de registro.
+    \item Envio de datos de captura.
+    \item Byte de prueba.
+\end{enumerate}
 
 % \noWord[Borrar figura, no la termines, no es útil.]
 % \begin{figure}[!hbt]
@@ -561,12 +568,17 @@ Los módulos anteriormente explicados, no poseen relación entre ellos, por tant
 
 %* Listo
 \section{Simulaciones finales}
-Con el objetivo de eliminar posibles errores capaces de dañar los propios componentes \emph{hardware}, y para comprobar el correcto funcionamiento del sistema, se han realizado diversas pruebas previas al sintetizado y utilización de la configuración final. La grafica resultante de dicha simulación se puede ver en el anexo~\ref{ch:simulacion-final}.
+Con el objetivo de eliminar posibles errores capaces de dañar los propios componentes \emph{hardware}, y para comprobar el correcto funcionamiento del sistema, se han realizado diversas pruebas previas al sintetizado y utilización de la configuración final. Las gráficas resultantes de las simulaciones se pueden ver en el anexo~\ref{ch:simulacion-final}.
 
 \begin{enumerate}
     %* Listo
-    \item \textbf{Pruebas de botones auxiliares.} \\
-    Se simulan las pulsaciones de los botones externos de la \emph{FPGA}, produciendo un reinicio con el primero, y un envío de un $byte$ por el puerto serie con el segundo.
+    \item \textbf{Prueba del botón auxiliar de reinicio.} \\
+    Se simula la pulsación del botón externo de reinicio, poniendo el sistema en su estado inicial.
+    
+    %* Listo
+    \item \textbf{Prueba del botón auxiliar de \emph{test}.} \\
+    Se simula la pulsación del botón externo de \emph{test}, produciendo un envío de un $byte$ de prueba por el puerto serie.
+    % Se simulan las pulsaciones de los botones externos de la \emph{FPGA}, produciendo un reinicio con el primero, y un envío de un $byte$ por el puerto serie con el segundo.
 
     %* Listo
     \item \textbf{Prueba de lectura de registro.} \\
@@ -602,15 +614,15 @@ Con el objetivo de eliminar posibles errores capaces de dañar los propios compo
 \end{enumerate}
 
 
-%!
-\section{Información del sintetizado final}
-INFO??
+% %!
+% \section{Información del sintetizado final}
+% INFO??
 
-\begin{itemize}
-    \item Utilizado 818 de 1280 (63\%) celdas lógicas de la FPGA.
-    \item Utilizados los 16 bloques de RAM disponible en la FPGA.
-    \item El circuito interno lógico interno encargado del bus ULPI soporta una frecuencia de trabajo máxima de $79.05MHz$, por lo que supera perfectamente la velocidad mínima mínima de $60MHz$.
-\end{itemize}
+% \begin{itemize}
+%     \item Utilizado 818 de 1280 (63\%) celdas lógicas de la FPGA.
+%     \item Utilizados los 16 bloques de RAM disponible en la FPGA.
+%     \item El circuito interno lógico interno encargado del bus ULPI soporta una frecuencia de trabajo máxima de $79.05MHz$, por lo que supera perfectamente la velocidad mínima mínima de $60MHz$.
+% \end{itemize}
 
 % \chapter{Resultados}
 % \label{ch:resultados-plantilla}
