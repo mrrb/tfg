@@ -1,0 +1,83 @@
+\begin{tikzpicture}[auto]
+    % Config
+    \tikzFlow
+
+    % Place nodes
+    \node [flowStart] (start) {Inicio};
+    \node [flowBase, below of=start] (idle) {Reposo};
+
+    \node [flowDecision] at ($ (idle)+(-5.1,-2) $) (op) {Nuevo comando del usuario?};
+    \node [flowDecision, below of=op] (config) {Operación de configuración de puerto?};
+    \node [flowDecision, below of=config] (open) {Operación de apertura de puerto?};
+    \node [flowDecision, below of=open] (close) {Operación de cerrado de puerto?};
+    \node [flowDecision, below of=close] (read) {Operación de lectura de registro?};
+    \node [flowDecision, below of=read] (write) {Operación de escritura de registro?};
+    \node [flowDecision, below of=write] (toggle) {Operación de activación/desactivación de envío de datos?};
+    \node [flowDecision, below of=toggle] (exit) {Cerrado del programa?};
+    
+    \node [flowBase] at ($ (config)+(4.5,0) $) (doConfig) {Configuración de puerto};
+    \node [flowBase] at ($ (open)+(4.5,0) $) (doOpen) {Apertura de puerto};
+    \node [flowBase] at ($ (close)+(4.5,0) $) (doClose) {Cerrado de puerto};
+    \node [flowBase] at ($ (read)+(4.5,0) $) (doRead) {Lectura de registro};
+    \node [flowBase] at ($ (write)+(4.5,0) $) (doWrite) {Escritura de registro};
+    \node [flowBase] at ($ (toggle)+(4.5,0) $) (doToggle) {Activación/desactivación del envío de datos};
+    
+    \node [flowBase, below of=exit] (saveData) {Guardado de los datos capturados en un archivo};
+    \node [flowStart, below of=saveData] (end) {Fin del programa};
+
+    \node [flowDecision] at ($ (idle)+(5,-2) $) (data) {Existen datos disponibles en el puerto serie?};
+    \node [flowBase] at ($ (data)+(5.1,0) $) (sleep) {Espera de un segundo};
+    \node [flowBase, below of=data] (getInfo) {Obtención de información sobre los datos capturados};
+    \node [flowBase, below of=getInfo] (getPcks) {Lectura de  los $n$ datos capturados};
+    \node [flowBase, below of=getPcks] (savePcks) {Guardado de la captura en memoria};
+    
+    % % Draw edges
+    \path [flowLine] (start) -- (idle);
+
+    \path [flowLine] (idle) -| (op.north);
+    \path [flowLine] (op) node [right, yshift=-1.1cm, xshift=-1cm] {Sí} -- (config);
+    \path [flowLine] (config) node [right, yshift=-1.1cm, xshift=-1cm] {No} -- (open);
+    \path [flowLine] (open) node [right, yshift=-1.1cm, xshift=-1cm] {No} -- (close);
+    \path [flowLine] (close) node [right, yshift=-1.1cm, xshift=-1cm] {No} -- (read);
+    \path [flowLine] (read) node [right, yshift=-1.1cm, xshift=-1cm] {No} -- (write);
+    \path [flowLine] (write) node [right, yshift=-1.1cm, xshift=-1cm] {No} -- (toggle);
+    \path [flowLine] (toggle) node [right, yshift=-1.1cm, xshift=-1cm] {No} -- (exit);
+
+    \path [flowLine] (config.east) node [above, xshift=0.35cm] {Sí} -- (doConfig.west);
+    \path [flowLine] (open.east) node [above, xshift=0.35cm] {Sí} -- (doOpen.west);
+    \path [flowLine] (close.east) node [above, xshift=0.35cm] {Sí} -- (doClose.west);
+    \path [flowLine] (read.east) node [above, xshift=0.35cm] {Sí} -- (doRead.west);
+    \path [flowLine] (write.east) node [above, xshift=0.35cm] {Sí} -- (doWrite.west);
+    \path [flowLine] (toggle.east) node [above, xshift=0.25cm] {Sí} -- (doToggle.west);
+        
+    \path [flowLine] (data.south) node [right, yshift=-0.2cm, xshift=-1cm] {Sí} -- (getInfo.north);
+    
+    \path [flowLine] (getInfo) -- (getPcks.north);
+    \path [flowLine] (getPcks) -- (savePcks);
+    
+    \path [flowLine] (op.east) node [above, xshift=0.35cm] {No} -- (data.west);
+    \path [flowLine] (data.east) node [above, xshift=0.35cm] {No} -- (sleep.west);
+
+    \node [flowHide] at ($ (sleep.east)+(0.91,0) $) (anchor1) {};
+    \path [flowLine] (savePcks.east) -| +(6,0) |- (idle.east);
+    \path [flowLine] (sleep.east) -- (anchor1.center);
+    
+    \path [flowLine] (exit) node [right, yshift=-1.1cm, xshift=-1cm] {Sí} -- (saveData);    
+    \path [flowLine] (saveData) -- (end);    
+    
+    \node [flowHide] at ($ (data.west)+(-0.825,0) $) (anchor2) {};
+    \path [flowLine] (exit.east) node [above, xshift=0.25cm] {No} -| (anchor2.center);
+
+    \node [flowHide] at ($ (doConfig.east)+(0.75,0) $) (anchor3) {};
+    \node [flowHide] at ($ (doOpen.east)+(0.75,0) $) (anchor4) {};
+    \node [flowHide] at ($ (doClose.east)+(0.75,0) $) (anchor5) {};
+    \node [flowHide] at ($ (doRead.east)+(0.75,0) $) (anchor6) {};
+    \node [flowHide] at ($ (doWrite.east)+(0.75,0) $) (anchor7) {};
+    \node [flowHide] at ($ (doToggle.east)+(0.75,0) $) (anchor8) {};
+    \path [flowLine] (doConfig.east) -- (anchor3.center);
+    \path [flowLine] (doOpen.east) -- (anchor4.center);
+    \path [flowLine] (doClose.east) -- (anchor5.center);
+    \path [flowLine] (doRead.east) -- (anchor6.center);
+    \path [flowLine] (doWrite.east) -- (anchor7.center);
+    \path [flowLine] (doToggle.east) -- (anchor8.center);
+\end{tikzpicture}
