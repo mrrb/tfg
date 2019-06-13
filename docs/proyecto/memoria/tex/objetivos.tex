@@ -2,11 +2,11 @@
 \label{ch:objetivos}
 
 %* Listo
-Bajo la premisa de realizar un \textbf{analizador USB \emph{hardware} de bajo coste} con herramientas y utilidades de código libre, el presente Trabajo Fin de Grado se ha descompuesto en varios objetivos parciales, estos siguen siempre una metodología SMART, es decir, deben ser Simples, Medibles, Acordados, Realista y Temporizados.
+Bajo la premisa de realizar un \textbf{analizador USB \emph{hardware} de bajo coste} con herramientas y utilidades de código libre, el presente Trabajo Fin de Grado se ha descompuesto en varios objetivos parciales. Estos siguen siempre una metodología SMART, es decir, deben ser Simples, Medibles, Acordados, Realista y Temporizados.
 
 %* Listo
 \section{Selección de componentes \emph{hardware}}
-Debido a la flexibilidad que supone utilizar una FPGA\cite{monmasson2007fpga}, se propone diseñar el sistema de captura a partir de una. Por otra parte, ya que existen circuitos especializados en procesar capas física USB, es de gran interés incluir uno de ellos\footnote{La idea de utilizar un integrado especializado, se obtiene del sistema \emph{USB Sniffer} planteado por \emph{Ultra-Embedded}, nombrado en el capitulo~\ref{ch:antecedentes} de antecedentes.}, pudiendo abstraer de esa forma ciertas partes de la comunicación USB de poco interés, y reduciendo en cierta medidas posibles errores de sincronización.
+Debido a la flexibilidad que supone utilizar una FPGA\cite{monmasson2007fpga}, se propone diseñar el sistema de captura a partir de una. Por otra parte, ya que existen circuitos especializados en procesar la capa física USB, es de gran interés incluir uno de ellos\footnote{La idea de utilizar un integrado especializado, se obtiene del sistema \emph{USB Sniffer} planteado por \emph{Ultra-Embedded}, nombrado en el capítulo~\ref{ch:antecedentes} de antecedentes.}, pudiendo abstraer de esa forma ciertas partes de la comunicación USB de poco interés, y reduciendo en cierta medida posibles errores de sincronización.
 
 Se deben buscar por tanto, todos aquellos componentes necesarios, de la forma más económica posible, para elaborar el sistema de captura. Seguidamente, se ha de elegir como se conexionan mutuamente.
 
@@ -14,9 +14,9 @@ Se deben buscar por tanto, todos aquellos componentes necesarios, de la forma m�
 \section{Implementación de memoria \emph{FIFO}}
 Diseño e implementación de un módulo en lenguaje Verilog que actúe como memoria \emph{FIFO}. Este será capaz de almacenar información de tal manera que el primer $bit$ introducido sea el primero en ser recuperado.
 
-Dado que la FPGA a utilizar dispone de varios bloques de RAM específicos, se utilizarán varios de estos para no depender unicamente de registros, consiguiendo una mayor capacidad de almacenamiento, con un circuito lo mayor optimizado posible.
+Dado que la FPGA a utilizar dispone de varios bloques de RAM específicos, es interesante utilizar varios de estos para no depender unicamente de registros, consiguiendo una mayor capacidad de almacenamiento, con un circuito lo mayor optimizado posible.
 
-La gran mayoría los módulos a diseñar dependen en gran medida de este tipo de memoria, por lo que es esencial disponer de ella en el la mayor brevedad posible, a su vez, y debido a su gran utilidad, la velocidad\cite{rose1993architecture} máxima a la que puede funcionar el sistema en su conjunto está dada por su velocidad de escritura/lectura de datos.
+La gran mayoría los módulos a diseñar pueden depender en gran medida de este tipo de memoria, por lo que es esencial disponer de ella en el la mayor brevedad posible, a su vez, y debido a su gran utilidad, la velocidad\cite{rose1993architecture} máxima a la que puede funcionar el sistema en su conjunto está dada por su velocidad de escritura/lectura de datos.
 
 En la figura~\ref{fig:FIFO_info} se muestra un esquema del resultado esperado.
 
@@ -44,7 +44,7 @@ En la figura~\ref{fig:serie_esquema} se muestra una señal típica serie, esta e
     \label{fig:serie_esquema}
 \end{figure}
 
-A su vez, este objetivo se puede descomponer en varios subobjetivos.
+A su vez, este objetivo se puede descomponer en varios.
 
 %* Listo
 \subsection{Diseño de un módulo de emisión serie}
@@ -58,9 +58,9 @@ Módulo capaz almacenar en una memoria \emph{FIFO} los datos paralelizados captu
 
 %* Listo
 \section{Implementación de un sistema que procese el protocolo ULPI}
-Diseño e implementación de un sistema en lenguaje Verilog capaz de comunicarse con otros dispositivos compatibles con el protocolo ULPI (\emph{UTMI+ Low Pin Interface}), siendo en este caso, el integrado USB3300 de \emph{Microchip}, encargado de la capa física USB.
+Diseño e implementación de un sistema en lenguaje Verilog capaz de comunicarse con otros dispositivos compatibles con el protocolo ULPI, siendo en este caso, el integrado \emph{USB3300} de \emph{Microchip}, encargado de la capa física USB.
 
-Todas las características y casos del protocolo ULPI están completamente definidas tanto en la hoja de especificaciones del propio protocolo\cite{ulpi-specs} como en la hoja de características del circuito integrado USB3300\cite{microchip:usb3300}. Hay que destacar que el bus consta de una señal de reloj a $60MHz$ a la que se referencia el resto de señales (\emph{CLK}), 8 señales de datos bidireccionales paralelos (\emph{DATA}), una señal de control de dirección (\emph{DIR}) y dos señales extra de control (\emph{STP} y \emph{NXT}).
+Todas las características y casos del protocolo ULPI están completamente definidas tanto en la hoja de especificaciones del propio protocolo\cite{ulpi-specs} como en la hoja de características del circuito integrado \emph{USB3300}\cite{microchip:usb3300}. Hay que destacar que el bus consta de una señal de reloj a $60MHz$ a la que se referencia el resto de señales (\emph{CLK}), 8 señales de datos bidireccionales paralelos (\emph{DATA}), una señal de control de dirección (\emph{DIR}) y dos señales extra de control (\emph{STP} y \emph{NXT}).
 
 Puesto que unicamente queremos obtener de forma pasiva los datos USB, de los cuatro posibles modos de funcionamiento ULPI, escritura de registros, lectura de registros, recepción de datos USB y envío de datos USB, solo es interesante diseñar los tres primeros, por lo que este objetivo se puede dividir en las siguientes partes.
 
@@ -72,19 +72,19 @@ En la figura~\ref{fig:ULPI_REG_WRITE} se puede apreciar la comunicación básica
 \begin{figure}[hbt]
     \centering
     \includegraphics[width=90mm]{datasheets/USB3300_REG_WRITE.eps}
-    \caption{Trama de escritura de registros ULPI.}
+    \caption{Trama de escritura de registros ULPI. \\Figura extraída de la hoja de características.}
     \label{fig:ULPI_REG_WRITE}
 \end{figure}
 
 %* Listo
 \subsection{Diseño de un módulo de lectura de registros ULPI}
-Módulo capaz de generar y procesar las señales ULPI necesarias para obtener un valor almacenado en un registro arbitrario del integrado conectado por ULPI.
+Módulo capaz de generar y procesar las señales ULPI necesarias para obtener un valor almacenado en un registro arbitrario del integrado.
 
 En la figura~\ref{fig:ULPI_REG_READ} se puede apreciar la comunicación básica usada para realizar dicha lectura.
 \begin{figure}[hbt]
     \centering
     \includegraphics[width=90mm]{datasheets/USB3300_REG_READ.eps}
-    \caption{Trama de lectura de registros ULPI.}
+    \caption{Trama de lectura de registros ULPI. \\Figura extraída de la hoja de características.}
     \label{fig:ULPI_REG_READ}
 \end{figure}
 
@@ -94,7 +94,7 @@ Módulo que ante la llegada de datos USB, sea capaz de procesar las señales ULP
 \begin{figure}[hbt]
     \centering
     \includegraphics[width=90mm]{datasheets/USB3300_RECV.eps}
-    \caption{Trama ULPI de recepción de datos USB.}
+    \caption{Trama ULPI de recepción de datos USB. \\Figura extraída de la hoja de características.}
     \label{fig:ULPI_RECV}
 \end{figure}
 
