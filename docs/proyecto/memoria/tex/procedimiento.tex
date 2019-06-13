@@ -71,7 +71,7 @@ Durante los cerca de 35 años que llevan existiendo las FPGAs, los fabricantes h
 
 Estos últimos años, han empezado a surgir proyectos, que por medio de ingeniería inversa, han permitido poder utilizar con herramientas totalmente libres las FPGA. Un gran hito a destacar es la introducción en el año 2015 del proyecto \emph{IceStorm}, liderado por \emph{Clifford Wolf}.
 
-El uso de \emph{software} libre trae consigo los siguiente beneficios:
+El uso de \emph{software} libre trae consigo los siguiente beneficios.
 \begin{itemize}
     \item \textbf{Acceso libre al conocimiento.} Sin depender completamente del fabricante, se dispondría de un gran abanico de fuentes de información de los que poder obtener cualquier conocimiento relacionado, fomentando su estudio y mejora. Todo ello sin variar el resultado del producto.
 
@@ -89,20 +89,20 @@ Durante el desarrollo del proyecto, han surgido varios problemas tanto intrínse
 \subsection{Fallos intrínsecos}
 \begin{itemize}
     \item \textbf{Metodología inicial.} \\
-    Durante las primeras iteraciones de desarrollo de módulos, no se había definido una metodología a utilizar, lo que se supuso ineficiencias y errores continuos. Tras definir la metodología expuesta en el capitulo~\ref{ch:contribuciones} y replantear varias iteraciones, se pudo continuar sin problema alguno.
+    Durante las primeras iteraciones de desarrollo de módulos, no se había definido una metodología a utilizar, lo que supuso ineficiencias y errores continuos. Tras definir la metodología expuesta en el capitulo~\ref{ch:contribuciones} y replantear varias iteraciones, se pudo continuar sin problema alguno.
     
-    \item \textbf{Inicialización de bloques BRAM.} \\
-    Debido un entendimiento escaso del método de Inicialización de los bloques BRAM de la FGPA, se produjeron errores al almacenar datos. Tras una lectura más detallada de la librería de referencia\cite{lattice:ice-library} del fabricante \emph{Lattice}, se pudo solucionar el problema.
+    \item \textbf{Inicialización de bloques de RAM.} \\
+    Debido un entendimiento escaso del método de Inicialización de los bloques RAM de la FGPA, se produjeron errores al almacenar datos. Tras una lectura más detallada de la librería de referencia\cite{lattice:ice-library} del fabricante \emph{Lattice}, se pudo solucionar el problema.
 \end{itemize}
 
 \subsection{Fallos extrínsecos}
-Debido al continuo desarrollo de la herramienta de sintetizado \emph{Yosys}, han surgido en varias ocasiones varios errores graves que han obligado a pausar el proyecto, o a buscar alternativas, lo que ha supuesto un trabajo adicional no medible en los resultados finales. Hay que destacar los siguientes.
+Debido al continuo desarrollo de la herramienta de sintetizado \emph{Yosys}, han surgido en varias ocasiones varios errores graves que han obligado a pausar el proyecto o a buscar alternativas, lo que ha supuesto un trabajo adicional no medible en los resultados finales. Hay que destacar los siguientes.
 \begin{itemize}
     \item \textbf{Sintetizados incorrectos.} \\
-    En las primeras versiones de \emph{Yosys} usadas, en varias ocasiones, al crear el binario, este no funcionaba completamente, teniendo que probar distintas opciones de síntesis.
+    En las primeras versiones de \emph{Yosys} usadas, en varias ocasiones al crear el binario, este no funcionaba completamente, teniendo que probar distintas opciones de síntesis.
 
     \item \textbf{Error con las puertas triestato.} \\
-    En una de las actualizaciones de \emph{Yosys} que fueron surgiendo a lo largo del desarrollo del TFG, a la hora de inicializar los puertos de la FPGA de forma bidireccional, es decir, con entradas/salidas triestato, el sintetizado fallaba. Este problema se tuvo que solventar inicializando dichos puertos de forma manual. Tras varias actualizaciones, se solucionó el problemas, pudiendo volver a utilizar el método de inicialización del principio.
+    En una de las actualizaciones de \emph{Yosys} que fueron surgiendo a lo largo del desarrollo del TFG, a la hora de inicializar los puertos de la FPGA de forma bidireccional, es decir, con salidas triestato\footnote{Puerto cuya salida puede ser a nivel bajo (\emph{0}), nivel alto (\emph{1}) o alta impedancia}, el sintetizado fallaba. Este problema se tuvo que solventar inicializando dichos puertos de forma manual. Tras varias actualizaciones, se solucionó el problemas, pudiendo volver a utilizar el método de inicialización original.
 \end{itemize}
 
 
