@@ -12,7 +12,7 @@
    height="24.374044cm"
    viewBox="0 0 144220.05 95960.802"
    id="svg5930"
-   sodipodi:docname="diagramas_funcionamiento.svg"
+   sodipodi:docname="top.svg"
    inkscape:version="0.92.4 5da689c313, 2019-01-14">
   <metadata
      id="metadata5936">
@@ -40,13 +40,13 @@
      inkscape:window-height="1026"
      id="namedview5932"
      showgrid="false"
-     inkscape:zoom="0.5500629"
-     inkscape:cx="136.92083"
-     inkscape:cy="483.9382"
+     inkscape:zoom="2.2002516"
+     inkscape:cx="574.21931"
+     inkscape:cy="506.3111"
      inkscape:window-x="0"
      inkscape:window-y="26"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g5234" />
+     inkscape:current-layer="g5294" />
   <title
      id="title2">SVG Picture created as diagramas_funcionamiento.svg date 2019/02/26 00:13:52 </title>
   <desc
@@ -6252,46 +6252,6 @@
      style="fill:#000084;fill-opacity:0;stroke:#000084;stroke-width:60;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
      id="g3070"
      transform="translate(-57260,-28069.594)">
-    <path
-       d="m 115760,64260 480,480"
-       id="path3006"
-       inkscape:connector-curvature="0" />
-    <path
-       d="m 116240,64260 -480,480"
-       id="path3008"
-       inkscape:connector-curvature="0" />
-    <path
-       d="m 115760,63260 480,480"
-       id="path3010"
-       inkscape:connector-curvature="0" />
-    <path
-       d="m 116240,63260 -480,480"
-       id="path3012"
-       inkscape:connector-curvature="0" />
-    <path
-       d="m 115760,68260 480,480"
-       id="path3014"
-       inkscape:connector-curvature="0" />
-    <path
-       d="m 116240,68260 -480,480"
-       id="path3016"
-       inkscape:connector-curvature="0" />
-    <path
-       d="m 115760,69260 480,480"
-       id="path3018"
-       inkscape:connector-curvature="0" />
-    <path
-       d="m 116240,69260 -480,480"
-       id="path3020"
-       inkscape:connector-curvature="0" />
-    <path
-       d="m 115760,71260 480,480"
-       id="path3022"
-       inkscape:connector-curvature="0" />
-    <path
-       d="m 116240,71260 -480,480"
-       id="path3024"
-       inkscape:connector-curvature="0" />
     <path
        d="m 119760,85260 480,480"
        id="path3026"
