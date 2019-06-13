@@ -1,27 +1,30 @@
 \chapter{Conclusiones}
 \label{ch:conclusiones}
 
-%* Comprobar
+%* Listo
 En este capitulo se plasman las principales conclusiones del presente trabajo, y a su vez, se proponen posibles mejoras y trabajos futuros de interés.
 
-%* Comprobar
+%* Listo
 \section{Conclusiones}
 A continuación se detallan las principales conclusiones obtenidas durante la realización de este proyecto:
 
 \begin{itemize}
-    %* Comprobar
+    %* Listo
     \item Se ha procedido, en un primer lugar, a un análisis de mercado, confirmando la escasez de analizadores USB \emph{hardware} de bajo coste. Reafirmando de esa forma la finalidad del proyecto.
     
-    %* Comprobar
+    %* Listo
     \item Se ha procedido a la selección y posterior conexión de los diversos componentes utilizados. Estos incluyen la placa de evaluación \emph{USB3300}, la placa de desarrollo \emph{iCEstick}, cableado de conexión, botonera y una base impresa en 3D.
     
-    %* Comprobar
+    %* Listo
     \item Todo ello ha supuesto un precio de aproximadamente 45\$ (40\texteuro~al cambio), lo que supone una gran diferencia respecto a los analizadores comerciales, y una reducción de 43\$ respecto al proyecto de \emph{Ultra-Embedded} de similares características.
     
-    %* Comprobar
+    %* Listo
     \item Se ha establecido una metodología de diseño y elaboración de módulos, que ha permitido una gran eficiencia en su elaboración, consiguiendo a su vez, una menor probabilidad de fallos y una alta reutilización.
     
-    %* Comprobar
+    %* Listo
+    \item El sistema soportar tramas USB 2.0 \emph{low speed}, \emph{full speed} y \emph{high speed}. Para esta última, debido a la escasa cantidad de memoria RAM disponible, puede haber perdida de datos si ocurre una gran transferencia USB en un breve periodo de tiempo.
+
+    %* Listo
     \item Para el funcionamiento del sistema, se han diseñado y elaborado varios módulos, incluidos los establecidos en los objetivos, en el lenguaje descriptor de \emph{hardware} Verilog. \\
     Todos ellos han utilizado el 63\% de los bloques lógicos y el 100\% de los bloques de RAM disponibles en la FPGA usada. \\
     Principalmente hay que destacar los siguientes módulos.
@@ -34,11 +37,13 @@ A continuación se detallan las principales conclusiones obtenidas durante la re
         \item Controlador maestro del sistema.
     \end{enumerate}
 
-    %* Comprobar
-    \item Se ha desarrollado una aplicación con las todas opciones necesarias para poder configurar la FPGA y recibir una captura, siendo esta almacenada en un archivo \emph{JSON} de fácil lectura. \\
-    Posteriormente, y para cumplir el objetivo propuesto, se ha creado una herramienta que convierte la trama capturada de formato \emph{JSON} a \emph{PCAP}.
+    %* Listo
+    \item Se ha desarrollado una aplicación con las todas opciones necesarias para poder configurar la FPGA y recibir una captura, siendo esta almacenada en un archivo \emph{JSON} de fácil lectura.
     
-    %* Comprobar
+    %* Listo
+    \item Posteriormente, y para cumplir el objetivo propuesto, se ha creado una herramienta que convierte la trama capturada de formato \emph{JSON} a \emph{PCAP}.
+    
+    %* Listo
     \item Como observación final, hay que comentar varios aspectos a destacar en el uso de las FPGAs en general.
     \begin{itemize}
         \item Permiten una gran flexibilidad a la hora de realizar cualquier diseño de electrónica digital, y a diferencias de otros elementos como microcontroladores, permiten un alto nivel de paralelización de tareas, por lo que son de gran utilidad en ciertos diseños.
@@ -47,33 +52,33 @@ A continuación se detallan las principales conclusiones obtenidas durante la re
     \end{itemize}
 \end{itemize}
 
-%* Comprobar
+%* Listo
 Con todo lo anteriormente expuesto, se puede afirmar que se han cumplido todos los objetivos establecidos al principio del trabajo, recogidos en el capítulo~\ref{ch:objetivos}.
 
 
 
-%* Comprobar
+%* Listo
 \section{Trabajos futuros}
 A continuación se enumeran varios trabajos futuros que se pueden realizar para mejorar el resultado del proyecto.
 
 \begin{itemize}
-    %* Comprobar
+    %* Listo
     \item Debido a la baja cantidad de memoria disponible en la FPGA usada, puede ser de gran interés añadir un módulo de memoria RAM externa, en la que almacenar de forma temporal los datos.
     
-    %* Comprobar
+    %* Listo
     \item Implementación de un nuevo sistema de comunicación entre la FPGA y el PC, que prescindiendo del puerto serie actual, permita una mayor tasa de transferencia.
     
-    %* Comprobar
+    %* Listo
     \item Diseño de una PCB que unifique los componentes utilizados en una sola placa, y se deshaga de todos aquellos innecesarios, como puede ser el emisor/receptor de infrarrojos de la placa iCEstick. Realizando esta tarea, a parte de obtener un producto más refinado, se puede disminuir aun más el precio final del sistema.
     
-    %* Comprobar
+    %* Listo
     \item Creación de un disector para la utilidad de análisis \emph{Wireshark}, que sea capaz de mostrar más detalles de los datos capturados en el archivo \emph{PCAP}.
     
-    %* Comprobar
+    %* Listo
     \item Introducción de herramientas de filtrado USB en la propia FPGA, que facilite el análisis. Por ejemplo, se podrían añadir filtros según el PID o la longitud de los datos a capturar.
 
-    %* Comprobar
-    \item Introducción de un sistema que permita saber en que instante temporal a ocurrido la captura de cada paquete de datos. Para ello, se puede añadir por ejemplo un circuito RTC (\emph{Real Time Clock}, o reloj en tiempo real en español) que añada una marca temporal a cada paquete de datos.
+    %* Listo
+    \item Introducción de un sistema que permita saber en que instante temporal a ocurrido la captura de cada paquete de datos. Para ello, se puede añadir por ejemplo un circuito RTC (\emph{Real Time Clock}, o Reloj en Tiempo Real en español) que añada una marca temporal a cada paquete de datos obtenido.
 \end{itemize}
 
 
