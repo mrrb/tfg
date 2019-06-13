@@ -20,7 +20,7 @@ Seguidamente, se estudia la complejidad del módulo a desarrollar, dividiéndolo
 %* Listo
 Estando definida ya su distribución, se realiza un pequeño esquema sobre el que partir, que de forma gráfica muestre sus diversas partes y relaciones, junto a este, si fuera necesario, se dibuja otro que muestre las etapas de la máquina de estados, pudiendo a continuación empezar con la programación del mismo.
 
-Cada módulo dispone de un estilo común, distribuido de la siguiente forma:
+Cada módulo dispone de un estilo común, distribuido de la siguiente forma.
 \begin{enumerate}
     %* Listo
     \item{\textbf{Comentario de cabecera.}} \\
@@ -56,7 +56,7 @@ Cada módulo dispone de un estilo común, distribuido de la siguiente forma:
     \begin{lstlisting}[language=Verilog,
         caption={Ejemplo de control de reinicio síncrono/asíncrono.},
         label=src:metodologia-verilog-sync]
-// X es el nombre del modulo en cada caso
+// X es el nombre del módulo en cada caso
 `ifdef ASYNC_RESET
     `define X_ASYNC_RESET or negedge rst
 `else
@@ -126,7 +126,7 @@ reg [7:0]DATA_buff   = 8'b0; // Buffer where ...
 
     %* Listo
     \item{\textbf{Creación de \textit{flags} o señales de control (listado~\ref{src:metodologia-verilog-flags}).}} \\
-    Para poder identificar con facilidad si el sistema se encuentra en un estado concreto, se crean estas señales, cuyo valor será \textit{1} cuando la máquina de estados esté en dicho estado, y \textit{0} en caso contrario.
+    Para poder identificar con facilidad si el sistema se encuentra en un estado concreto, se crean estas señales, cuyo valor será \textit{1} (nivel alto) cuando la máquina de estados esté en dicho estado, y \textit{0} (nivel bajo) en caso contrario.
     \begin{lstlisting}[language=Verilog,
         caption={Ejemplo de creación de \textit{flags}.},
         label=src:metodologia-verilog-flags]
@@ -137,14 +137,13 @@ wire X_s_RUN;  // HIGH if X\_state\_r == X\_RUN,  else LOW
 
     %* Listo
     \item{\textbf{Asignación de valores de salida y señales internas (listado~\ref{src:metodologia-verilog-asignacion}).}} \\
-    Se asignan los valores que tomarán los diversos \emph{wires}, tanto de uso interno, como de salida, estos pueden relacionarse con registros, salidas de módulos ya inicializados u otros \emph{wires}. Además, al final de cada asignación, se comenta cual va a ser su uso, por ejemplo, una asignación de salida o control.
+    Se asignan los valores que tomarán los diversos \emph{wires}\footnote{Termino usado para referirse al conexionado interno de la FPGA}, tanto de uso interno, como de salida, estos pueden relacionarse con registros, salidas de módulos ya inicializados u otros \emph{wires}. Además, al final de cada asignación, se comenta cual va a ser su uso, por ejemplo, una asignación de salida o control.
     \begin{lstlisting}[language=Verilog,
         caption={Ejemplo de asignación de valores.},
         label=src:metodologia-verilog-asignacion]
 // Assigns
 assign X_s_IDLE = (X_state_r == X_IDLE) ? 1'b1 : 1'b0; // \#FLAG
 assign X_s_RUN  = (X_state_r == X_RUN)  ? 1'b1 : 1'b0; // \#FLAG
-
 assign nombre_salida_1 = DATA_buff[2]; // \#OUTPUT
     \end{lstlisting}
     
@@ -216,7 +215,7 @@ Para asegurar el correcto funcionamiento de cada módulo, estos deben superar va
 Estás pruebas hacen uso de las herramientas de código abierto \emph{Icarus Verilog}\footnote{Véase su repositorio: \url{https://github.com/steveicarus/iverilog}} (abreviado \emph{iverilog}), encargada de simular el propio código de \emph{Verilog}, y el visor de ondas \emph{GTKWave}\cite{gtkwave2019}, permitiendo generar y mostrar gráficamente todas las señales del circuito en cualquier instante de tiempo.
 
 %* Listo
-Para llevar a cabo dicha simulación, \emph{Iverilog} tiene como entrada un archivo en lenguaje \emph{Verilog} en el que se inicializa el propio módulo a analizar, y seguidamente, en ese mismo archivo, se van variando las entradas al módulo según su instante de tiempo. Posteriormente, y tras obtener el archivo con el resultado de la simulación, se abre en \emph{GTKWave} y se compara el resultado generado en el módulo, respecto al esperado.
+Para llevar a cabo dicha simulación, \emph{Iverilog} tiene como entrada un archivo en lenguaje \emph{Verilog} en el que se inicializa el propio módulo a analizar, y seguidamente, en ese mismo archivo, se van variando las entradas al módulo según su instante de tiempo. Posteriormente, y tras obtener el resultado de la simulación, se abre en \emph{GTKWave} y se compara el resultado generado en el módulo, respecto al esperado.
 
 En la figura~\ref{fig:ej-gtkwave} se muestra el resultado gráfico de una simulación de ejemplo.
 
@@ -233,7 +232,7 @@ En la figura~\ref{fig:ej-gtkwave} se muestra el resultado gráfico de una simula
 \section{Herramientas de utilizadas}
 A parte de la metodología implementada, valida para cualquier sistema a diseñar que utilice lenguaje Verilog, es necesario el uso de herramientas especificas según la FPGA usada.
 
-Particularmente para el presente proyecto, en el que usa una FPGA iCE40HX1k del fabricante \emph{Lattice}, se han utilizado las siguientes herramientas, todas ellas bajo la filosofía de código libre
+Particularmente para el presente proyecto, en el que usa una FPGA \emph{iCE40HX1k} del fabricante \emph{Lattice}, se han utilizado las siguientes herramientas, todas ellas bajo la filosofía de código libre.
 
 \begin{itemize}
     %* Listo
@@ -246,7 +245,7 @@ Particularmente para el presente proyecto, en el que usa una FPGA iCE40HX1k del 
     
     \begin{figure}[htb]
         \centering
-        \includegraphics[width=135mm]{otro/gui_nextpnr.png}
+        \includegraphics[width=145mm]{otro/gui_nextpnr.png}
         \caption{Interfaz gráfica de la herramienta \emph{Nextpnr}.}
         \label{fig:gui_nextpnr}
     \end{figure}
