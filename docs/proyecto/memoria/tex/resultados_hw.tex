@@ -136,9 +136,9 @@ En la tabla~\ref{tab:precio-final} se desglosa el precio final según los compon
     \end{tabular}
 \end{table}
 
-%!
+%* Comprobar
 \section{Módulos integrados en la FPGA}
-Según los elementos \emph{hardware} usados, y teniendo en cuenta los requerimientos definidos en el capítulo~\ref{ch:objetivos}, se han diseñado e implementado los siguientes módulos en la FPGA, todos ellos en lenguaje descriptor de \emph{hardware} Verilog.
+Según los elementos \emph{hardware} usados, y teniendo en cuenta los requerimientos definidos en el capítulo~\ref{ch:objetivos}, se han diseñado e implementado los siguientes módulos en la FPGA, todos ellos en lenguaje descriptor de \emph{hardware} Verilog. Todos los módulos se sitúan en el directorio \emph{.\textbackslash ICEstick\textbackslash USB3300\_sniffer\textbackslash modules\textbackslash} del repositorio.
 
 \textbf{Nota.} En el anexo~\ref{ch:diagramas} se muestran de forma gráfica todas las relaciones existente entre los módulos, mientras que en el anexo~\ref{ch:maquinas-estados} se plasman sus maquinas de estados \emph{Mealy} internas.
 
@@ -390,9 +390,9 @@ Este módulo se ha dividido a su vez en los siguientes submódulos.
     \end{figure}
 \end{itemize}
 
-%* Comprobar
+%* Listo
 \subsection{Módulo de comunicación ULPI}
-Sistema, que de forma síncrona al reloj de $60MHz$ generado por el integrado \emph{USB3300}, es capaz tanto de procesar como de generar señales ULPI, tal como se contempla en su especificación\cite{ulpi-specs}. En el listado~\ref{src:resultados-modulos-ulpi} se plasman los parámetros, entradas y salidas del módulo.
+Sistema, que de forma síncrona al reloj de $60MHz$ generado por el integrado \emph{USB3300}, es capaz tanto de procesar como de generar señales ULPI, tal como se contempla en su especificación\cite{ulpi-specs}. En el listado~\ref{src:resultados-modulos-ulpi} se plasman las entradas y salidas del módulo.
 
 \begin{lstlisting}[language=Verilog,
     caption={Entradas y salidas del módulo ULPI.},
@@ -450,7 +450,7 @@ En la siguiente lista se nombran los diversos submódulo que lo forman, iniciali
 \end{figure}
 
 \begin{itemize}
-    %* Comprobar
+    %* Listo
     \item \textbf{Submódulo de escritura de registros (\emph{ULPI\_REG\_WRITE}).} \\
     Dándole una dirección de $6bits$ y un $byte$ de datos, este módulo genera las señales necesarias para la escritura de registros. En la figura~\ref{fig:flujo_ulpi_write} se muestra su flujo de funcionamiento.
     \begin{figure}[hbtp]
@@ -460,7 +460,7 @@ En la siguiente lista se nombran los diversos submódulo que lo forman, iniciali
         \label{fig:flujo_ulpi_write}
     \end{figure}
     
-    %* Comprobar
+    %* Listo
     \item \textbf{Submódulo de lectura de registros (\emph{ULPI\_REG\_READ}).} \\
     Dándole en esta ocasión únicamente la dirección de $6bits$, este genera las señales necesarias para que el integrado \emph{USB3300} envíe el valor del registro solicitado, valor que debe ser leído por este modulo. En la figura~\ref{fig:flujo_ulpi_read} se muestra su flujo de funcionamiento.
     \begin{figure}[hbtp]
@@ -470,7 +470,7 @@ En la siguiente lista se nombran los diversos submódulo que lo forman, iniciali
         \label{fig:flujo_ulpi_read}
     \end{figure}
     
-    %* Comprobar
+    %* Listo
     \item \textbf{Submódulo de obtención de datos USB (\emph{ULPI\_RECV}).} \\
     Cada vez que el integrado \emph{USB3300} quiera enviar una captura de datos, pone a nivel alto la señal DIR y empieza a transmitir los datos. Este módulo está continuamente esperando dicho cambio, a partir del cual obtiene, clasifica y almacena los datos entrantes. En la figura~\ref{fig:flujo_ulpi_recv} se muestra su flujo de funcionamiento.
     \begin{figure}[hbtp]
@@ -482,7 +482,7 @@ En la siguiente lista se nombran los diversos submódulo que lo forman, iniciali
 \end{itemize}
 
 
-%* Comprobar
+%* Listo
 \subsection{Módulo de procesado y almacenaje de comandos entrantes (\emph{ULPI\_op})}
 Se ha diseñado e implementado un simple protocolo, con el que ser capaz de recibir las ordenes del sistema y de enviar los datos capturados.
 
@@ -504,7 +504,7 @@ Siempre que se desee ejecutar un comando en el sistema de captura, el PC envía 
     \end{tabular}
 \end{table}
 
-Estos $bytes$, tras ser recibidos por el módulo de comunicación serie, son recogidos por este módulo, el cual los clasifica y almacena hasta su ejecución. En el listado~\ref{src:resultados-modulos-ulpi-op} se plasman los parámetros, entradas y salidas del módulo.
+Estos $bytes$, tras ser recibidos por el módulo de comunicación serie, son recogidos por este módulo, el cual los clasifica y almacena hasta su ejecución. En el listado~\ref{src:resultados-modulos-ulpi-op} se plasman las entradas y salidas del módulo.
 
 \begin{lstlisting}[language=Verilog,
     caption={Entradas y salidas del módulo ULPI\_op.},
@@ -530,7 +530,7 @@ Estos $bytes$, tras ser recibidos por el módulo de comunicación serie, son rec
 \end{lstlisting}
 
 
-%* Comprobar
+%* Listo
 \subsection{Módulos de control de botonera (\emph{btn\_debouncer} y \emph{signal\_trigger})}
 Al haber introducido varios botones externos, estos sufren una propiedad física de rebote, por la que el botón, al ser pulsado, salta entre varios estados antes de estabilizarse, produciendo pulsaciones no deseadas. Para solucionarlo, se ha creado un simple módulo que concatena varios \emph{Flip-Flops} tal como se muestra en la figura~\ref{fig:esquema-debounce}.
 
@@ -544,27 +544,19 @@ Al haber introducido varios botones externos, estos sufren una propiedad física
 Por otro lado, como las pulsaciones del usuario tienen una duración mucho mayor a la de un ciclo del reloj de control, se ha creado un segundo módulo que ante la pulsación de larga duración, envía un único pulso con el mismo ancho que el del reloj de entrada.
 
 
-%!
+%* Listo
 \subsection{Módulo de control maestro (\emph{main\_controller})}
-Los módulos anteriormente explicados, no poseen relación entre ellos, por tanto necesitan un módulo extra encargado de temporizar y distribuir que tareas deben realizar.
-
-Se han pririzados las tareas de la siguiente manera:
+Los módulos anteriormente explicados, no poseen relación entre ellos, por lo que necesitan un módulo extra encargado de temporizar y distribuir que tareas deben realizar. Por tanto, este módulo a partir de las señales generadas por el resto de ellos, prioritiza las tareas de la siguiente manera.
 \begin{enumerate}
-    \item Comando de activacion/desactivacion de envío de datos.
-    \item Comando de envio del ultimo registro leido.
-    \item Comando de escritura de registro.
-    \item Comando de lectura de registro.
-    \item Envio de datos de captura.
-    \item Byte de prueba.
+    \item Ejecución de un comando de activacion/desactivacion de envío de datos.
+    \item Ejecución de un comando de envío del último registro leído.
+    \item Ejecución de un comando de escritura de registro.
+    \item Ejecución de un comando de lectura de registro.
+    \item Envío de datos de captura.
+    \item Envío de un $byte$ de prueba al pulsar el botón externo.
 \end{enumerate}
 
-% \noWord[Borrar figura, no la termines, no es útil.]
-% \begin{figure}[!hbt]
-%     \centering
-%     \scalebox{0.8} {\input{diagramas_flujo/main_controller.tex}}
-%     \caption{Diagrama de funcionamiento del módulo de control maestro}
-%     \label{fig:flujo_main_controller}
-% \end{figure}
+
 
 %* Listo
 \section{Simulaciones finales}
@@ -614,7 +606,6 @@ Con el objetivo de eliminar posibles errores capaces de dañar los propios compo
 \end{enumerate}
 
 
-% %!
 % \section{Información del sintetizado final}
 % INFO??
 
