@@ -6,7 +6,8 @@ Aun teniendo más importancia la parte \emph{hardware} comentada en el capitulo~
 
 %* Listo
 \section{Aplicaciones de apoyo}
-A medida que se ha ido desarrollando la parte \emph{hardware}, se han creado varias utilidades en lenguaje \emph{Python}, con las que realizar cálculos de forma rápida o con las que comprobar el funcionamiento de ciertas partes del sistema. Dichas aplicaciones se encuentran en el directorio \emph{.\textbackslash ICEstick\textbackslash USB3300\_sniffer\textbackslash tools\textbackslash} del repositorio. \\
+A medida que se ha ido desarrollando la parte \emph{hardware}, se han creado varias utilidades en lenguaje \emph{Python}, con las que realizar cálculos de forma rápida o con las que comprobar el funcionamiento de ciertas partes del sistema. Dichas aplicaciones se encuentran en el directorio \emph{.\textbackslash ICEstick\textbackslash USB3300\_sniffer\textbackslash tools\textbackslash} del repositorio.
+
 Hay que destacar las siguientes:
 \begin{enumerate}
     %* Listo
@@ -68,22 +69,23 @@ $ ./gen_bauds.py
 
 %* Comprobar
 \section{Información de la aplicación}
-Tal como se ha comentado al principio de este capítulo, aun teniendo mayor carga la parte \emph{hardware}, es esencial implementar una aplicación que se comunique con la FPGA y permita su funcionamiento.
+Tal como se ha comentado al principio de este capítulo, aun teniendo mayor carga la parte \emph{hardware}, es esencial implementar una aplicación que se comunique con la FPGA y permita su funcionamiento. Esta aplicación se encuentra en el directorio \emph{.\textbackslash PC\textbackslash app\textbackslash} del repositorio.
 
-Para ello, utilizando lenguaje C, se ha creado una aplicación que dando opciones de control con una simple interfaz, es capaz de enviar comandos o recibir datos USB, y a su vez, es capaz de almacenarlos para su posterior estudio. A grandes rasgos, en la figura~\ref{fig:flujo_app} se muestra un esquema de funcionamiento de la aplicación.
+Para ello, utilizando el lenguaje C, se ha creado una aplicación que dando varias opciones de control con una simple interfaz, es capaz de enviar comandos o recibir datos USB, y a su vez, es capaz de almacenarlos para su posterior estudio. A grandes rasgos, en la figura~\ref{fig:flujo_app} se muestra un esquema de funcionamiento de la aplicación.
 
 Esta aplicación se ha dividido de la siguiente manera:
 \begin{enumerate}
     %* Listo
     \item \textbf{Hilo encargado de controlar las entradas de usuario.} \\
     Tanto la configuración a usar para conectarse a la \emph{FPGA} (puerto serie y su velocidad), como los comandos a enviar, son introducidos al programa por medio de un simple menú basado en texto desde la terminal. Este permite:
-    \begin{itemize}
-        \item Configurar el puerto serie (puerto a usar y velocidad en baudios).
-        \item Abrir/cerrar el puerto serie seleccionado.
-        \item Realizar una operación de lectura de registro.
-        \item Realizar una operación de escritura de registro.
-        \item Activar/desactivar el envío de datos USB al PC.
-    \end{itemize}
+    \begin{enumerate}
+        \item[Opción 0.] Configurar el puerto serie (puerto a usar y velocidad en baudios).
+        \item[Opción 1.] Abrir/cerrar el puerto serie seleccionado.
+        \item[Opción 2.] Realizar una operación de lectura de registro.
+        \item[Opción 3.] Realizar una operación de escritura de registro.
+        \item[Opción 4.] Activar/desactivar el envío de datos USB al PC.
+        \item[Opción 5.] Cerrar programa y guardar captura.
+    \end{enumerate}
 
     En la figura~\ref{fig:matriz-app-menu} se muestra dicho menú, y a su vez, se ejemplifica un proceso de escritura y posterior lectura del registro con dirección \emph{0x16} (registro que según la hoja de características del integrado \emph{USB3300}\cite{microchip:usb3300} es de libre utilización).
 
@@ -118,7 +120,7 @@ Esta aplicación se ha dividido de la siguiente manera:
 
 %* Listo
 \section{Información del archivo generado}
-Se ha elegido almacenar la información capturada en un archivo formato \emph{JSON}\footnote{Formato de texto, que permite almacenar información de forma estructurada.}. Para cada paquete capturado se almacena el último estado del bus conocido (\emph{TxCMD}), la longitud de paquetes capturados y los propios datos obtenidos. En la figura~\ref{fig:tree-json} se muestra la estructura utilizada en el archivo.
+Se ha elegido almacenar la información capturada en un archivo formato \emph{JSON}\footnote{Formato de texto, que permite almacenar información de forma estructurada.}. Para cada paquete capturado se almacena el último estado del bus conocido (\emph{TxCMD}), la longitud de paquetes capturados y los propios datos. En la figura~\ref{fig:tree-json} se muestra la estructura utilizada en el archivo.
 
 \begin{figure}[!hbtp]
     \centering
@@ -142,7 +144,7 @@ Se ha elegido almacenar la información capturada en un archivo formato \emph{JS
     \label{fig:tree-json}
 \end{figure}
 
-Para poder analizar la captura en la aplicación de análisis \emph{Wireshark}, se ha creado otra utilidad, que a partir del archivo \emph{JSON} generado anteriormente, lo transforme a \emph{PCAP}. Esta transformación no sigue la estructura de ningún disector\cite{wiresharkdisector2014} actual, por lo que en \emph{Wireshark} solo se consigue visualizar los datos de una forma más estructura sin dar información adicional.
+Para poder analizar la captura en la aplicación de análisis \emph{Wireshark}, se ha creado otra utilidad (situada en el directorio \emph{.\textbackslash PC\textbackslash json2pcap\textbackslash} del repositorio), que a partir del archivo \emph{JSON} generado anteriormente, lo transforme a \emph{PCAP}. Esta transformación no sigue la estructura de ningún disector\cite{wiresharkdisector2014} actual, por lo que en \emph{Wireshark} solo se consigue visualizar los datos de una forma más estructura sin dar información adicional.
 
 
 
