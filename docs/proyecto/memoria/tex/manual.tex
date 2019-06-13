@@ -1,14 +1,16 @@
 \chapter{Manual de instalación y utilización}
 \label{ch:manual}
-%* Comprobar
+
+%* Listo
 En el presente anexo, se detallan los procedimientos a seguir para la instalación y utilización del sistema bajo un sistema Linux.
 
-%* Comprobar
+%* Listo
 \section{Requisitos \emph{software} previos}
 Antes de poder generar un archivo binario compatible con la FPGA \emph{Lattice iCE40HX1K}, es necesario instalar las aplicaciones encargadas de su creación.
 
+%* Listo
 \subsubsection{Dependencidas de las aplicaciones}
-Previo a la instalación de dichas aplicaciones, hay que instalar también sus dependencias. A continuación se dan la lista de paquetes a instalar según tres sistemas operativos Linux distintos.
+Previo a la instalación de dichas aplicaciones, hay que instalar también sus dependencias. A continuación se dan la lista de paquetes a instalar según tres distribuciones Linux distintas.
 
 \begin{itemize}
     \item \textbf{Para una instalación en \emph{Ubuntu}} \\
@@ -35,6 +37,7 @@ $ sudo pacman -S base-devel clang boost-libs python qt5-base boost \
     \end{verbatim}
 \end{itemize}
 
+%* Listo
 \subsubsection{Instalación de las herramientas \emph{IceStorm}}
 Se procede a instalar las herramientas y bases de datos del proyecto \emph{IceStorm} (\emph{icepack}, \emph{icebox}, \emph{iceprog}, \emph{icetime} y bases de datos de las diversas FPGAs).
 
@@ -45,6 +48,7 @@ $ make -j$(nproc)
 $ sudo make install
 \end{lstlisting}
 
+%* Listo
 \subsubsection{Instalación de \emph{NextPNR}}
 Se procede a instalar la herramienta de posicionado y encaminamiento (\emph{Place-And-Route}) \emph{NextPNR}.
 
@@ -56,6 +60,7 @@ $ make -j$(nproc)
 $ sudo make install
 \end{lstlisting}
 
+%* Listo
 \subsubsection{Instalación de \emph{Yosys}}
 Se procede a instalar la herramienta de síntesis del lenguaje Verilog \emph{Yosys}.
 
@@ -72,14 +77,15 @@ $ sudo make install
 % $ sudo make install
 % \end{verbatim}
 
+%* Listo
 \subsubsection{Permisos de subida}
-Si se desea subir el archivo binario generado sin utilizar permisos administrativos del sistema, se ha de ejecutar el siguiente comando.
+Si se desea subir el archivo binario generado sin utilizar permisos administrativos del sistema, se ha de ejecutar el siguiente comando, en el que se da un mayor nivel de acceso al integrado \emph{FTID} de la placa \emph{iCEstick}.
 \begin{lstlisting}[language=bash]
 $ sudo sh -c 'echo "ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", MODE="0660", GROUP="plugdev", TAG+="uaccess"" > /etc/udev/rules.d/53-lattice-ftdi.rules'
 \end{lstlisting}
 
 
-%* Comprobar
+%* Listo
 \section{Descarga del repositorio}
 Para poder utilizar el sistema, hay que descargar en primer lugar los datos del repositorio.
 \begin{lstlisting}[language=bash]
@@ -89,7 +95,7 @@ $ cd analizador_usb
 A partir de este momento, todas las operaciones a realizar estarán referencias al directorio del repositorio: \emph{.\textbackslash analizador\_usb}.
 
 
-%* Comprobar
+%* Listo
 \section{Generación y programación del archivo binario}
 Los archivos a utilizar para la generación del binario están situados en la carpeta \emph{./ICEstick/USB3300\_sniffer}. Una vez situados en esa carpeta, y si todos los requisitos están instalados, ya sería posible realizar la generación y posterior programación del archivo binario.
 
@@ -101,7 +107,7 @@ $ cd ../../
 \end{lstlisting}
 
 
-%* Comprobar
+%* Listo
 \section{Instalación de las aplicaciones de control}
 Las aplicaciones creadas están situadas en la carpeta \emph{./PC/}. Previamente a su ejecución hay que compilarlas e instalarlas.
 
@@ -122,7 +128,7 @@ $ cd ../../
 \end{lstlisting}
 
 
-%* Comprobar
+%* Listo
 \section{Obtención de la captura}
 Con la aplicación de control ya instalada, y el sistema conectado al PC, ya se podría comenzar la captura.
 Para evitar posibles perdidas de datos capturados, se recomienda conectar el bus USB a analizar con el sistema en funcionamiento y la señal \emph{RECV\_TOGGLE} activa.
@@ -141,6 +147,6 @@ Para evitar posibles perdidas de datos capturados, se recomienda conectar el bus
 
 La captura generada se guarda automáticamente en el directorio desde el que se llama a la aplicación. Tras la captura, es recomendable almacenar dicho archivo, ya que si se vuelve a realizar una nueva, este archivo será sobrescribido.
 
-%* Comprobar
+%* Listo
 \section{Conversión de la captura a formato \emph{PCAP}}
 Para realizar la conversión a formato \emph{PCAP}, simplemente hay que llamar a la herramienta \emph{\$ \textbf{capture-json2pcap <ruta archivo JSON>}}, indicando como parámetro la ruta del archivo \emph{JSON}. El archivo convertido, se guarda en el directorio donde se encuentra la captura original, manteniendo el mismo nombre.
