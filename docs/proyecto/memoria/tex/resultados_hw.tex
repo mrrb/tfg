@@ -2,12 +2,12 @@
 \label{ch:resultados_hw}
 
 % %* Listo
-% En el siguiente capitulo se van a comentar los diversos resultados \emph{hardware} obtenidos en el presente TFG. Se incluyen además, varias imágenes que complementen las explicaciones del mismo.
+% En el siguiente capítulo se van a comentar los diversos resultados \emph{hardware} obtenidos en el presente TFG. Se incluyen además, varias imágenes que complementen las explicaciones del mismo.
 % \section{Resultados de los elementos \emph{hardware} del sistema}
 
 
 %* Listo
-Partiendo del esquema dado de analizadores USB \emph{hardware} (figura~\ref{fig:esquema-hardware}), se aprecian dos partes implicadas en la captura, por un lado el encargado de capturar la trama, y por otro, el encargado de controlar dicha captura y almacenar los resultados. En este capitulo se van a comentar los resultados de la primera, incluyendo además varias imágenes que complementen las explicaciones dadas.
+Partiendo del esquema dado de analizadores USB \emph{hardware} (figura~\ref{fig:esquema-hardware}), se aprecian dos partes implicadas en la captura, por un lado el encargado de capturar la trama, y por otro, el encargado de controlar dicha captura y almacenar los resultados. En este capítulo se van a comentar los resultados de la primera, incluyendo además varias imágenes que complementen las explicaciones dadas.
 
 \begin{figure}[htb]
     \centering
@@ -18,7 +18,7 @@ Partiendo del esquema dado de analizadores USB \emph{hardware} (figura~\ref{fig:
 
 %* Listo
 \section{Componentes utilizados}
-En al figura \ref{fig:sistema_final} se muestra el resultado \emph{hardware} del presente trabajo, este a su vez, está formado por los siguientes componentes.
+En la figura \ref{fig:sistema_final} se muestra el resultado \emph{hardware} del presente trabajo, este a su vez, está formado por los siguientes componentes.
 
 \begin{figure}[htbp]
     \centering
@@ -29,8 +29,8 @@ En al figura \ref{fig:sistema_final} se muestra el resultado \emph{hardware} del
 
 \begin{enumerate}
     %* Listo
-    \item \textbf{Placa de desarrollo \emph{IceStick \cite{icestickmanual}} (Véase figura~\ref{fig:IceStick_board}).} \\
-    Se trata de una placa de desarrollo, que incorpora, sin contar con todos los conectores, indicadores \emph{LEDs}, elementos pasivos y componentes de regulación, la \emph{FPGA iCE40HX-1k\cite{lattice:ice40}} del fabricante \emph{Lattice}\footnote{Página web del producto: \url{https://www.latticesemi.com/Products/FPGAandCPLD/iCE40.aspx}}, memoria SPI de $32MBit$ para almacenar el sintetizado generado, conversor USB a doble puerto de comunicación FIFO \emph{FTDI 2232H\cite{FTDI:FT2232HL}} para comunicarse con el PC y oscilador de $12MHz$ con el que referenciar ciertas partes del circuito.
+    \item \textbf{Placa de desarrollo \emph{iCEstick \cite{icestickmanual}} (véase figura~\ref{fig:IceStick_board}).} \\
+    Se trata de una placa de desarrollo, que incorpora, sin contar con todos los conectores, indicadores \emph{LED}, elementos pasivos y componentes de regulación, la \emph{FPGA iCE40HX-1k\cite{lattice:ice40}} del fabricante \emph{Lattice}\footnote{Página web del producto: \url{https://www.latticesemi.com/Products/FPGAandCPLD/iCE40.aspx}}, memoria SPI de $32Mbits$ para almacenar el sintetizado generado, conversor USB a doble puerto de comunicación FIFO \emph{FTDI 2232H\cite{FTDI:FT2232HL}} para comunicarse con el PC y oscilador de $12MHz$ con el que referenciar ciertas partes del circuito.
     
     \begin{figure}[htbp]
         \centering
@@ -40,10 +40,10 @@ En al figura \ref{fig:sistema_final} se muestra el resultado \emph{hardware} del
     \end{figure}
 
     %* Listo
-    \item \textbf{Módulo encargado de la capa física USB.} \\
+    \item \textbf{Placa encargada de la capa física USB.} \\
     PCB que incorpora el circuito integrado \emph{USB3300\cite{icestickmanual}} del fabricante \emph{Microchip}. Este se encarga de manejar la capa física del bus USB, comunicándose con la FPGA por medio del protocolo ULPI\cite{ulpi-specs}.
 
-    En al figura~\ref{fig:USB3300_board}, se aprecia que dicha PCB incluye dos conectores USB, uno tipo A hembra, y otro tipo mini-B hembra. Sus señales de datos están interconectadas, por lo que es en este punto donde ambos extremos del bus a analizar se unen, pudiendo capturar la trama sin interrumpir la conexión, debido a que el integrado \emph{USB3300} se puede configurar para mantener sus patillas de datos en alta impedancia.
+    En al figura~\ref{fig:USB3300_board}, se aprecia que dicha PCB incluye dos conectores USB hembra, uno tipo A, y otro tipo mini-B. Sus señales de datos están interconectadas, por lo que es en este punto donde ambos extremos del bus a analizar se unen, pudiendo capturar la trama sin interrumpir la conexión, debido a que el integrado \emph{USB3300} se puede configurar para mantener sus patillas de datos en alta impedancia.
 
     \begin{figure}[htbp]
         \centering
@@ -72,7 +72,7 @@ En al figura \ref{fig:sistema_final} se muestra el resultado \emph{hardware} del
 
     %* Listo
     \item \textbf{Base impresa en 3D (Figura~\ref{fig:matriz-hw-resto:base}).} \\
-    Se ha diseñado con SolveSpace\footnote{Herramienta de diseño parámetro CAD 2D/3D. \url{http://solvespace.com}}, y posteriormente impreso, una pequeña base en 3D, en la cual tener las dos placas unidas y organizadas.
+    Se ha diseñado con SolveSpace\footnote{Herramienta de diseño paramétrico CAD 2D/3D. \url{http://solvespace.com}}, y posteriormente impreso, una pequeña base en 3D, donde tener las dos placas unidas y organizadas.
 
     \begin{figure}[!htb]
         \centering
@@ -110,11 +110,11 @@ En la tabla~\ref{tab:precio-final} se desglosa el precio final según los compon
         \textbf{Precio} \\ \hline
         \hline
 
-        Placa de desarrollo iCEstick &
+        Placa de desarrollo \emph{iCEstick} &
         1 &
         30\texteuro \\ \hline
 
-        Placa con integrado USB3300 &
+        Placa con integrado \emph{USB3300} &
         1 &
         7\texteuro \\ \hline
 
@@ -122,7 +122,7 @@ En la tabla~\ref{tab:precio-final} se desglosa el precio final según los compon
         1 &
         2\texteuro \\ \hline
 
-        Cableado de unión x10 &
+        Cableado de unión (x10) &
         2 &
         1\texteuro \\ \hline
 
@@ -136,7 +136,7 @@ En la tabla~\ref{tab:precio-final} se desglosa el precio final según los compon
     \end{tabular}
 \end{table}
 
-%* Comprobar
+%* Listo
 \section{Módulos integrados en la FPGA}
 Según los elementos \emph{hardware} usados, y teniendo en cuenta los requerimientos definidos en el capítulo~\ref{ch:objetivos}, se han diseñado e implementado los siguientes módulos en la FPGA, todos ellos en lenguaje descriptor de \emph{hardware} Verilog. Todos los módulos se sitúan en el directorio \emph{.\textbackslash ICEstick\textbackslash USB3300\_sniffer\textbackslash modules\textbackslash} del repositorio.
 
@@ -153,7 +153,7 @@ Módulo que divide un reloj de entrada, tal que la frecuencia de salida sea $f_{
     \label{fig:clk_div_esquema}
 \end{figure}
 
-A partir de él se generan tres relojes. Los dos primeros se basan en el reloj de $12MHz$ procedente de la placa \emph{iCEstick}, dividiéndolo por un lado 24 veces para obtener la señal \emph{clk\_div\_ice} (frecuencia de $0.7Hz$ y periodo de $1.4s$), y por otro lado 19 veces para obtener la señal \emph{clk\_debounce} (frecuencia de $22.9Hz$ y periodo de $43ms$). El tercer reloj se basa en el reloj de $60MHz$ del módulo \emph{USB3300}, y es dividido 24 para obtener la señal \emph{clk\_div\_ULPI} (frecuencia de $3.6Hz$ y periodo de $0.3s$).
+A partir de él se generan tres relojes. Los dos primeros se basan en el reloj de $12MHz$ procedente de la placa \emph{iCEstick}, dividiéndolo por un lado 24 veces para obtener la señal \emph{clk\_div\_ice} (frecuencia de $0.7Hz$ y periodo de $1.4s$), y por otro lado 19 veces para obtener la señal \emph{clk\_debounce} (frecuencia de $22.9Hz$ y periodo de $43ms$). El tercer reloj se basa en el reloj de $60MHz$ del módulo \emph{USB3300}, y es dividido 24 veces para obtener la señal \emph{clk\_div\_ULPI} (frecuencia de $3.6Hz$ y periodo de $0.3s$).
 
 Los relojes \emph{clk\_div\_ice} y \emph{clk\_div\_ULPI} tienen la única funcionalidad de comprobar el funcionamiento del sistema por medio de los LEDs integrados en la placa. El reloj \emph{clk\_debounce} es usado en el módulo \emph{btn\_debouncer}, comentado más adelante.
 
@@ -202,7 +202,7 @@ Los relojes \emph{clk\_div\_ice} y \emph{clk\_div\_ULPI} tienen la única funcio
 \subsection{Módulo de generación de reloj de baudios (\emph{clk\_baud\_pulse})}
 De igual manera que el módulo \emph{clk\_div}, este también genera un reloj, pero en esta ocasión en vez de utilizar directamente \emph{Flip-Flops}, se utiliza un contador, lo que permite una mayor precisión en la salida. El ancho de pulso resultante es igual al del reloj de entrada. En el listado~\ref{src:resultados-modulos-clk-baud-pulse} se plasman los parámetros, entradas y salidas del módulo.
 
-Este reloj generado, configurable por medio de un parámetro, es usado para controlar la velocidad (baudios) de lectura y escritura en el módulo de comunicación serie, comentado más adelante.
+Este reloj generado, configurable por medio de un parámetro, es usado para controlar la velocidad (en baudios) de lectura y escritura en el módulo de comunicación serie, comentado más adelante.
 
 \begin{lstlisting}[language=Verilog,
     caption={Parámetros, entradas y salidas del módulo clk\_baud\_pulse.},
@@ -212,7 +212,7 @@ Este reloj generado, configurable por medio de un parámetro, es usado para cont
  * Módulo clk_baud_pulse
  *
  * Parámetros:
- *  - COUNTER_VAL. Valor optimo a contar para generar el pulso deseado.
+ *  - COUNTER_VAL. Valor óptimo a contar para generar el pulso deseado.
  *  - PULSE_DELAY. Numero de retrasos en la señal de salida antes producir un pulso.
  *
  * Entradas:
@@ -290,9 +290,9 @@ Se han creado dos variantes, \emph{FIFO\_BRAM\_SYNC} y \emph{FIFO\_BRAM\_SYNC\_C
 \subsection{Módulo de registro de desplazamiento universal (\emph{shift\_register})}
 Módulo capaz de desplazar tanto a izquierda como a derecha la información almacenada, y que a su vez, permite una carga y lectura en paralelo. En el listado~\ref{src:resultados-modulos-shift} se plasman los parámetros, entradas y salidas del módulo.
 
-La finalidad de este submódulo es poder convertir datos de serie a paralelo o de paralelo a serie, cuando ocurra una recepción o transmisión de datos serie respectivamente.
+La finalidad de este módulo es poder convertir datos de serie a paralelo o de paralelo a serie, cuando ocurra una recepción o transmisión de datos serie respectivamente.
 
-En la figura~\ref{fig:shift_esquema} se muestra, mostrando sus señales, el funcionamiento del registro de desplazamiento diseñado, en está ocasión, con desplazamiento hacia la derecha.
+En la figura~\ref{fig:shift_esquema} se ejemplifica, mostrando sus señales, el funcionamiento del registro de desplazamiento diseñado, en esta ocasión, con desplazamiento hacia la derecha.
 
 \begin{figure}[htb]
     \centering
@@ -332,7 +332,7 @@ En la figura~\ref{fig:shift_esquema} se muestra, mostrando sus señales, el func
 
 %* Listo
 \subsection{Módulo de comunicación serie (\emph{UART})}
-Sistema capaz de generar y recibir señales compatibles con una comunicación bidireccional serie 8N1\footnote{8N1: $8~bits$ de datos, sin $bit$ de paridad y un $bit$ de parada}, consiguiendo una tasa de transferencia estable máxima de $3750000~bauds$. Además, tanto para la lectura coma para la escritura, se han incorporado unos \emph{buffers} basados en la memoria FIFO anterior, de $512~bytes$ cada uno. En el listado~\ref{src:resultados-modulos-uart} se plasman los parámetros, entradas y salidas del módulo.
+Sistema capaz de generar y recibir señales compatibles con una comunicación bidireccional serie 8N1\footnote{8N1: $8~bits$ de datos, sin $bit$ de paridad y un $bit$ de parada}, consiguiendo una tasa de transferencia estable máxima de $3750000~baudios$. Además, tanto para la lectura coma para la escritura, se han incorporado unos \emph{buffers} basados en la memoria FIFO anterior de $512~bytes$ cada uno. En el listado~\ref{src:resultados-modulos-uart} se plasman los parámetros, entradas y salidas del módulo.
 
 \begin{lstlisting}[language=Verilog,
     caption={Parámetros, entradas y salidas del módulo UART.},
@@ -342,7 +342,7 @@ Sistema capaz de generar y recibir señales compatibles con una comunicación bi
  * Módulo UART
  *
  * Parámetros:
- *  - BAUDS. Valor optimo a contar para generar los baudios deseado.
+ *  - BAUDS. Valor óptimo a contar para generar los baudios deseado.
  *
  * Entradas:
  *  - rst. Señal de reinicio, activa a nivel bajo.
@@ -357,7 +357,7 @@ Sistema capaz de generar y recibir señales compatibles con una comunicación bi
  *  - clk_Rx. Reloj, a la velocidad fijada por BAUDS, usado para recibir los datos.
  *  - clk_Tx. Reloj, a la velocidad fijada por BAUDS, usado para transmitir los datos.
  *  - O_DATA. Señal de 8bits que contiene los datos recibidos.
- *  - TiP. Señal que indcia que hay una transmisión en proceso.
+ *  - TiP. Señal que indica que hay una transmisión en proceso.
  *  - NrD. Señal que indica la llegada de nuevos datos. Esta estará activa un pulso de clk.
  *  - Tx_FULL. Señal que indica que el buffer de transmisión interno está lleno.
  *  - Rx_FULL. Señal que indica que el buffer de recepción interno está lleno.
@@ -392,7 +392,7 @@ Este módulo se ha dividido a su vez en los siguientes submódulos.
 
 %* Listo
 \subsection{Módulo de comunicación ULPI}
-Sistema, que de forma síncrona al reloj de $60MHz$ generado por el integrado \emph{USB3300}, es capaz tanto de procesar como de generar señales ULPI, tal como se contempla en su especificación\cite{ulpi-specs}. En el listado~\ref{src:resultados-modulos-ulpi} se plasman las entradas y salidas del módulo.
+Sistema, que de forma síncrona al reloj de $60MHz$ generado por el integrado \emph{USB3300}, es capaz tanto de procesar como de generar señales ULPI tal como se contempla en su especificación\cite{ulpi-specs}. En el listado~\ref{src:resultados-modulos-ulpi} se plasman las entradas y salidas del módulo.
 
 \begin{lstlisting}[language=Verilog,
     caption={Entradas y salidas del módulo ULPI.},
@@ -429,16 +429,16 @@ Sistema, que de forma síncrona al reloj de $60MHz$ generado por el integrado \e
  *  - USB_DATA. Datos capturados USB.
  *  - USB_INFO_DATA. Información de la última captura USB (RxCMD y tamaño).
  *  - DATA_buff_full. Señal que indica que el buffer de captura está lleno.
- *  - DATA_buff_empty. Señal que indica que el buffer de captura está vacio.
+ *  - DATA_buff_empty. Señal que indica que el buffer de captura está vacío.
  *  - INFO_buff_full. Señal que indica que el buffer de información está lleno.
- *  - INFO_buff_empty. Señal que indica que el buffer de información está vacio.
+ *  - INFO_buff_empty. Señal que indica que el buffer de información está vacío.
  *  - DATA_out. Señal de datos de salida del bus ULPI.
  *  - STP. Señal del bus ULPI (SToP).
  *  - U_RST. Señal de reinicio del integrado USB3300.
  */
 \end{lstlisting}
 
-De todos los modos de funcionamiento de dicho bus, y tal como se ha comentado en el capitulo \ref{ch:objetivos} de objetivos, se han creado unicamente los submódulos encargados de leer y escribir registros, y el modo de recibir datos USB.
+De todos los modos de funcionamiento de dicho bus, y tal como se ha comentado en el capítulo~\ref{ch:objetivos} de objetivos, se han creado unicamente los submódulos encargados de leer y escribir registros, y el modo de recibir datos USB.
 
 En la siguiente lista se nombran los diversos submódulo que lo forman, inicializados posteriormente todos ellos en un mismo archivo siguiendo el diagrama mostrado en la figura~\ref{fig:flujo_ulpi_main}.
 
@@ -518,13 +518,13 @@ Estos $bytes$, tras ser recibidos por el módulo de comunicación serie, son rec
  *  - clk. Reloj de referencia.
  *  - UART_DATA. Datos del puerto serie.
  *  - UART_Rx_EMPTY. Señal que indica que el puerto serie no tiene datos disponibles.
- *  - op_stack_pull. Señal que indica que se quiere obtner un nuevo valor del buffer de operaciones.
+ *  - op_stack_pull. Señal que indica que se quiere obtener un nuevo valor del buffer de operaciones.
  *
  * Salidas:
  *  - UART_NxT. Señal usada para obtener, si fuera posible, un nuevo byte.
- *  - op_stack_msg. Comando completo recibido y almacendao.
+ *  - op_stack_msg. Comando completo recibido y almacenado.
  *  - op_stack_full. Señal que indica que el buffer de operaciones está lleno.
- *  - op_stack_empty. Señal que indica que el buffer de operaciones está vacio.
+ *  - op_stack_empty. Señal que indica que el buffer de operaciones está vacío.
  *
  */
 \end{lstlisting}
@@ -546,7 +546,7 @@ Por otro lado, como las pulsaciones del usuario tienen una duración mucho mayor
 
 %* Listo
 \subsection{Módulo de control maestro (\emph{main\_controller})}
-Los módulos anteriormente explicados, no poseen relación entre ellos, por lo que necesitan un módulo extra encargado de temporizar y distribuir que tareas deben realizar. Por tanto, este módulo a partir de las señales generadas por el resto de ellos, prioritiza las tareas de la siguiente manera.
+Los módulos anteriormente explicados, no poseen relación entre ellos, por lo que necesitan un módulo extra encargado de temporizar y distribuir que tareas deben realizar. Por tanto, este módulo a partir de las señales generadas por el resto de ellos, prioriza las tareas de la siguiente manera.
 \begin{enumerate}
     \item Ejecución de un comando de activacion/desactivacion de envío de datos.
     \item Ejecución de un comando de envío del último registro leído.
@@ -568,13 +568,13 @@ Con el objetivo de eliminar posibles errores capaces de dañar los propios compo
     Se simula la pulsación del botón externo de reinicio, poniendo el sistema en su estado inicial.
     
     %* Listo
-    \item \textbf{Prueba del botón auxiliar de \emph{test}.} \\
-    Se simula la pulsación del botón externo de \emph{test}, produciendo un envío de un $byte$ de prueba por el puerto serie.
+    \item \textbf{Prueba del botón auxiliar de `\emph{test}'.} \\
+    Se simula la pulsación del botón externo de \emph{test}, produciendo el envío de un $byte$ de prueba por el puerto serie.
     % Se simulan las pulsaciones de los botones externos de la \emph{FPGA}, produciendo un reinicio con el primero, y un envío de un $byte$ por el puerto serie con el segundo.
 
     %* Listo
     \item \textbf{Prueba de lectura de registro.} \\
-    Se simula una petición enviada por el puerto serie que realice una lectura de registro \emph{ULPI}.
+    Se simula una petición enviada por el puerto serie que realice una lectura de registro ULPI.
     
     %* Listo
     \item \textbf{Prueba de transmisión del último registro leído.} \\
@@ -585,7 +585,7 @@ Con el objetivo de eliminar posibles errores capaces de dañar los propios compo
     Se simula una petición enviada por el puerto serie que escriba un $byte$ en un registro del integrado \emph{USB3300}.
     
     %* Listo
-    \item \textbf{Prueba de captación de 6 bytes USB.}{\label{enum:captacion_6}} \\
+    \item \textbf{Prueba de captación de 6 \emph{bytes} USB.}{\label{enum:captacion_6}} \\
     Prueba en la que se simula la llegada de $6~bytes$ de datos USB, se comprueba también el correcto guardado de los mismos en la memoria FIFO interna.
     
     %* Listo
@@ -593,18 +593,17 @@ Con el objetivo de eliminar posibles errores capaces de dañar los propios compo
     Se simula una petición enviada por el puerto serie, con la que activar el envío de los datos capturados.
     
     %* Listo
-    \item \textbf{Prueba de captación de 4 bytes USB.} \\
+    \item \textbf{Prueba de captación de 4 \emph{bytes} USB.} \\
     De igual manera que la prueba \ref{enum:captacion_6}, pero enviando esta vez $4~bytes$ con el envío de datos al PC activado.
     
     %* Listo
     \item \textbf{Prueba de captación de cambios de estado del bus USB.} \\
-    Se simula un cambio de estado USB enviado por el bus \emph{ULPI}, observando si se actualiza en la FPGA.
+    Se simula un cambio de estado USB enviado por el bus ULPI, observando si se actualiza en la FPGA.
     
     %* Listo
     \item \textbf{Prueba de finalización de la transmisión de datos capturados.} \\
     De igual manera que en la prueba \ref{enum:activacion_transmision} se activaba el envió de datos automático, se realiza la misma petición, desactivándolo en este caso.
 \end{enumerate}
-
 
 % \section{Información del sintetizado final}
 % INFO??
