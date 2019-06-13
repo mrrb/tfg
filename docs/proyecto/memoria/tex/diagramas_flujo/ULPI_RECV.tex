@@ -13,15 +13,15 @@
     
     \node [flowDecision, below of=DIR1] (DIR2) {DIR sigue a nivel alto?};
     
-    \node [flowBase] at ($ (DIR2)+(4.1,0) $) (save) {Almacenar en memoria TxdCMD y el numero de $bytes$ leídos};
+    \node [flowBase] at ($ (DIR2)+(4.1,0) $) (save) {Almacenar en memoria RxCMD y el numero de $bytes$ leídos};
 
     \node [flowBase, below of=DIR2] (read) {Leer datos ULPI};
 
     \node [flowDecision, below of=read] (NXT) {NXT está a nivel alto?};
     
-    \node [flowBase] at ($ (NXT)+(-4,-2) $) (saveTxcmd) {Actualizar valor interno de TxdCMD con el valor leido};
+    \node [flowBase] at ($ (NXT)+(-4,-2) $) (saveTxcmd) {Actualizar valor interno de RxCMD con el valor leido};
 
-    \node [flowBase] at ($ (NXT)+(4,-2) $) (saveByte) {Guardar en la memoria de datos USB el valor leido};
+    \node [flowBase] at ($ (NXT)+(4,-2) $) (saveByte) {Guardar en la memoria de datos USB el valor leído};
 
     \node [flowBase, below of=saveByte] (increase) {Incrementar contador de $bytes$};
 
