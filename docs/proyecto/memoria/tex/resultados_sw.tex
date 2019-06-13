@@ -1,15 +1,15 @@
 \chapter{Resultados \emph{software}}
 \label{ch:resultados_sw}
 
-%* Comprobar
-Aun teniendo más importancia la parte \emph{hardware} comentada en el capitulo~\ref{ch:resultados_hw}, el sistema no sería funcional sin el \emph{software}, que utilizando los recursos creados, pueda recibir y almacenar la captura. Además, se han creado varias utilidades que han ayudado en el diseño \emph{hardware}.
+%* Listo
+Aun teniendo más importancia la parte \emph{hardware} comentada en el capitulo~\ref{ch:resultados_hw}, el sistema no sería funcional sin el \emph{software}, que utilizando los recursos creados, pueda recibir y almacenar la captura. Además, se han creado varias utilidades que han sido ayuda en las fases de diseño \emph{hardware}.
 
-%* Comprobar
+%* Listo
 \section{Aplicaciones de apoyo}
 A medida que se ha ido desarrollando la parte \emph{hardware}, se han creado varias utilidades en lenguaje \emph{Python}, con las que realizar cálculos de forma rápida o con las que comprobar el funcionamiento de ciertas partes del sistema. Dichas aplicaciones se encuentran en el directorio \emph{.\textbackslash ICEstick\textbackslash USB3300\_sniffer\textbackslash tools\textbackslash} del repositorio. \\
 Hay que destacar las siguientes:
 \begin{enumerate}
-    %* Comprobar
+    %* Listo
     \item \textbf{Utilidad de divisiones del reloj (\emph{get\_divider.py}).} \\
     Utilidad con la que poder realizar de forma rápida varios cálculos relacionados con los relojes de entrada. Por ejemplo, obtener los valores óptimos con los que dividir un reloj para generar unos baudios deseados. En el listado \ref{src:utilidad_divisiones_reloj_out} se plasma un ejemplo de uso.
     \begin{lstlisting}[
@@ -31,12 +31,12 @@ $ ./get_divider.py -b 12000000 9600
   10 [8.533333333333334e-05s] - [0.00010416666666666667s] - 11 [0.00017066666666666668s]          
     \end{lstlisting}
     
-    %* Comprobar
+    %* Listo
     \item \textbf{Utilidad de generación de baudios (\emph{gen\_bauds.py}).} \\
     Pequeña aplicación que, para los $baudios$ más comunes, genere varias definiciones en lenguaje \emph{Verilog} a usar por el módulo encargado de generar el reloj de baudios. En el listado \ref{src:utilidad_baudios_out} se muestra un ejemplo de la salida de la aplicación ante un reloj de $60MHz$.
 %     \\ \noWord[Borrar listado??? La verdad, es algo inutil ponerlo]
     \begin{lstlisting}[
-        caption={Ejemplo de la utilidad de generación de baudios ante \emph{60 MHz} de entrada.},
+        caption={Ejemplo de la utilidad de generación de baudios ante \emph{60MHz} de entrada.},
         label=src:utilidad_baudios_out]
 $ ./gen_bauds.py
   `define B921600 66
@@ -61,31 +61,31 @@ $ ./gen_bauds.py
   `define B110    545455
     \end{lstlisting}
     
-    %* Comprobar
+    %* Listo
     \item \textbf{Utilidad de control serie (\emph{serial\_control.py}).} \\
     Aplicación, que usando una librería encargada de controlar puertos serie, realiza varias comprobaciones del protocolo creado. Esta se puede configurar para abrir el puerto serie a cualquier velocidad, y poder enviar comandos de prueba.
 \end{enumerate}
 
-%! Revisar
+%* Comprobar
 \section{Información de la aplicación}
 Tal como se ha comentado al principio de este capítulo, aun teniendo mayor carga la parte \emph{hardware}, es esencial implementar una aplicación que se comunique con la FPGA y permita su funcionamiento.
 
-Para ello, utilizando lenguaje C, se ha creado una aplicación que dando opciones de control con una simple interfaz, es capaz de enviar comandos o recibir datos USB, y a su vez, es capaz de almacenarlos para su posterior estudio.
+Para ello, utilizando lenguaje C, se ha creado una aplicación que dando opciones de control con una simple interfaz, es capaz de enviar comandos o recibir datos USB, y a su vez, es capaz de almacenarlos para su posterior estudio. A grandes rasgos, en la figura~\ref{fig:flujo_app} se muestra un esquema de funcionamiento de la aplicación.
 
-La aplicación se ha dividido de la siguiente manera:
+Esta aplicación se ha dividido de la siguiente manera:
 \begin{enumerate}
-    %* Comprobar
+    %* Listo
     \item \textbf{Hilo encargado de controlar las entradas de usuario.} \\
     Tanto la configuración a usar para conectarse a la \emph{FPGA} (puerto serie y su velocidad), como los comandos a enviar, son introducidos al programa por medio de un simple menú basado en texto desde la terminal. Este permite:
     \begin{itemize}
         \item Configurar el puerto serie (puerto a usar y velocidad en baudios).
-        \item Abrir/cerrar el puerto seleccionado.
+        \item Abrir/cerrar el puerto serie seleccionado.
         \item Realizar una operación de lectura de registro.
         \item Realizar una operación de escritura de registro.
         \item Activar/desactivar el envío de datos USB al PC.
     \end{itemize}
 
-    En la figura~\ref{fig:matriz-app-menu} se muestra dicho menú, y a su vez, se ejemplifica un proceso de escritura y posterior lectura del registro con dirección \emph{0x16} (registro que según la hoja de características del integrado USB3300\cite{microchip:usb3300} es de libre utilización).
+    En la figura~\ref{fig:matriz-app-menu} se muestra dicho menú, y a su vez, se ejemplifica un proceso de escritura y posterior lectura del registro con dirección \emph{0x16} (registro que según la hoja de características del integrado \emph{USB3300}\cite{microchip:usb3300} es de libre utilización).
 
     \begin{figure}[htbp]
         \centering
@@ -101,20 +101,24 @@ La aplicación se ha dividido de la siguiente manera:
         \label{fig:matriz-app-menu}
     \end{figure}
     
-    %! Revisar
+    %* Listo
     \item \textbf{Hilo encargado de gestionar la comunicación con la \emph{FPGA}, así como almacenar la trama capturada.} \\
-    Este hilo maneja toda la comunicación serie entre la FPGA, ya sea para enviar comandos, o para recibir los datos USB capturados. Hace uso de la librería \emph{libserialport}\footnote{Librería compatible con sistemas operativos Linux, Mac OS X, FreeBSD, Windows y Android. Página web de referencia: \url{https://sigrok.org/wiki/Libserialport}} para establecer una comunicación por el puerto serie.
+    Haciendo uso de la librería \emph{libserialport}\footnote{Librería compatible con sistemas operativos Linux, Mac OS X, FreeBSD, Windows y Android. Página web de referencia: \url{https://sigrok.org/wiki/Libserialport}}, se establece una comunicación serie entre la FPGA por la que enviar las solicitudes de comandos, y recibir los datos de captura. Al finalizar el proceso de recepción de datos, es este hilo también el encargado de guardar la captura en un archivo para su posterior análisis.
 
-    Al finalizar el proceso de recepción de datos, es este hilo el encargado también de guardar la captura en un archivo para su posterior análisis.
 
-    \noWord[Añadir figura flujo del papel]
+    \begin{figure}[hbtp]
+        \centering
+        \scalebox{0.8} {\input{diagramas_flujo/app.tex}}
+        \caption{Diagrama de funcionamiento de la aplicación}
+        \label{fig:flujo_app}
+    \end{figure}
+    
 \end{enumerate}
 
 
-%!
+%* Listo
 \section{Información del archivo generado}
-Se ha elegido almacenar la información capturada en un archivo formato \emph{JSON}\footnote{Formato de texto, que permite almacenar información de forma estructurada.}.
-Este archivo, posee una estructura fi
+Se ha elegido almacenar la información capturada en un archivo formato \emph{JSON}\footnote{Formato de texto, que permite almacenar información de forma estructurada.}. Para cada paquete capturado se almacena el último estado del bus conocido (\emph{TxCMD}), la longitud de paquetes capturados y los propios datos obtenidos. En la figura~\ref{fig:tree-json} se muestra la estructura utilizada en el archivo.
 
 \begin{figure}[!hbtp]
     \centering
@@ -138,22 +142,8 @@ Este archivo, posee una estructura fi
     \label{fig:tree-json}
 \end{figure}
 
-%!
-\section{Conversión de \emph{JSON} a \emph{PCAP}}
-Para poder analizar la captura en la aplicación de análisis \emph{Wireshark}, se ha creado otra utilidad, que a partir del archivo \emph{JSON} generado anteriormente lo transforma a \emph{PCAP}.
-Su uso 
+Para poder analizar la captura en la aplicación de análisis \emph{Wireshark}, se ha creado otra utilidad, que a partir del archivo \emph{JSON} generado anteriormente, lo transforme a \emph{PCAP}. Esta transformación no sigue la estructura de ningún disector\cite{wiresharkdisector2014} actual, por lo que en \emph{Wireshark} solo se consigue visualizar los datos de una forma más estructura sin dar información adicional.
 
-\begin{lstlisting}[
-    caption={Ejemplo de la utilidad de generación de baudios ante \emph{60 MHz} de entrada.},
-    label=src:test]
-\end{lstlisting}
-
-\begin{figure}[!hbt]
-    \centering
-    \scalebox{0.8} {\input{diagramas_flujo/app.tex}}
-    \caption{Diagrama de funcionamiento de la aplicación}
-    \label{fig:flujo_app}
-\end{figure}
 
 
 % \chapter{Resultados}
