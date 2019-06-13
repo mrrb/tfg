@@ -5,8 +5,8 @@
 En el presente anexo, se detallan los procedimientos a seguir para la instalación y utilización del sistema bajo un sistema Linux.
 
 %* Listo
-\section{Requisitos \emph{software} previos}
-Antes de poder generar un archivo binario compatible con la FPGA \emph{Lattice iCE40HX1K}, es necesario instalar las aplicaciones encargadas de su creación.
+\section{Requisitos de \emph{software} previos}
+Antes de poder generar un archivo binario (\emph{bitstream}) compatible con la FPGA \emph{Lattice iCE40HX1K}, es necesario instalar las aplicaciones encargadas de su creación.
 
 %* Listo
 \subsubsection{Dependencidas de las aplicaciones}
@@ -101,8 +101,10 @@ Los archivos a utilizar para la generación del binario están situados en la ca
 
 \begin{lstlisting}[language=bash]
 $ cd ./ICEstick/USB3300_sniffer
-$ make pnr
-$ make prog
+$ make synt # Sintetizado del código Verilog en Yosys
+$ make pnr  # PNR del sintetizado anterior en Nextpnr
+$ make pack # Creación del archivo binario
+$ make prog # Programación de la memoria de la FPGA
 $ cd ../../
 \end{lstlisting}
 
@@ -145,7 +147,7 @@ Para evitar posibles perdidas de datos capturados, se recomienda conectar el bus
     \item Cerrar el programa (automáticamente se apaga la señal \emph{RECV\_TOGGLE} y se cierra el puerto). \textbf{[Opción 5]}
 \end{enumerate}
 
-La captura generada se guarda automáticamente en el directorio desde el que se llama a la aplicación. Tras la captura, es recomendable almacenar dicho archivo, ya que si se vuelve a realizar una nueva, este archivo será sobrescribido.
+La captura generada se guarda automáticamente en el directorio desde el que se llama a la aplicación. Tras la captura, es recomendable almacenar dicho archivo, ya que si se vuelve a realizar una nueva, este se sobrescribirá.
 
 %* Listo
 \section{Conversión de la captura a formato \emph{PCAP}}
