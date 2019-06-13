@@ -1,28 +1,28 @@
 \chapter{Procedimiento}
 \label{ch:procedimiento}
 
-%* Comprobar
+%* Listo
 En el desarrollo del presente TFG se ha utilizado una metodología ágil basada en \emph{Scrum}~\cite{scrumguide}, definida por el director. El trabajo se ha dividido en iteraciones de varias semanas denominadas \emph{sprints}. Las unidades de trabajo se presentan en forma de historias de usuario (\emph{user stories}) que definen mini-proyectos de muy corta duración que aportan valor al proyecto.  Es decir, cada historia de usuario cumple o ayuda a cumplir alguno de los objetivos. Medir el valor percibido corresponde al propietario del producto (\emph{Product Owner}), que participa activamente en la planificación del proceso priorizando las unidades de trabajo.
 
 
-%* Comprobar
+%* Listo
 \section{Diferencias con Scrum}
-%* Comprobar
+%* Listo
 \emph{Scrum} es una metodología estrictamente centrada en el cliente. El cliente es el responsable de priorizar y, en cierto modo, planificar las iteraciones. Esto garantiza que la ejecución del proyecto responda al máximo con las expectativas del cliente, aún cuando los imprevistos impidan alcanzar alguno de los objetivos iniciales. Esta característica de \emph{Scrum} es la única que se ha intentado mantener inalterada. Sin embargo, al ser el TFG un proyecto individual, ha requerido modificar significativamente otros aspectos de la metodología.
 
-%* Comprobar
+%* Listo
 \subsection{Roles}
 La única remuneración que se obtiene con la ejecución de un TFG es la calificación de los distintos aspectos (anteproyecto, valoración del director, valoración del tribunal, etc.). Por tanto, el cliente del TFG se compone por el director y el tribunal de la defensa. Desgraciadamente no es posible conocer a priori el tribunal. Por este motivo el director es el único representante del cliente en el proceso de desarrollo (\emph{Product Owner}).
 
 La labor de dirección del TFG se asimila a la de dirección del proyecto y, por tanto, el director también actúa como coordinador del proceso, o \emph{Scrum Master}. Nótese que hay dos roles representados por la misma persona. Desde un punto de vista purista esto implica que puede haber conflicto de intereses y los intereses del cliente pueden estar insuficientemente representados. Es una limitación extrínseca, que no es posible solucionar con el proceso actual. Aún así, el uso de una metodología ágil centrada en el cliente debe mejorar el alineamiento de intereses cuando sobrevienen problemas que afectan o pueden afectar a la consecución de alguno de los objetivos iniciales.
 
-%* Comprobar
+%* Listo
 \subsection{Historias de usuario}
 \emph{Scrum}, como la mayoría de los métodos ágiles, está enfocada al desarrollo de proyectos en entornos de alta incertidumbre por equipos multidisciplinares bien formados. El desarrollo de un TFG, al tratarse de un primer proyecto profesional, también está sometido a gran cantidad de incertidumbre. Sin embargo, no siempre se cuenta con la formación previa necesaria para abordar todos los problemas. Esto implica que, en ocasiones, se necesita aprender o leer, sin repercusión medible en el valor percibido por el \emph{Product Owner}. En esos casos se planifican unidades de trabajo que no corresponden estrictamente a historias de usuario en el sentido de Scrum. Se ha intentado mantener al mínimo este tipo de historias de usuario para tener el proceso lo más controlado posible.
 
 Puntualmente ha sido necesario planificar historias de usuario que solo pretenden explorar opciones.  Este tipo de historias de usuario están contempladas en \emph{Scrum}, se denominan \emph{spikes}. Sin embargo, en la ejecución de este TFG se ha procurado reducir al mínimo para que la exploración de alternativas no domine en el tiempo dedicado al TFG.
 
-%* Comprobar
+%* Listo
 \subsection{Planificación de \emph{sprints}}
 Para la planificación y el seguimiento se ha utilizado un tablero \href{http://trello.com}{Trello}. Los tableros Trello permiten agrupar tarjetas en una serie de listas con nombre. Se ha utilizado el esquema propuesto en~\cite{andrewlittlefield2016}.
 
@@ -32,7 +32,7 @@ Usando la técnica de \emph{planning poker} (ver~\cite{scrumguide}) se dimension
 
 El director, como \emph{product owner} traslada las tarjetas correspondientes a las primeras historias de la lista \emph{Backlog} a la lista \emph{ToDo} hasta completar los días de trabajo de la iteración.
 
-%* Comprobar
+%* Listo
 \subsection{Flujo de trabajo}
 El flujo de trabajo diario del autor corresponde a la siguiente secuencia:
 \begin{itemize}
@@ -47,25 +47,25 @@ El flujo de trabajo diario del autor corresponde a la siguiente secuencia:
 
 En todo momento es posible ver el estado global de ejecución del proyecto. Al finalizar, la lista \emph{Done} contiene todas las historias de usuario ejecutadas por orden de terminación. Y las listas \emph{Blocked} y \emph{Backlog} contienen (en este orden) todas las historias de usuario que corresponderían a trabajo futuro, ya priorizadas por el director.
 
-%* Comprobar
+%* Listo
 \subsection{Herramientas de ayuda}
 El proceso de desarrollo está fuertemente ligado a la herramienta \href{https://trello.com/}{Trello}. Se trata de una herramienta colaborativa en línea, que permite mantener una serie de tarjetas agrupadas en listas con nombre. Cada tarjeta puede tener un título, una descripción, un conjunto de adjuntos, y un conjunto de comentarios. Trello se ha usado con éxito en la planificación de proyectos de nivel de complejidad muy variable. Por ejemplo, Epic Games utiliza un tablero Trello para planificar las características a incorporar a cada nueva versión de Unreal Engine. Por otro lado, un problema de Trello es el manejo limitado de la historia de modificaciones en las tarjetas y en los movimientos entre listas de tarjetas. Esto dificulta en cierto modo el seguimiento de los cambios y, sobre todo, la corrección de errores en el proceso. Por este motivo, Trello solo se ha empleado en la coordinación del trabajo, mientras que toda la gestión de cambios se ha delegado en otra herramienta.
 
-%* Comprobar
-Todo el proyecto ha sido gestionado desde su inicio con una herramienta de control de versiones distribuido~\cite{scottchaconbenstraub2018} en un repositorio público de GitHub, disponible en \thegitrepo. Cada vez que se completa con éxito una historia de usuario se notifica mediante un comentario en la tarjeta correspondiente. Este comentario tan solo contiene el identificador del paquete de cambios (\emph{commit}) que da por concluida la historia. La evolución del proyecto se puede consultar  en todo momento desde la propia página del repositorio.
+%* Listo
+Todo el proyecto ha sido gestionado desde su inicio con una herramienta de control de versiones distribuido\cite{scottchaconbenstraub2018} en un repositorio público de GitHub, disponible en \thegitrepo. Cada vez que se completa con éxito una historia de usuario se notifica mediante un comentario en la tarjeta correspondiente. Este comentario tan solo contiene el identificador del paquete de cambios (\emph{commit}) que da por concluida la historia. La evolución del proyecto se puede consultar  en todo momento desde la propia página del repositorio.
 
 
-%* Comprobar
+%* Listo
 \section{Aprendizaje de funcionamiento y utilización de FPGAs}
-Debido a la utilización de una tecnología de la cual no disponía un conocimiento previo, una fase del TFG se ha centrado en el estudio y aprendizaje de varios aspectos de las FPGAs.
+Debido a la utilización de una tecnología de la cual el no disponía un conocimiento previo, una fase del TFG se ha centrado en el estudio y aprendizaje de varios aspectos de las FPGAs.
 
-A grandes rasgos, una FPGA\cite{kuon2008fpga} se puede considerar como una plataforma con multitud de puertas lógicas y registros biestables, todos ellos dispersos en el propio circuito integrado, y que permiten ser interconectados de forma arbitraria. Este tipo de sistemas, permiten crear en el una infinidad de diseños reprogramables de cualquier complejidad. Otra de sus grandes ventajas, es su gran nivel de paralelización, permitiendo realizar multitud de operaciones sin ningún tipo de relación entre ellas.
+A grandes rasgos, una FPGA\cite{kuon2008fpga} se puede considerar como una plataforma con multitud de puertas lógicas y registros biestables, todos ellos dispersos en el propio circuito integrado, y que permiten ser interconectados de forma arbitraria. Este tipo de sistemas, permiten crear en él una infinidad de diseños reprogramables de cualquier complejidad. Otra de sus grandes ventajas, es su gran nivel de paralelización, permitiendo realizar multitud de operaciones sin ningún tipo de relación entre ellas.
 
 El diseño del circuito interno se realiza mediante un lenguaje descriptor de \emph{hardware}, siendo este posteriormente convertido a un fichero binario (denominado \emph{bitstream}), que contiene toda la configuración interpretable por la FPGA, permitiendo que realice las conexiones deseadas.
 
 Para el presente caso, se ha utilizado el lenguaje descriptor \emph{Verilog}. Se ha seguido un tutorial incremental\cite{obijuan:tutorial-fpga}, en el que los diversos conceptos se han introducido paulatinamente, refinando y mejorando los anteriores.
 
-%* Comprobar
+%* Listo
 \section{Uso de \emph{software} libre}
 Durante los cerca de 35 años que llevan existiendo las FPGAs, los fabricantes han mantenido cerrada toda información sobre el \emph{software} y las especificaciones de sus binarios \emph{bitstreams}. Lo que ha permitido que dichos fabricantes tengan un control absoluto sobre el método de diseño que se debe utilizar y los equipos compatibles. Esto ha disminuido la capacidad del desarrollador final de usar FPGAs y cerrado las puertas a nuevos.
 
@@ -82,7 +82,7 @@ El uso de \emph{software} libre trae consigo los siguiente beneficios:
     \item \textbf{Nuevas aplicaciones.} Al no depender de las previsiones del fabricante, pueden surgir multitud de nuevas aplicaciones sin ningún tipo de restricción.
 \end{itemize}
 
-%* Comprobar
+%* Listo
 \section{Problemas encontrados durante la elaboración del proyecto}
 Durante el desarrollo del proyecto, han surgido varios problemas tanto intrínsecos como extrínsecos, los cuales han tenido que ser resueltos o mitigados de diversas formas. 
 
@@ -92,17 +92,17 @@ Durante el desarrollo del proyecto, han surgido varios problemas tanto intrínse
     Durante las primeras iteraciones de desarrollo de módulos, no se había definido una metodología a utilizar, lo que se supuso ineficiencias y errores continuos. Tras definir la metodología expuesta en el capitulo~\ref{ch:contribuciones} y replantear varias iteraciones, se pudo continuar sin problema alguno.
     
     \item \textbf{Inicialización de bloques BRAM.} \\
-    Debido un entendimiento escaso del método de Inicialización de los bloques BRAM de la FGPA, se produjeron errores al almacenar datos. Tras una lectura de la librería de referencia\cite{lattice:ice-library} del fabricante \emph{Lattice}, se pudo solucionar el problema.
+    Debido un entendimiento escaso del método de Inicialización de los bloques BRAM de la FGPA, se produjeron errores al almacenar datos. Tras una lectura más detallada de la librería de referencia\cite{lattice:ice-library} del fabricante \emph{Lattice}, se pudo solucionar el problema.
 \end{itemize}
 
 \subsection{Fallos extrínsecos}
-Debido al continuo desarrollo de la herramienta de sintetizado \emph{Yosys}, han surgido en varias ocasiones varios errores grabes que han obligado a pausar el proyecto, o a buscar alternativas, lo que ha supuesto un trabajo adicional no medible en los resultados finales. Hay que destacar los siguientes.
+Debido al continuo desarrollo de la herramienta de sintetizado \emph{Yosys}, han surgido en varias ocasiones varios errores graves que han obligado a pausar el proyecto, o a buscar alternativas, lo que ha supuesto un trabajo adicional no medible en los resultados finales. Hay que destacar los siguientes.
 \begin{itemize}
     \item \textbf{Sintetizados incorrectos.} \\
     En las primeras versiones de \emph{Yosys} usadas, en varias ocasiones, al crear el binario, este no funcionaba completamente, teniendo que probar distintas opciones de síntesis.
 
     \item \textbf{Error con las puertas triestato.} \\
-    En una de las actualizaciones de \emph{Yosys} que fueron surgiendo a lo largo del desarrollo del TFG, a la hora de inicializar los puertos de la FPGA de forma bidireccionales, es decir, con entradas/salidas triestato, el sintetizado fallaba. Este problema se tuvo que solventar inicializando dichos puertos de forma manual.
+    En una de las actualizaciones de \emph{Yosys} que fueron surgiendo a lo largo del desarrollo del TFG, a la hora de inicializar los puertos de la FPGA de forma bidireccional, es decir, con entradas/salidas triestato, el sintetizado fallaba. Este problema se tuvo que solventar inicializando dichos puertos de forma manual. Tras varias actualizaciones, se solucionó el problemas, pudiendo volver a utilizar el método de inicialización del principio.
 \end{itemize}
 
 
