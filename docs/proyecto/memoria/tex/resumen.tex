@@ -4,7 +4,7 @@ El objetivo del presente Trabajo Fin de Grado, consiste en el desarrollo e imple
 
 Previamente a su elaboración, se ha realizado un estudio del estado del arte en cuanto a sistemas de captación y análisis tanto \emph{hardware} como \emph{software}, observando el elevado precio de estos, reafirmando la necesidad de disponer un sistema de bajo coste.
 
-Para su desarrollo se ha utilizado en primer lugar una placa de evaluación que incluye el circuito integrado especializado \emph{USB3300}, encargado de la propia capa física del bus USB. Esta placa también incluye dos conectores hembra USB, uno de tipo A y el otro de tipo mini-B, a los cuales se conectan ambos extremo del bus a analizar.
+Para su desarrollo se ha utilizado en primer lugar una placa de evaluación que incluye el circuito integrado especializado \emph{USB3300}, encargado de la propia capa física del bus USB. Esta placa también incluye dos conectores hembra USB, uno de tipo A y el otro de tipo mini-B, a los cuales se conectan ambos extremo del bus a analizar. Hay que destacar, que este integrado utiliza el protocolo paralelo ULPI (UTMI+ Low Pin Interface) para transmitir los datos.
 
 Seguidamente, se ha usado la placa de desarrollo \emph{iCEstick}, que entre otros componentes, incluye una \emph{FPGA iCE40HX1k} de la compañía \emph{Lattice} y un conversor de USB a puerto serie \emph{FTDI FT2232HL}. Dicha placa, tiene la función de comunicarse tanto con el integrado anterior encargado de la capa física, como con el equipo de control, siendo este un PC.
 
@@ -21,7 +21,7 @@ Todos ellos, han soportado varias simulaciones con las que asegurar su correcto 
 Junto con los anteriores módulo, se desarrolla un protocolo simple con el que poder comandar el sistema. Este protocolo esta formado por dos bytes, en los que se incluyen el comando a realizar, una dirección de 6 bits, y un byte de datos. \\
 Hay que comentar también el diseño e impresión de una pequeña base en 3D, donde situar todos los componentes de forma segura.
 
-El segundo grupo, aun teniendo una menor dificultad respecto al primero, es esencial para poder ver los resultados obtenidos. Para controlar la totalidad del sistema se ha creado una aplicación en lenguaje C, que por medio de un simple menú permita la interacción entre la FPGA y el usuario. Este menú permite por un lado configurar y abrir el puerto al que está conectado la FPGA, y por otro, permite enviar los comandos necesarios para hacer funcionar al sistema (siendo estos de escritura de registros, lectura de registros y activación/desactivación del envío de datos al PC) y recibir los datos USB capturados. \\
+El segundo grupo, aún teniendo una menor dificultad respecto al primero, es esencial para poder ver los resultados obtenidos. Para controlar la totalidad del sistema se ha creado una aplicación en lenguaje C, que por medio de un simple menú permita la interacción entre la FPGA y el usuario. Este menú permite por un lado configurar y abrir el puerto al que está conectado la FPGA, y por otro, permite enviar los comandos necesarios para hacer funcionar al sistema (siendo estos de escritura de registros, lectura de registros y activación/desactivación del envío de datos al PC) y recibir los datos USB capturados. \\
 Esta aplicación también se encarga de almacenar de forma estructurada dichos datos en un archivo formato \emph{JSON}, que posteriormente puede ser estudiado. Secundariamente, y tras la finalización de todo lo anterior, se ha creado una pequeña utilidad, que convierte el fichero \emph{JSON} a \emph{PCAP}, lo que permite ser visualizado en el programa \emph{Wireshark}.
 
 Hay que destacar que todo el sistema en su conjunto ha costado menos de 45\$ (aproximadamente 40\texteuro), precio muy por debajo de cualquier otro método de captura comercial.
@@ -37,14 +37,44 @@ Para finalizar, hay que comentar varios aspectos a incluir o mejorar.
 
 
 \begin{abstract}
-The main purpose of this Final Degree Project is the development and implementation of a hardware base system capable of capture and store a USB (Universal Serial Bus) data frame. Furthermore, this system has to be as affordable as possible, using only open source tools and utilities.
+The main purpose of this Final Degree Project is the development and implementation of a hardware base system capable of capturing and storing USB (Universal Serial Bus) data frames. Furthermore, this system has to be as affordable as possible, using only open source tools and utilities.
 
 Previously to the elaboration of the project, a study on the current State of the Art of hardware and software based capture and analysis systems has been made. Noting the high price of them, the necessity of having an inexpensive system were reaffirmed.
 
-To obtain the desired result, a evaluation board containing the USB3300 specialised integrated circuit has been used, that integrated circuit handles the Physical layer of the bus, reducing the complexity level of the final design. This board also includes two USB female connectors, one of type A and the other one of type mini-B, where both ends of the USB bus to analyze are connected. It is worth mentioning that this integrated circuit uses the parallel protocol ULPI (UTMI+ Low Pin Interface) to interface with other devices.
+To obtain the desired result, an evaluation board containing the USB3300 specialised integrated circuit from Microchip has been used, that integrated circuit handles the Physical layer of the bus, reducing the complexity level of the final design. This board also includes two USB female connectors, one type A and the other one type mini-B, where both ends of the USB bus to analyse are connected. It is worth mentioning that this integrated circuit uses the parallel protocol ULPI (UTMI+ Low Pin Interface) to interface with other devices.
 
-The iCEstick development board, that includes the FPGA (Field-Programmable Gate Array) iCE40HX1K from the Lattice Semiconductor manufacturer and a the FTDI FT2232HL USB to Serial converter integrated circuit, is then use to communicate with both the USB3300 and the control equipment, in this case a PC.
+The iCEstick development board, that includes the FPGA (Field-Programmable Gate Array) iCE40HX1K from the Lattice Semiconductor manufacturer and the FTDI FT2232HL USB to Serial converter integrated circuit, is then used to communicate with both the USB3300 and the control equipment, in this case a PC.
 
+From now on, the development of the system is divided into two differentiated groups, being the first one related to the FPGA, and the second one related to control software. A procedure based on Scrum is used, which divides the entire project into several week-long iterations, called sprints.
 
-\noWord[Terminar!!]
+In the first group, a methodology is defined in the required modules, and in an effective, clean and secure manner. Doing that, several modules are created in the hardware description language (HDL) Verilog. The following ones are especially significant.
+
+\begin{itemize}
+    \item \textbf{Serial communication module.} The main function of this module is to process and generate all the signals that allow the PC and the FPGA to be serially communicated.
+    
+    \item \textbf{ULPI communication module.} The main function of this module, in the same way that the last one, is to process and generate all the ULPI signals created by the USB3300 integrated circuit, following the specifications given in its datasheet. Thanks to this module, the system is able to read and write registers in the physical circuit, and obtain the USB data.
+    
+    \item \textbf{FIFO memory module.} The main function of this module is to create a FIFO (First-In Firts-Out) memory from the internal RAM blocks of the FPGA. This type of memory let the first data packet introduced be the first packet to be dumped.
+    
+    \item \textbf{General control module.} The main function of this module is to join and manage all the other modules, creating a synchronized system.
+\end{itemize}
+
+All of them have gone through several simulations to confirm its correct operation, before the deployment in the final system. \\
+Along with the all the modules, a protocol through which the PC can control the FPGA is created. This protocol is form by two bytes, that include a 2bits command to perform, a 6bits address, and a byte of data. \\
+In addition to the main hardware, a simple 3D base has been designed and printed, so the components are situated securely.
+
+The second group, that has a lower difficulty than the first one, is essential to obtain the captured data. To control the entire system, an application written in C language has been created, that through a simple text menu is able to allow the user to interact with the FPGA. As well as allowing the configuration (baudrate and port name) and opening/closing of the serial port, this application can send the required commands that make the FPGA works (ULPI register read and write, and toggle the automatic data send on/off) and receive the captured USB data. \\
+This application is also capable of saving the captured data into a structured JSON file, so the data could be studied later. Secondarily, and after the main application is complete, a little application has been created to convert the file from the JSON format into the PCAP format, so the Wireshark analysis tool can display its contents.
+    
+It should be noted that the price of the entire system is lower than \$45 (around \texteuro40), a much lower price than any other commercial capture system.
+    
+Finally, I would like to deal with some aspects that could be improved or included.
+\begin{itemize}
+    \item The transmission method used to communicate the FPGA with the PC could be improved, increasing the transfer rate so fewer data is loosed in high speed USB transmissions. For example, the system could stop using the serial port, and instead, start using another protocol supported by the FTDI integrated circuit, that can give a high speed.
+    
+    \item Add an external RAM module, so the FPGA will have more memory where store temporally all captured the data.
+    
+    \item Create a Wireshark dissector to obtain more useful and detailed information about the captured data.
+\end{itemize}
+\newpage
 \end{abstract}
